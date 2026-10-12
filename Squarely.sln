@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sim", "Sim\Sim.csproj", "{05E5D5CB-8CAF-4A90-8F38-2BF5552A80A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sim.Tests", "Sim.Tests\Sim.Tests.csproj", "{04FD69D4-6C36-4612-A3B8-987764136D78}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05E5D5CB-8CAF-4A90-8F38-2BF5552A80A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05E5D5CB-8CAF-4A90-8F38-2BF5552A80A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05E5D5CB-8CAF-4A90-8F38-2BF5552A80A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05E5D5CB-8CAF-4A90-8F38-2BF5552A80A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04FD69D4-6C36-4612-A3B8-987764136D78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04FD69D4-6C36-4612-A3B8-987764136D78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04FD69D4-6C36-4612-A3B8-987764136D78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04FD69D4-6C36-4612-A3B8-987764136D78}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

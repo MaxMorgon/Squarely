@@ -1,0 +1,9 @@
+﻿{
+  "name": "Squarely.Sim.Tests",
+  "references": ["Squarely.Sim"],
+  "includePlatforms": ["Editor"],
+  "overrideReferences": true,
+  "precompiledReferences": ["nunit.framework.dll"],
+  "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+  "autoReferenced": false
+}
