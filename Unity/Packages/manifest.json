@@ -52,8 +52,11 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0",
-	"com.iddo.squarely.sim": "file:../../Sim/Src",
-	"com.iddo.squarely.sim.tests": "file:../../Sim.Tests/Src"
+    "com.iddo.squarely.sim": "file:../../Sim/Src",
+    "com.iddo.squarely.sim.tests": "file:../../Sim.Tests/Src",
+    "com.unity.pipeline": "0.9.1-exp.1"
   },
-  "testables": ["com.iddo.squarely.sim.tests"]
+  "testables": [
+    "com.iddo.squarely.sim.tests"
+  ]
 }
