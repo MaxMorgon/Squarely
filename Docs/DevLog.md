@@ -78,6 +78,13 @@ Each comment below improved the design:
 
 - Result: 53 tests passing, docs updated.
 
+### 10. Live Unity editor automation (Unity CLI)
+- Installed Unity's new **Unity CLI** (beta) and the **`com.unity.pipeline`** package, so the AI can drive the *open* editor from the terminal: list commands, read the console, and run the Unity Test Runner.
+- Verified it end to end: all 53 sim tests run **inside the live Unity editor** through the CLI and pass, proving the Sim compiles under Unity's compiler as well as .NET.
+- You chose the open-editor workflow over headless batch mode, and asked for **custom `[CliCommand]`s for repeated operations** rather than ad-hoc C# `eval` snippets (reviewable, versioned, cheaper). The first one planned is an asset refresh.
+- Also installed the .NET 10 SDK for the VS Code C# tooling. Tests verified on it.
+- **Decision by:** you (open-editor workflow, commands over eval); AI (setup, verification).
+
 ---
 
 ## Highlights (raw material for README / CV)
