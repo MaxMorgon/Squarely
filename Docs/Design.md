@@ -15,16 +15,18 @@ A block-placement puzzle game (the genre of 1010!, Block Blast, etc.), built as 
 
 ### Placement
 - A piece can be placed anywhere it fits entirely on empty cells inside the board.
-- After each placement, every **full row and full column** is cleared simultaneously (a cell on both a full row and column is cleared once).
+- After each placement, every completed **board pattern** is cleared simultaneously (a cell in several matches is cleared once).
+- By default the patterns are the **full rows and columns**. Modes can add custom patterns: pixel-art images, small shapes like a smiley, abstract shapes. They can be anchored to a spot or match anywhere, and each is worth its own points. A completed image could be "tattooed" into the background.
 
 ### Scoring
 - Placing a piece: +1 point per cell placed.
-- Clearing lines: points per line, with a bonus for clearing multiple lines in one placement.
-- **Combo/streak:** consecutive placements that clear lines increase a multiplier; a placement with no clear resets it.
+- Completing patterns: each pattern's own points (lines have a default value), plus a bonus for completing several in one placement.
+- **Combo/streak:** consecutive placements that complete patterns increase a multiplier; a placement with no clear resets it.
 - Exact numbers live in config, not code.
 
-### Game over
-- When none of the remaining pieces in the hand fit anywhere on the board.
+### Game resolution
+- A game resolves as **won** or **lost**, decided by configurable resolution rules.
+- Default: **lost** when none of the pieces in the hand fit anywhere on the board ("no moves left"). Other modes can add rules such as reaching a target score (won) or a move limit.
 
 ## Live-ops goals
 
@@ -32,7 +34,7 @@ The product should make new content and features cheap to ship:
 
 - **Data-driven config** — board size, piece set, piece weights, scoring values, hand size are data, not constants. Can later be delivered remotely.
 - **Extensible rules** — new mechanics (special cells, blockers, power-ups, objectives) plug into the sim through well-defined hooks rather than editing the core loop.
-- **Event output** — the sim emits events (placed, cleared, scored, combo, game over) that the Unity layer, analytics, and meta systems consume.
+- **Event output** — the sim emits events (placed, cleared, scored, combo, resolved) that the Unity layer, analytics, and meta systems consume.
 - **Meta layer separate from core** — progression, currencies, quests, events sit outside the core puzzle sim and react to its events.
 - **Deterministic + seeded** — enables replays, bug reproduction, daily challenges with a shared seed, and server validation later.
 
