@@ -1,0 +1,9 @@
+{
+    "name": "Squarely.Presentation",
+    "rootNamespace": "Squarely.Presentation",
+    "references": [
+        "Squarely.Simulation",
+        "Unity.InputSystem"
+    ],
+    "autoReferenced": true
+}

@@ -12,6 +12,8 @@ Design and rules: [Docs/Design.md](Docs/Design.md) — read it before working on
 | `Sim.Tests/` | NUnit tests for Sim (`Squarely.Simulation.Tests`). Runs via `dotnet test` and in Unity's Test Runner. |
 | `Unity/` | Unity 6000.3 (URP 2D) project. Consumes `Sim/Src` and `Sim.Tests/Src` as local UPM packages via `Unity/Packages/manifest.json`. |
 | `Squarely.sln` | Solution for Sim + Sim.Tests (Unity has its own generated projects). |
+| `Unity/Assets/Scripts/Presentation/` | `Squarely.Presentation` asmdef: views, input, event playback. References `Squarely.Simulation` and `Unity.InputSystem`. |
+| `Unity/Assets/Editor/` | `Squarely.Editor` asmdef (Editor-only): editor tools and custom Unity CLI commands (`Cli/`). |
 
 ## Architecture rules
 
@@ -26,6 +28,18 @@ Design and rules: [Docs/Design.md](Docs/Design.md) — read it before working on
 dotnet build Squarely.sln
 dotnet test Squarely.sln -v q
 ```
+
+Unity CLI (drives the user's open editor; run from `Unity/`, binary at `%LOCALAPPDATA%\Unity\bin\unity.exe`, pass `--caller plugin --skill unity-cli`):
+
+```sh
+unity status --json                      # editor connected? state "ready"
+unity command asset refresh              # import new/changed files, generate .meta files (custom command)
+unity command recompile                  # then poll: unity command recompile_status
+unity command console status             # compile errors / console counts
+unity command test run --mode EditMode   # run tests in the editor (long output; read the Summary only)
+```
+
+Custom commands are `[CliCommand]` static methods in `Unity/Assets/Editor/Cli/` (attributes come from the `Unity.Pipeline.Attributes` assembly). Turn any operation we repeat into one, rather than re-sending `eval` snippets.
 
 After changing Sim or Sim.Tests code, run `dotnet test Squarely.sln -v q` once at the end of the task (not after every edit) and make sure it passes before calling work done. Skip it for doc-only or Unity-only changes. Unity-side changes can't be verified from the CLI — say so and ask the user to check in the editor.
 
@@ -60,7 +74,7 @@ Not: `if (value < 0) return 0;`
 
 - **One top-level type per file** (class, struct, interface, enum), file named after the type. Only exception: a type nested inside another type.
 - Namespaces mirror assemblies: `Squarely.Simulation`, `Squarely.Simulation.Tests`. (Not `Squarely.Sim` — it would clash with the `Sim` class.)
-- Sources go under `Src/` in each package. Every new file/folder there needs a Unity `.meta` file — let Unity generate it; don't hand-write GUIDs. Mention to the user when new files will need Unity to import them.
+- Sources go under `Src/` in each package. Every new file/folder there (and under `Unity/Assets/`) needs a Unity `.meta` file — let Unity generate it; don't hand-write GUIDs. After adding files, run `unity command asset refresh` and commit the generated `.meta` files with them. If the editor isn't connected, ask the user to focus Unity instead.
 - Nullable and implicit usings are disabled; write explicit `using` directives.
 - New Sim features come with tests in `Sim.Tests`.
 

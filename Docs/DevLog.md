@@ -85,6 +85,16 @@ Each comment below improved the design:
 - Also installed the .NET 10 SDK for the VS Code C# tooling. Tests verified on it.
 - **Decision by:** you (open-editor workflow, commands over eval); AI (setup, verification).
 
+### 11. PR housekeeping
+- An accidental merge order (the stacked PR merged into its base branch first) was untangled. The feature branch was reset, the work re-opened as a **draft** stacked PR so it couldn't be merged early, then retargeted to `main` once its base had merged.
+- You granted scoped permissions (`git reset --hard`, `git push --force-with-lease`) in local, uncommitted settings instead of blanket access.
+
+### 12. First custom CLI command + presentation assembly
+- Added **`unity command asset refresh`**, a project-specific `[CliCommand]` that imports new files and generates `.meta` files in the open editor. This removes the manual "switch to Unity" step from the AI workflow. Tested end to end with a temporary file.
+- Found and worked around a documentation error: the CLI attributes live in `Unity.Pipeline.Attributes`, not `Unity.Pipeline`.
+- Prepared the **`Squarely.Presentation`** asmdef (references Sim + Input System) and the Editor-only **`Squarely.Editor`** asmdef, ready for the view layer.
+- **Decision by:** both.
+
 ---
 
 ## Highlights (raw material for README / CV)
