@@ -4,38 +4,45 @@ using System.Collections.Generic;
 namespace Squarely.Simulation
 {
     /// <summary>
-    /// An immutable piece shape: a set of cell offsets, normalized so the lowest X and Y are 0.
+    /// An immutable piece definition: cell offsets (normalized so the lowest X and Y are 0)
+    /// and the cell type its blocks become when placed.
     /// </summary>
     public sealed class PieceShape
     {
-        private readonly GridPos[] _cells;
+        private readonly GridPos[] _offsets;
 
-        public PieceShape(string id, IEnumerable<GridPos> cells)
+        public PieceShape(string id, IEnumerable<GridPos> offsets, string cellTypeId = Cell.BlockType)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentException("Piece id is required.", nameof(id));
 
-            if (cells == null)
-                throw new ArgumentNullException(nameof(cells));
+            if (offsets == null)
+                throw new ArgumentNullException(nameof(offsets));
+
+            if (string.IsNullOrEmpty(cellTypeId))
+                throw new ArgumentException($"Piece '{id}' needs a cell type id.", nameof(cellTypeId));
 
             Id = id;
-            _cells = Normalize(cells);
+            CellTypeId = cellTypeId;
+            _offsets = Normalize(offsets);
 
-            if (_cells.Length == 0)
-                throw new ArgumentException($"Piece '{id}' has no cells.", nameof(cells));
+            if (_offsets.Length == 0)
+                throw new ArgumentException($"Piece '{id}' has no cells.", nameof(offsets));
 
-            foreach (GridPos cell in _cells)
+            foreach (GridPos offset in _offsets)
             {
-                Width = Math.Max(Width, cell.X + 1);
-                Height = Math.Max(Height, cell.Y + 1);
+                Width = Math.Max(Width, offset.X + 1);
+                Height = Math.Max(Height, offset.Y + 1);
             }
         }
 
         public string Id { get; }
 
-        public IReadOnlyList<GridPos> Cells => _cells;
+        public string CellTypeId { get; }
 
-        public int CellCount => _cells.Length;
+        public IReadOnlyList<GridPos> Offsets => _offsets;
+
+        public int CellCount => _offsets.Length;
 
         public int Width { get; }
 
@@ -47,13 +54,13 @@ namespace Squarely.Simulation
         /// Builds a shape from a text pattern. Rows are separated by '/', written top row first.
         /// '#' is a filled cell, '.' is empty. Example: an L shape is "#./#./##".
         /// </summary>
-        public static PieceShape FromPattern(string id, string pattern)
+        public static PieceShape FromPattern(string id, string pattern, string cellTypeId = Cell.BlockType)
         {
             if (string.IsNullOrEmpty(pattern))
                 throw new ArgumentException($"Piece '{id}' has an empty pattern.", nameof(pattern));
 
             string[] rows = pattern.Split('/');
-            var cells = new List<GridPos>();
+            var offsets = new List<GridPos>();
 
             for (int rowIndex = 0; rowIndex < rows.Length; rowIndex++)
             {
@@ -66,25 +73,25 @@ namespace Squarely.Simulation
                     char symbol = row[x];
 
                     if (symbol == '#')
-                        cells.Add(new GridPos(x, y));
+                        offsets.Add(new GridPos(x, y));
                     else if (symbol != '.')
                         throw new FormatException($"Piece '{id}' has invalid character '{symbol}' in pattern '{pattern}'.");
                 }
             }
 
-            return new PieceShape(id, cells);
+            return new PieceShape(id, offsets, cellTypeId);
         }
 
         #endregion
 
-        private static GridPos[] Normalize(IEnumerable<GridPos> cells)
+        private static GridPos[] Normalize(IEnumerable<GridPos> offsets)
         {
             var unique = new List<GridPos>();
 
-            foreach (GridPos cell in cells)
+            foreach (GridPos offset in offsets)
             {
-                if (!unique.Contains(cell))
-                    unique.Add(cell);
+                if (!unique.Contains(offset))
+                    unique.Add(offset);
             }
 
             if (unique.Count == 0)
@@ -93,10 +100,10 @@ namespace Squarely.Simulation
             int minX = int.MaxValue;
             int minY = int.MaxValue;
 
-            foreach (GridPos cell in unique)
+            foreach (GridPos offset in unique)
             {
-                minX = Math.Min(minX, cell.X);
-                minY = Math.Min(minY, cell.Y);
+                minX = Math.Min(minX, offset.X);
+                minY = Math.Min(minY, offset.Y);
             }
 
             var normalized = new GridPos[unique.Count];

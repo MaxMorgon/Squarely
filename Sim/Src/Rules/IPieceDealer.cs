@@ -7,6 +7,6 @@ namespace Squarely.Simulation
     /// </summary>
     public interface IPieceDealer
     {
-        PieceShape Deal(Board board, Hand hand, DeterministicRandom random);
+        PieceShape Deal(IReadOnlyBoard board, IReadOnlyHand hand, DeterministicRandom random);
     }
 }

@@ -4,9 +4,10 @@ using System.Collections.Generic;
 namespace Squarely.Simulation
 {
     /// <summary>
-    /// The play grid. Handles placement and line clearing only; knows nothing about score or hands.
+    /// The play grid. Handles cell state and placement only; matching lives in <see cref="PatternMatcher"/>.
+    /// Mutators are internal so only the sim (and tests) can change the board.
     /// </summary>
-    public sealed class Board
+    public sealed class Board : IReadOnlyBoard
     {
         private readonly Cell[] _cells;
 
@@ -27,7 +28,7 @@ namespace Squarely.Simulation
 
         public int Height { get; }
 
-        #region Cell access
+        #region Reading
 
         public bool Contains(GridPos pos)
         {
@@ -39,31 +40,14 @@ namespace Squarely.Simulation
             return _cells[IndexOf(pos)];
         }
 
-        public void SetCell(GridPos pos, Cell cell)
-        {
-            _cells[IndexOf(pos)] = cell;
-        }
-
         public bool IsEmpty(GridPos pos)
         {
             return GetCell(pos).IsEmpty;
         }
 
-        private int IndexOf(GridPos pos)
-        {
-            if (!Contains(pos))
-                throw new ArgumentOutOfRangeException(nameof(pos), $"Position {pos} is outside the {Width}x{Height} board.");
-
-            return pos.Y * Width + pos.X;
-        }
-
-        #endregion
-
-        #region Placement
-
         public bool CanPlace(PieceShape shape, GridPos origin)
         {
-            foreach (GridPos offset in shape.Cells)
+            foreach (GridPos offset in shape.Offsets)
             {
                 GridPos pos = origin + offset;
 
@@ -88,72 +72,54 @@ namespace Squarely.Simulation
             return false;
         }
 
-        public void Place(PieceShape shape, GridPos origin, Cell cell)
+        private int IndexOf(GridPos pos)
         {
-            if (!CanPlace(shape, origin))
-                throw new InvalidOperationException($"Piece '{shape.Id}' cannot be placed at {origin}.");
+            if (!Contains(pos))
+                throw new ArgumentOutOfRangeException(nameof(pos), $"Position {pos} is outside the {Width}x{Height} board.");
 
-            foreach (GridPos offset in shape.Cells)
-                SetCell(origin + offset, cell);
+            return pos.Y * Width + pos.X;
         }
 
         #endregion
 
-        #region Line clearing
+        #region Mutation
 
-        public BoardLines FindFullLines()
+        internal void SetCell(GridPos pos, Cell cell)
         {
-            var rows = new List<int>();
-            var columns = new List<int>();
+            _cells[IndexOf(pos)] = cell;
+        }
 
-            for (int y = 0; y < Height; y++)
-            {
-                if (IsRowFull(y))
-                    rows.Add(y);
-            }
+        internal void Place(PieceShape shape, GridPos origin)
+        {
+            if (!CanPlace(shape, origin))
+                throw new InvalidOperationException($"Piece '{shape.Id}' cannot be placed at {origin}.");
 
-            for (int x = 0; x < Width; x++)
-            {
-                if (IsColumnFull(x))
-                    columns.Add(x);
-            }
+            var cell = new Cell(shape.CellTypeId);
 
-            if (rows.Count == 0 && columns.Count == 0)
-                return BoardLines.None;
-
-            return new BoardLines(rows, columns);
+            foreach (GridPos offset in shape.Offsets)
+                SetCell(origin + offset, cell);
         }
 
         /// <summary>
-        /// Clears all given rows and columns at once. A cell on both a cleared row and column is cleared once.
-        /// Returns the cleared cells in board order (bottom row first, left to right).
+        /// Empties the given positions. Duplicates are cleared once.
+        /// Returns the positions that were filled before, in board order (bottom row first, left to right).
         /// </summary>
-        public IReadOnlyList<GridPos> ClearLines(BoardLines lines)
+        internal IReadOnlyList<GridPos> ClearCells(IEnumerable<GridPos> positions)
         {
+            var toClear = new bool[_cells.Length];
+
+            foreach (GridPos pos in positions)
+                toClear[IndexOf(pos)] = true;
+
             var cleared = new List<GridPos>();
-
-            if (lines.IsEmpty)
-                return cleared;
-
-            var clearRow = new bool[Height];
-            var clearColumn = new bool[Width];
-
-            foreach (int y in lines.Rows)
-                clearRow[y] = true;
-
-            foreach (int x in lines.Columns)
-                clearColumn[x] = true;
 
             for (int y = 0; y < Height; y++)
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    if (!clearRow[y] && !clearColumn[x])
-                        continue;
-
                     var pos = new GridPos(x, y);
 
-                    if (IsEmpty(pos))
+                    if (!toClear[IndexOf(pos)] || IsEmpty(pos))
                         continue;
 
                     SetCell(pos, Cell.Empty);
@@ -162,28 +128,6 @@ namespace Squarely.Simulation
             }
 
             return cleared;
-        }
-
-        private bool IsRowFull(int y)
-        {
-            for (int x = 0; x < Width; x++)
-            {
-                if (IsEmpty(new GridPos(x, y)))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private bool IsColumnFull(int x)
-        {
-            for (int y = 0; y < Height; y++)
-            {
-                if (IsEmpty(new GridPos(x, y)))
-                    return false;
-            }
-
-            return true;
         }
 
         #endregion

@@ -1,28 +1,28 @@
 namespace Squarely.Simulation
 {
     /// <summary>
-    /// Place the piece in a hand slot so its bottom-left corner is at Origin.
+    /// Place a piece from the hand, identified by its instance id, with its bottom-left corner at Origin.
     /// </summary>
     public sealed class PlacePieceCommand : ISimCommand
     {
-        public PlacePieceCommand(int slot, GridPos origin)
+        public PlacePieceCommand(int pieceInstanceId, GridPos origin)
         {
-            Slot = slot;
+            PieceInstanceId = pieceInstanceId;
             Origin = origin;
         }
 
-        public int Slot { get; }
+        public int PieceInstanceId { get; }
 
         public GridPos Origin { get; }
 
         public CommandResult Execute(Sim sim)
         {
-            return sim.PlacePiece(Slot, Origin);
+            return sim.PlacePiece(PieceInstanceId, Origin);
         }
 
         public override string ToString()
         {
-            return $"Place slot {Slot} at {Origin}";
+            return $"Place piece #{PieceInstanceId} at {Origin}";
         }
     }
 }

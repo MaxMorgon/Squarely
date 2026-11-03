@@ -3,47 +3,82 @@ using System;
 namespace Squarely.Simulation
 {
     /// <summary>
-    /// The player's pieces. A fixed number of slots; each holds a piece or is empty (null).
+    /// The player's pieces: a fixed number of slots, each holding a piece instance or empty.
+    /// Mutators are internal so only the sim can change the hand.
     /// </summary>
-    public sealed class Hand
+    public sealed class Hand : IReadOnlyHand
     {
-        private readonly PieceShape[] _slots;
+        private readonly PieceInstance[] _slots;
 
         public Hand(int size)
         {
             if (size <= 0)
                 throw new ArgumentOutOfRangeException(nameof(size), "Hand size must be positive.");
 
-            _slots = new PieceShape[size];
+            _slots = new PieceInstance[size];
         }
 
         public int Size => _slots.Length;
 
-        public bool IsValidSlot(int slot)
-        {
-            return slot >= 0 && slot < _slots.Length;
-        }
+        #region Reading
 
-        public PieceShape Get(int slot)
+        public PieceInstance GetSlot(int slot)
         {
             return _slots[slot];
         }
 
-        public bool IsEmpty(int slot)
+        public bool IsSlotEmpty(int slot)
         {
             return _slots[slot] == null;
         }
 
-        public void Set(int slot, PieceShape piece)
+        public int FindSlot(int instanceId)
         {
-            _slots[slot] = piece;
+            for (int slot = 0; slot < _slots.Length; slot++)
+            {
+                if (_slots[slot] != null && _slots[slot].InstanceId == instanceId)
+                    return slot;
+            }
+
+            return -1;
         }
 
-        public PieceShape Take(int slot)
+        #endregion
+
+        #region Mutation
+
+        /// <summary>
+        /// Puts the piece in the first empty slot and returns that slot.
+        /// </summary>
+        internal int Add(PieceInstance piece)
         {
-            PieceShape piece = _slots[slot];
+            if (piece == null)
+                throw new ArgumentNullException(nameof(piece));
+
+            for (int slot = 0; slot < _slots.Length; slot++)
+            {
+                if (_slots[slot] != null)
+                    continue;
+
+                _slots[slot] = piece;
+                return slot;
+            }
+
+            throw new InvalidOperationException("The hand is full.");
+        }
+
+        internal PieceInstance Take(int instanceId)
+        {
+            int slot = FindSlot(instanceId);
+
+            if (slot < 0)
+                throw new InvalidOperationException($"Piece instance {instanceId} is not in the hand.");
+
+            PieceInstance piece = _slots[slot];
             _slots[slot] = null;
             return piece;
         }
+
+        #endregion
     }
 }

@@ -16,6 +16,7 @@ namespace Squarely.Simulation
                 BoardHeight = 8,
                 HandSize = 3,
                 Pieces = CreatePieces(),
+                Clearing = new ClearingConfig(),
                 Scoring = new ScoringConfig(),
             };
         }

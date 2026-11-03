@@ -13,7 +13,7 @@ namespace Squarely.Simulation.Tests
             Assert.That(shape.CellCount, Is.EqualTo(1));
             Assert.That(shape.Width, Is.EqualTo(1));
             Assert.That(shape.Height, Is.EqualTo(1));
-            Assert.That(shape.Cells[0], Is.EqualTo(new GridPos(0, 0)));
+            Assert.That(shape.Offsets[0], Is.EqualTo(new GridPos(0, 0)));
         }
 
         [Test]
@@ -23,7 +23,7 @@ namespace Squarely.Simulation.Tests
             // ##
             PieceShape shape = PieceShape.FromPattern("corner", "#./##");
 
-            Assert.That(shape.Cells, Is.EquivalentTo(new[]
+            Assert.That(shape.Offsets, Is.EquivalentTo(new[]
             {
                 new GridPos(0, 1),
                 new GridPos(0, 0),
@@ -38,7 +38,7 @@ namespace Squarely.Simulation.Tests
         {
             PieceShape shape = PieceShape.FromPattern("padded", "../.#");
 
-            Assert.That(shape.Cells, Is.EquivalentTo(new[] { new GridPos(0, 0) }));
+            Assert.That(shape.Offsets, Is.EquivalentTo(new[] { new GridPos(0, 0) }));
             Assert.That(shape.Width, Is.EqualTo(1));
             Assert.That(shape.Height, Is.EqualTo(1));
         }
@@ -56,12 +56,19 @@ namespace Squarely.Simulation.Tests
         }
 
         [Test]
-        public void Constructor_DuplicateCells_AreRemoved()
+        public void FromPattern_DefaultCellType_IsBlock()
+        {
+            Assert.That(PieceShape.FromPattern("dot", "#").CellTypeId, Is.EqualTo(Cell.BlockType));
+            Assert.That(PieceShape.FromPattern("dot", "#", "stone").CellTypeId, Is.EqualTo("stone"));
+        }
+
+        [Test]
+        public void Constructor_DuplicateOffsets_AreRemoved()
         {
             var shape = new PieceShape("dupes", new[] { new GridPos(2, 3), new GridPos(2, 3) });
 
             Assert.That(shape.CellCount, Is.EqualTo(1));
-            Assert.That(shape.Cells[0], Is.EqualTo(new GridPos(0, 0)));
+            Assert.That(shape.Offsets[0], Is.EqualTo(new GridPos(0, 0)));
         }
 
         [Test]

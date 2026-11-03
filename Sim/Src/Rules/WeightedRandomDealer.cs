@@ -22,7 +22,7 @@ namespace Squarely.Simulation
                 if (piece.Weight <= 0)
                     continue;
 
-                _shapes.Add(PieceShape.FromPattern(piece.Id, piece.Pattern));
+                _shapes.Add(PieceShape.FromPattern(piece.Id, piece.Pattern, piece.CellTypeId));
                 _weights.Add(piece.Weight);
                 _totalWeight += piece.Weight;
             }
@@ -31,7 +31,7 @@ namespace Squarely.Simulation
                 throw new ArgumentException("Dealer needs at least one piece with positive weight.", nameof(pieces));
         }
 
-        public PieceShape Deal(Board board, Hand hand, DeterministicRandom random)
+        public PieceShape Deal(IReadOnlyBoard board, IReadOnlyHand hand, DeterministicRandom random)
         {
             int roll = random.NextInt(_totalWeight);
 

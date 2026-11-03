@@ -3,32 +3,10 @@ using System.Collections.Generic;
 
 namespace Squarely.Simulation.Tests
 {
-    /// <summary>
-    /// Deals pieces from a fixed list, in order, so tests can script exact scenarios.
-    /// </summary>
-    public sealed class ScriptedDealer : IPieceDealer
-    {
-        private readonly Queue<PieceShape> _pieces;
-
-        public ScriptedDealer(params string[] patterns)
-        {
-            _pieces = new Queue<PieceShape>();
-
-            for (int i = 0; i < patterns.Length; i++)
-                _pieces.Enqueue(PieceShape.FromPattern($"scripted_{i}", patterns[i]));
-        }
-
-        public PieceShape Deal(Board board, Hand hand, DeterministicRandom random)
-        {
-            if (_pieces.Count == 0)
-                throw new InvalidOperationException("ScriptedDealer ran out of pieces.");
-
-            return _pieces.Dequeue();
-        }
-    }
-
     public static class TestHelpers
     {
+        #region Setup
+
         /// <summary>
         /// Fills cells from a pattern (same format as pieces: '/' rows, top first, '#' filled),
         /// with the pattern's bottom-left at the board's bottom-left.
@@ -57,9 +35,29 @@ namespace Squarely.Simulation.Tests
                 BoardHeight = height,
                 HandSize = handSize,
                 Pieces = new List<PieceDefinition> { new PieceDefinition("dot", "#") },
-                Scoring = new ScoringConfig(),
             };
         }
+
+        /// <summary>
+        /// Creates a sim that deals from the given scripted dealer, registered through the rule factory.
+        /// </summary>
+        public static Sim CreateSim(SimConfig config, ScriptedDealer dealer, ulong seed = 1)
+        {
+            RuleFactory rules = RuleFactory.CreateDefault();
+            rules.RegisterDealer(ScriptedDealer.Id, _ => dealer);
+            config.DealerId = ScriptedDealer.Id;
+
+            return new Sim(config, seed, rules);
+        }
+
+        public static int SlotInstanceId(Sim sim, int slot)
+        {
+            return sim.Hand.GetSlot(slot).InstanceId;
+        }
+
+        #endregion
+
+        #region Event queries
 
         public static T Single<T>(IReadOnlyList<ISimEvent> events) where T : class, ISimEvent
         {
@@ -82,17 +80,6 @@ namespace Squarely.Simulation.Tests
             return found;
         }
 
-        public static int Count<T>(IReadOnlyList<ISimEvent> events) where T : ISimEvent
-        {
-            int count = 0;
-
-            foreach (ISimEvent simEvent in events)
-            {
-                if (simEvent is T)
-                    count++;
-            }
-
-            return count;
-        }
+        #endregion
     }
 }

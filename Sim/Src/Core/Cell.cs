@@ -3,31 +3,34 @@ using System;
 namespace Squarely.Simulation
 {
     /// <summary>
-    /// The content of one board cell. Type 0 means empty.
+    /// The content of one board cell, identified by a string type id. A null type id means empty,
+    /// so a default Cell is an empty cell.
     /// Per-cell effects that are independent of the type (e.g. fire) will live in separate board layers.
     /// </summary>
     public readonly struct Cell : IEquatable<Cell>
     {
-        public const int EmptyType = 0;
-        public const int BlockType = 1;
+        public const string BlockType = "block";
 
-        public static readonly Cell Empty = new Cell(EmptyType);
+        public static readonly Cell Empty = default;
         public static readonly Cell Block = new Cell(BlockType);
 
-        public readonly int Type;
+        public readonly string TypeId;
 
-        public Cell(int type)
+        public Cell(string typeId)
         {
-            Type = type;
+            if (string.IsNullOrEmpty(typeId))
+                throw new ArgumentException("A filled cell needs a type id. Use Cell.Empty for empty cells.", nameof(typeId));
+
+            TypeId = typeId;
         }
 
-        public bool IsEmpty => Type == EmptyType;
+        public bool IsEmpty => TypeId == null;
 
         #region Equality
 
         public bool Equals(Cell other)
         {
-            return Type == other.Type;
+            return string.Equals(TypeId, other.TypeId, StringComparison.Ordinal);
         }
 
         public override bool Equals(object obj)
@@ -37,7 +40,7 @@ namespace Squarely.Simulation
 
         public override int GetHashCode()
         {
-            return Type;
+            return TypeId == null ? 0 : StringComparer.Ordinal.GetHashCode(TypeId);
         }
 
         public static bool operator ==(Cell a, Cell b)
@@ -54,7 +57,7 @@ namespace Squarely.Simulation
 
         public override string ToString()
         {
-            return IsEmpty ? "Empty" : $"Type {Type}";
+            return IsEmpty ? "Empty" : TypeId;
         }
     }
 }

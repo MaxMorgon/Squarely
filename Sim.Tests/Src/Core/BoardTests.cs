@@ -62,14 +62,14 @@ namespace Squarely.Simulation.Tests
         }
 
         [Test]
-        public void Place_FillsShapeCells()
+        public void Place_FillsShapeCells_WithPieceCellType()
         {
             var board = new Board(8, 8);
-            PieceShape corner = PieceShape.FromPattern("corner", "#./##");
+            PieceShape corner = PieceShape.FromPattern("corner", "#./##", "stone");
 
-            board.Place(corner, new GridPos(3, 4), Cell.Block);
+            board.Place(corner, new GridPos(3, 4));
 
-            Assert.That(board.IsEmpty(new GridPos(3, 4)), Is.False);
+            Assert.That(board.GetCell(new GridPos(3, 4)).TypeId, Is.EqualTo("stone"));
             Assert.That(board.IsEmpty(new GridPos(4, 4)), Is.False);
             Assert.That(board.IsEmpty(new GridPos(3, 5)), Is.False);
             Assert.That(board.IsEmpty(new GridPos(4, 5)), Is.True);
@@ -81,7 +81,7 @@ namespace Squarely.Simulation.Tests
             var board = new Board(8, 8);
             PieceShape line = PieceShape.FromPattern("line", "###");
 
-            Assert.Throws<InvalidOperationException>(() => board.Place(line, new GridPos(6, 0), Cell.Block));
+            Assert.Throws<InvalidOperationException>(() => board.Place(line, new GridPos(6, 0)));
         }
 
         [Test]
@@ -89,84 +89,43 @@ namespace Squarely.Simulation.Tests
         {
             var board = new Board(3, 3);
             TestHelpers.Fill(board, "###/#../###");
-            PieceShape line2 = PieceShape.FromPattern("line2", "##");
-            PieceShape dot = PieceShape.FromPattern("dot", "#");
 
-            Assert.That(board.CanPlaceAnywhere(line2), Is.True);
-            Assert.That(board.CanPlaceAnywhere(dot), Is.True);
+            Assert.That(board.CanPlaceAnywhere(PieceShape.FromPattern("line2", "##")), Is.True);
+            Assert.That(board.CanPlaceAnywhere(PieceShape.FromPattern("dot", "#")), Is.True);
             Assert.That(board.CanPlaceAnywhere(PieceShape.FromPattern("line3", "###")), Is.False);
         }
 
         #endregion
 
-        #region Line clearing
+        #region Clearing
 
         [Test]
-        public void FindFullLines_NoFullLines_ReturnsEmpty()
+        public void ClearCells_DuplicatesClearedOnce_InBoardOrder()
         {
             var board = new Board(3, 3);
-            TestHelpers.Fill(board, "##./##./...");
+            TestHelpers.Fill(board, ".#./.../##.");
 
-            Assert.That(board.FindFullLines().IsEmpty, Is.True);
+            var cleared = board.ClearCells(new[]
+            {
+                new GridPos(1, 2),
+                new GridPos(0, 0),
+                new GridPos(1, 0),
+                new GridPos(0, 0),
+            });
+
+            Assert.That(cleared, Is.EqualTo(new[] { new GridPos(0, 0), new GridPos(1, 0), new GridPos(1, 2) }));
+            Assert.That(board.IsEmpty(new GridPos(1, 2)), Is.True);
         }
 
         [Test]
-        public void FindFullLines_FullRow_IsFound()
+        public void ClearCells_EmptyPositions_AreNotReported()
         {
             var board = new Board(3, 3);
-            TestHelpers.Fill(board, "###");
+            board.SetCell(new GridPos(2, 2), Cell.Block);
 
-            BoardLines lines = board.FindFullLines();
+            var cleared = board.ClearCells(new[] { new GridPos(0, 0), new GridPos(2, 2) });
 
-            Assert.That(lines.Rows, Is.EqualTo(new[] { 0 }));
-            Assert.That(lines.Columns, Is.Empty);
-        }
-
-        [Test]
-        public void FindFullLines_FullColumn_IsFound()
-        {
-            var board = new Board(3, 3);
-            TestHelpers.Fill(board, "..#/..#/..#");
-
-            BoardLines lines = board.FindFullLines();
-
-            Assert.That(lines.Rows, Is.Empty);
-            Assert.That(lines.Columns, Is.EqualTo(new[] { 2 }));
-        }
-
-        [Test]
-        public void ClearLines_RowAndColumn_SharedCellClearedOnce()
-        {
-            var board = new Board(3, 3);
-            // Row 0 and column 0 full, plus one extra cell that must survive.
-            TestHelpers.Fill(board, "#../##./###");
-
-            BoardLines lines = board.FindFullLines();
-            var cleared = board.ClearLines(lines);
-
-            Assert.That(lines.Rows, Is.EqualTo(new[] { 0 }));
-            Assert.That(lines.Columns, Is.EqualTo(new[] { 0 }));
-            Assert.That(cleared.Count, Is.EqualTo(5));
-            Assert.That(board.IsEmpty(new GridPos(1, 1)), Is.False);
-            Assert.That(board.IsEmpty(new GridPos(0, 0)), Is.True);
-            Assert.That(board.IsEmpty(new GridPos(2, 0)), Is.True);
-            Assert.That(board.IsEmpty(new GridPos(0, 2)), Is.True);
-        }
-
-        [Test]
-        public void ClearLines_MultipleRows_AllCleared()
-        {
-            // 3 wide, 4 tall: rows 0 and 1 full, one survivor on row 3 (no full column).
-            var board = new Board(3, 4);
-            TestHelpers.Fill(board, "#../.../###/###");
-
-            BoardLines lines = board.FindFullLines();
-            var cleared = board.ClearLines(lines);
-
-            Assert.That(lines.Rows, Is.EqualTo(new[] { 0, 1 }));
-            Assert.That(lines.Columns, Is.Empty);
-            Assert.That(cleared.Count, Is.EqualTo(6));
-            Assert.That(board.IsEmpty(new GridPos(0, 3)), Is.False);
+            Assert.That(cleared, Is.EqualTo(new[] { new GridPos(2, 2) }));
         }
 
         #endregion

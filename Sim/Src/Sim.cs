@@ -5,59 +5,77 @@ namespace Squarely.Simulation
 {
     /// <summary>
     /// One play session of the puzzle. Owns all gameplay state and runs the turn flow.
-    /// Change state only through <see cref="Execute"/>; read it freely through the properties.
+    /// Outside code reads state through read-only views and changes it only through <see cref="Execute"/>.
     /// </summary>
     public sealed class Sim
     {
+        private readonly Board _board;
+        private readonly Hand _hand;
+        private readonly DeterministicRandom _random;
         private readonly IPieceDealer _dealer;
         private readonly IScoringRule _scoringRule;
+        private readonly List<IResolutionRule> _resolutionRules;
+        private readonly List<BoardPattern> _patterns;
+
+        private int _nextInstanceId = 1;
 
         public Sim(SimConfig config, ulong seed)
-            : this(config, seed, null, null)
+            : this(config, seed, RuleFactory.CreateDefault())
         {
         }
 
-        /// <param name="dealer">Null uses a <see cref="WeightedRandomDealer"/> over the config's pieces.</param>
-        /// <param name="scoringRule">Null uses a <see cref="DefaultScoringRule"/> with the config's scoring.</param>
-        public Sim(SimConfig config, ulong seed, IPieceDealer dealer, IScoringRule scoringRule)
+        /// <param name="rules">Creates the dealer, scoring and resolution rules named in the config.</param>
+        public Sim(SimConfig config, ulong seed, RuleFactory rules)
         {
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
 
+            if (rules == null)
+                throw new ArgumentNullException(nameof(rules));
+
             config.Validate();
 
-            Config = config;
             Seed = seed;
-            Random = new DeterministicRandom(seed);
-            Board = new Board(config.BoardWidth, config.BoardHeight);
-            Hand = new Hand(config.HandSize);
+            _random = new DeterministicRandom(seed);
+            _board = new Board(config.BoardWidth, config.BoardHeight);
+            _hand = new Hand(config.HandSize);
+            _patterns = config.Clearing.BuildPatterns(config.BoardWidth, config.BoardHeight);
 
-            _dealer = dealer ?? new WeightedRandomDealer(config.Pieces);
-            _scoringRule = scoringRule ?? new DefaultScoringRule(config.Scoring);
+            _dealer = rules.CreateDealer(config);
+            _scoringRule = rules.CreateScoringRule(config);
+            _resolutionRules = rules.CreateResolutionRules(config);
 
             // The opening hand is part of the initial state; the view reads it directly.
             RefillHand(new List<ISimEvent>());
-            UpdateGameOver(new List<ISimEvent>());
+            CheckResolution(new List<ISimEvent>());
         }
 
         #region State
 
-        public SimConfig Config { get; }
-
         public ulong Seed { get; }
 
-        public DeterministicRandom Random { get; }
+        /// <summary>Current RNG state, for snapshots. The RNG itself is not exposed, so nothing outside can advance it.</summary>
+        public ulong RandomState => _random.State;
 
-        public Board Board { get; }
+        public IReadOnlyBoard Board => _board;
 
-        public Hand Hand { get; }
+        public IReadOnlyHand Hand => _hand;
+
+        /// <summary>All patterns that clear when matched: rows, columns, then custom patterns.</summary>
+        public IReadOnlyList<BoardPattern> Patterns => _patterns;
 
         public int Score { get; private set; }
 
-        /// <summary>Number of consecutive placements that cleared lines. 0 = no active combo.</summary>
+        /// <summary>Number of consecutive placements that matched a pattern. 0 = no active combo.</summary>
         public int Combo { get; private set; }
 
-        public bool IsGameOver { get; private set; }
+        /// <summary>Null while the game is in progress.</summary>
+        public GameResolution Resolution { get; private set; }
+
+        public bool IsResolved => Resolution != null;
+
+        /// <summary>Mutable board for tests and in-assembly code only.</summary>
+        internal Board EditableBoard => _board;
 
         #endregion
 
@@ -71,46 +89,57 @@ namespace Squarely.Simulation
 
         #region Turn flow
 
-        internal CommandResult PlacePiece(int slot, GridPos origin)
+        internal CommandResult PlacePiece(int instanceId, GridPos origin)
         {
-            if (IsGameOver)
-                return CommandResult.Failed("The game is over.");
+            if (IsResolved)
+                return CommandResult.Failed("The game is already resolved.");
 
-            if (!Hand.IsValidSlot(slot))
-                return CommandResult.Failed($"Slot {slot} does not exist.");
+            int slot = _hand.FindSlot(instanceId);
 
-            if (Hand.IsEmpty(slot))
-                return CommandResult.Failed($"Slot {slot} is empty.");
+            if (slot < 0)
+                return CommandResult.Failed($"Piece #{instanceId} is not in the hand.");
 
-            PieceShape piece = Hand.Get(slot);
+            PieceInstance piece = _hand.GetSlot(slot);
 
-            if (!Board.CanPlace(piece, origin))
-                return CommandResult.Failed($"Piece '{piece.Id}' does not fit at {origin}.");
+            if (!_board.CanPlace(piece.Shape, origin))
+                return CommandResult.Failed($"Piece '{piece}' does not fit at {origin}.");
 
             var events = new List<ISimEvent>();
 
-            Hand.Take(slot);
-            Board.Place(piece, origin, Cell.Block);
-            events.Add(new PiecePlacedEvent(slot, piece, origin));
+            _hand.Take(instanceId);
+            _board.Place(piece.Shape, origin);
+            events.Add(new PiecePlacedEvent(piece, slot, origin));
 
-            BoardLines lines = Board.FindFullLines();
+            List<PatternMatch> matches = ClearMatches(events);
 
-            if (!lines.IsEmpty)
-            {
-                IReadOnlyList<GridPos> clearedCells = Board.ClearLines(lines);
-                events.Add(new LinesClearedEvent(lines, clearedCells));
-            }
-
-            ApplyScore(piece.CellCount, lines.Count, events);
+            ApplyScore(piece.Shape.CellCount, matches, events);
             RefillHand(events);
-            UpdateGameOver(events);
+            CheckResolution(events);
 
             return CommandResult.Succeeded(events);
         }
 
-        private void ApplyScore(int cellsPlaced, int linesCleared, List<ISimEvent> events)
+        private List<PatternMatch> ClearMatches(List<ISimEvent> events)
         {
-            ScoreResult result = _scoringRule.Score(cellsPlaced, linesCleared, Combo);
+            List<PatternMatch> matches = PatternMatcher.FindMatches(_board, _patterns);
+
+            if (matches.Count == 0)
+                return matches;
+
+            var positions = new List<GridPos>();
+
+            foreach (PatternMatch match in matches)
+                positions.AddRange(match.Positions);
+
+            IReadOnlyList<GridPos> clearedCells = _board.ClearCells(positions);
+            events.Add(new PatternsClearedEvent(matches, clearedCells));
+
+            return matches;
+        }
+
+        private void ApplyScore(int cellsPlaced, IReadOnlyList<PatternMatch> matches, List<ISimEvent> events)
+        {
+            ScoreResult result = _scoringRule.Score(cellsPlaced, matches, Combo);
 
             if (result.Points != 0)
             {
@@ -128,29 +157,33 @@ namespace Squarely.Simulation
 
         private void RefillHand(List<ISimEvent> events)
         {
-            for (int slot = 0; slot < Hand.Size; slot++)
+            for (int slot = 0; slot < _hand.Size; slot++)
             {
-                if (!Hand.IsEmpty(slot))
+                if (!_hand.IsSlotEmpty(slot))
                     continue;
 
-                PieceShape piece = _dealer.Deal(Board, Hand, Random);
-                Hand.Set(slot, piece);
-                events.Add(new PieceDealtEvent(slot, piece));
+                PieceShape shape = _dealer.Deal(_board, _hand, _random);
+                var piece = new PieceInstance(_nextInstanceId, shape);
+                _nextInstanceId++;
+
+                int dealtSlot = _hand.Add(piece);
+                events.Add(new PieceDealtEvent(piece, dealtSlot));
             }
         }
 
-        private void UpdateGameOver(List<ISimEvent> events)
+        private void CheckResolution(List<ISimEvent> events)
         {
-            for (int slot = 0; slot < Hand.Size; slot++)
+            foreach (IResolutionRule rule in _resolutionRules)
             {
-                PieceShape piece = Hand.Get(slot);
+                GameResolution resolution = rule.Check(this);
 
-                if (piece != null && Board.CanPlaceAnywhere(piece))
-                    return;
+                if (resolution == null)
+                    continue;
+
+                Resolution = resolution;
+                events.Add(new GameResolvedEvent(resolution, Score));
+                return;
             }
-
-            IsGameOver = true;
-            events.Add(new GameOverEvent(Score));
         }
 
         #endregion

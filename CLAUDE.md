@@ -58,6 +58,7 @@ Not: `if (value < 0) return 0;`
 
 ## Conventions
 
+- **One top-level type per file** (class, struct, interface, enum), file named after the type. Only exception: a type nested inside another type.
 - Namespaces mirror assemblies: `Squarely.Simulation`, `Squarely.Simulation.Tests`. (Not `Squarely.Sim` — it would clash with the `Sim` class.)
 - Sources go under `Src/` in each package. Every new file/folder there needs a Unity `.meta` file — let Unity generate it; don't hand-write GUIDs. Mention to the user when new files will need Unity to import them.
 - Nullable and implicit usings are disabled; write explicit `using` directives.

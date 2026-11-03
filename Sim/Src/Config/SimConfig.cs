@@ -4,19 +4,32 @@ using System.Collections.Generic;
 namespace Squarely.Simulation
 {
     /// <summary>
-    /// All tunable values for a sim session. Plain data, so it can be loaded from JSON or remote config later.
+    /// Everything that defines a game mode: board, hand, pieces, clearing patterns, scoring,
+    /// and which rules to use (by id, created through <see cref="RuleFactory"/>).
+    /// Plain serializable data, so it can be edited in Unity or loaded from remote config.
+    /// The seed is not part of config: config is the mode, the seed is one run of it.
     /// </summary>
+    [Serializable]
     public sealed class SimConfig
     {
-        public int BoardWidth { get; set; } = 8;
+        public int BoardWidth = 8;
 
-        public int BoardHeight { get; set; } = 8;
+        public int BoardHeight = 8;
 
-        public int HandSize { get; set; } = 3;
+        public int HandSize = 3;
 
-        public List<PieceDefinition> Pieces { get; set; } = new List<PieceDefinition>();
+        public string DealerId = RuleIds.WeightedRandomDealer;
 
-        public ScoringConfig Scoring { get; set; } = new ScoringConfig();
+        public string ScoringRuleId = RuleIds.DefaultScoring;
+
+        /// <summary>Checked in order after every turn; the first one that resolves the game wins.</summary>
+        public List<string> ResolutionRuleIds = new List<string> { RuleIds.NoMovesLeft };
+
+        public List<PieceDefinition> Pieces = new List<PieceDefinition>();
+
+        public ClearingConfig Clearing = new ClearingConfig();
+
+        public ScoringConfig Scoring = new ScoringConfig();
 
         public void Validate()
         {
@@ -29,8 +42,14 @@ namespace Squarely.Simulation
             if (Pieces == null || Pieces.Count == 0)
                 throw new InvalidOperationException("Config has no pieces.");
 
+            if (Clearing == null)
+                throw new InvalidOperationException("Config has no clearing settings.");
+
             if (Scoring == null)
                 throw new InvalidOperationException("Config has no scoring settings.");
+
+            if (ResolutionRuleIds == null)
+                throw new InvalidOperationException("Config has no resolution rule list.");
 
             int totalWeight = 0;
 
