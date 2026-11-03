@@ -1,6 +1,6 @@
 ﻿{
-  "name": "Squarely.Sim.Tests",
-  "references": ["Squarely.Sim"],
+  "name": "Squarely.Simulation.Tests",
+  "references": ["Squarely.Simulation"],
   "includePlatforms": ["Editor"],
   "overrideReferences": true,
   "precompiledReferences": ["nunit.framework.dll"],

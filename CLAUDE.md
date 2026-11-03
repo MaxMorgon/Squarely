@@ -1,13 +1,15 @@
 # Squarely
 
-> TODO: One paragraph on the game — genre, core loop, turn-based or real-time, target platform.
+A block-placement puzzle game (learning project, aiming for a live-ops product). The player is dealt 3 pieces at a time to place on a grid; full rows/columns clear and score. Turn-based. Core rules follow the genre; art, UI and meta features are original.
+
+Design and rules: [Docs/Design.md](Docs/Design.md) — read it before working on game logic. Build for extensibility: data-driven config, pluggable mechanics, sim emits events for Unity/meta to consume.
 
 ## Repo layout
 
 | Path | What it is |
 |---|---|
-| `Sim/` | Pure C# game logic (`Squarely.Sim`). netstandard2.1, C# 9. No Unity dependency. |
-| `Sim.Tests/` | NUnit tests for Sim (`Squarely.Sim.Tests`). Runs via `dotnet test` and in Unity's Test Runner. |
+| `Sim/` | Pure C# game logic (namespace/assembly `Squarely.Simulation`). netstandard2.1, C# 9. No Unity dependency. Code design: [Docs/CodeDesign.md](Docs/CodeDesign.md). |
+| `Sim.Tests/` | NUnit tests for Sim (`Squarely.Simulation.Tests`). Runs via `dotnet test` and in Unity's Test Runner. |
 | `Unity/` | Unity 6000.3 (URP 2D) project. Consumes `Sim/Src` and `Sim.Tests/Src` as local UPM packages via `Unity/Packages/manifest.json`. |
 | `Squarely.sln` | Solution for Sim + Sim.Tests (Unity has its own generated projects). |
 
@@ -15,7 +17,7 @@
 
 - **All game logic lives in Sim.** Unity is presentation + input only: it reads Sim state and sends commands to it.
 - **Sim never references `UnityEngine`** or any Unity package. Keep it buildable with plain `dotnet build`.
-- **Sim must compile under Unity's constraints:** C# 9 max, netstandard2.1 APIs only. No `record struct`, file-scoped namespaces, global usings, or other C# 10+ features.
+- **Sim must compile under Unity's constraints:** C# 9 max, netstandard2.1 APIs only. No `record struct`, file-scoped namespaces, global usings, or other C# 10+ features. Also no `record` or `init` accessors (netstandard2.1 lacks `IsExternalInit`).
 - **Sim is deterministic.** Same initial state + same inputs = same result, every time, on every machine. No unseeded or shared `System.Random` (use a seeded RNG owned by the sim state), no `DateTime`/wall-clock time, no iteration over unordered collections (`HashSet`/`Dictionary`) where order affects outcome, no floating-point in game logic unless explicitly agreed.
 
 ## Commands
@@ -56,7 +58,7 @@ Not: `if (value < 0) return 0;`
 
 ## Conventions
 
-- Namespaces mirror assemblies: `Squarely.Sim`, `Squarely.Sim.Tests`.
+- Namespaces mirror assemblies: `Squarely.Simulation`, `Squarely.Simulation.Tests`. (Not `Squarely.Sim` — it would clash with the `Sim` class.)
 - Sources go under `Src/` in each package. Every new file/folder there needs a Unity `.meta` file — let Unity generate it; don't hand-write GUIDs. Mention to the user when new files will need Unity to import them.
 - Nullable and implicit usings are disabled; write explicit `using` directives.
 - New Sim features come with tests in `Sim.Tests`.

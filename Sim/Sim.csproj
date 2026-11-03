@@ -4,7 +4,7 @@
         <LangVersion>9.0</LangVersion>
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>disable</Nullable>
-        <RootNamespace>Squarely.Sim</RootNamespace>
-        <AssemblyName>Squarely.Sim</AssemblyName>
+        <RootNamespace>Squarely.Simulation</RootNamespace>
+        <AssemblyName>Squarely.Simulation</AssemblyName>
     </PropertyGroup>
 </Project>
