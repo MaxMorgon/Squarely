@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Squarely.Simulation
@@ -7,7 +8,7 @@ namespace Squarely.Simulation
     /// </summary>
     public sealed class CommandResult
     {
-        private static readonly IReadOnlyList<ISimEvent> NoEvents = new ISimEvent[0];
+        private static readonly IReadOnlyList<ISimEvent> NoEvents = Array.Empty<ISimEvent>();
 
         private CommandResult(bool success, string failureReason, IReadOnlyList<ISimEvent> events)
         {
