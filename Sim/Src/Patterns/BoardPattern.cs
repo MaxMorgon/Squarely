@@ -12,6 +12,19 @@ namespace Squarely.Simulation
     {
         private readonly PatternCell[] _cells;
 
+        public string Id { get; }
+
+        public IReadOnlyList<PatternCell> Cells => _cells;
+
+        /// <summary>Points awarded for completing this pattern.</summary>
+        public int Points { get; }
+
+        public GridPos? Anchor { get; }
+
+        public int Width { get; }
+
+        public int Height { get; }
+
         /// <param name="anchor">Fixed board position of the pattern origin, or null to match anywhere.</param>
         public BoardPattern(string id, IEnumerable<PatternCell> cells, int points, GridPos? anchor)
         {
@@ -38,19 +51,6 @@ namespace Squarely.Simulation
                 Height = Math.Max(Height, cell.Offset.Y + 1);
             }
         }
-
-        public string Id { get; }
-
-        public IReadOnlyList<PatternCell> Cells => _cells;
-
-        /// <summary>Points awarded for completing this pattern.</summary>
-        public int Points { get; }
-
-        public GridPos? Anchor { get; }
-
-        public int Width { get; }
-
-        public int Height { get; }
 
         #region Factories
 

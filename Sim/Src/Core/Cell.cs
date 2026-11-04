@@ -16,6 +16,8 @@ namespace Squarely.Simulation
 
         public readonly string TypeId;
 
+        public bool IsEmpty => TypeId == null;
+
         public Cell(string typeId)
         {
             if (string.IsNullOrEmpty(typeId))
@@ -23,8 +25,6 @@ namespace Squarely.Simulation
 
             TypeId = typeId;
         }
-
-        public bool IsEmpty => TypeId == null;
 
         #region Equality
 

@@ -5,15 +5,15 @@ namespace Squarely.Simulation
     /// </summary>
     public sealed class GameResolution
     {
+        public GameOutcome Outcome { get; }
+
+        public string ReasonId { get; }
+
         public GameResolution(GameOutcome outcome, string reasonId)
         {
             Outcome = outcome;
             ReasonId = reasonId;
         }
-
-        public GameOutcome Outcome { get; }
-
-        public string ReasonId { get; }
 
         public override string ToString()
         {

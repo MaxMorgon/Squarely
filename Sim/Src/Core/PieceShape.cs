@@ -11,6 +11,18 @@ namespace Squarely.Simulation
     {
         private readonly GridPos[] _offsets;
 
+        public string Id { get; }
+
+        public string CellTypeId { get; }
+
+        public IReadOnlyList<GridPos> Offsets => _offsets;
+
+        public int CellCount => _offsets.Length;
+
+        public int Width { get; }
+
+        public int Height { get; }
+
         public PieceShape(string id, IEnumerable<GridPos> offsets, string cellTypeId = Cell.BlockType)
         {
             if (string.IsNullOrEmpty(id))
@@ -35,18 +47,6 @@ namespace Squarely.Simulation
                 Height = Math.Max(Height, offset.Y + 1);
             }
         }
-
-        public string Id { get; }
-
-        public string CellTypeId { get; }
-
-        public IReadOnlyList<GridPos> Offsets => _offsets;
-
-        public int CellCount => _offsets.Length;
-
-        public int Width { get; }
-
-        public int Height { get; }
 
         #region Pattern parsing
 

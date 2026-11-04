@@ -10,18 +10,18 @@ namespace Squarely.Simulation
     {
         private static readonly IReadOnlyList<ISimEvent> NoEvents = Array.Empty<ISimEvent>();
 
+        public bool Success { get; }
+
+        public string FailureReason { get; }
+
+        public IReadOnlyList<ISimEvent> Events { get; }
+
         private CommandResult(bool success, string failureReason, IReadOnlyList<ISimEvent> events)
         {
             Success = success;
             FailureReason = failureReason;
             Events = events;
         }
-
-        public bool Success { get; }
-
-        public string FailureReason { get; }
-
-        public IReadOnlyList<ISimEvent> Events { get; }
 
         public static CommandResult Succeeded(IReadOnlyList<ISimEvent> events)
         {

@@ -51,6 +51,7 @@ Standard C# conventions (Microsoft naming: `PascalCase` types/methods/properties
 - **Allman braces** — opening brace on its own line.
 - **Very short `if` bodies:** two lines, no braces. Never put the body on the same line as the `if`.
 - **Regions over comment banners** for grouping members (`#region Public API`), unless a comment is genuinely clearer.
+- **Member order:** constants and fields, then properties, then constructors, then methods.
 
 ```csharp
 public int Clamp(int value)

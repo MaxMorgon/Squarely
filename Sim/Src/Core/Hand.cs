@@ -10,6 +10,8 @@ namespace Squarely.Simulation
     {
         private readonly PieceInstance[] _slots;
 
+        public int Size => _slots.Length;
+
         public Hand(int size)
         {
             if (size <= 0)
@@ -17,8 +19,6 @@ namespace Squarely.Simulation
 
             _slots = new PieceInstance[size];
         }
-
-        public int Size => _slots.Length;
 
         #region Reading
 

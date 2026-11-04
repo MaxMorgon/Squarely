@@ -7,12 +7,6 @@ namespace Squarely.Simulation
     /// </summary>
     public sealed class ClearedMatch
     {
-        public ClearedMatch(PatternMatch match, IReadOnlyList<GridPos> cells)
-        {
-            Match = match;
-            Cells = cells;
-        }
-
         public PatternMatch Match { get; }
 
         /// <summary>
@@ -20,6 +14,12 @@ namespace Squarely.Simulation
         /// A cell shared with another match is listed in both. Cells the pattern requires empty are not listed.
         /// </summary>
         public IReadOnlyList<GridPos> Cells { get; }
+
+        public ClearedMatch(PatternMatch match, IReadOnlyList<GridPos> cells)
+        {
+            Match = match;
+            Cells = cells;
+        }
 
         public override string ToString()
         {

@@ -5,15 +5,15 @@ namespace Squarely.Simulation
     /// </summary>
     public sealed class PlacePieceCommand : ISimCommand
     {
+        public int PieceInstanceId { get; }
+
+        public GridPos Origin { get; }
+
         public PlacePieceCommand(int pieceInstanceId, GridPos origin)
         {
             PieceInstanceId = pieceInstanceId;
             Origin = origin;
         }
-
-        public int PieceInstanceId { get; }
-
-        public GridPos Origin { get; }
 
         public CommandResult Execute(Sim sim)
         {

@@ -17,6 +17,38 @@ namespace Squarely.Simulation
         private readonly List<IResolutionRule> _resolutionRules;
         private readonly List<BoardPattern> _patterns;
 
+        #region State
+
+        public ulong Seed { get; }
+
+        /// <summary>Current RNG state, for snapshots. The RNG itself is not exposed, so nothing outside can advance it.</summary>
+        public ulong RandomState => _random.State;
+
+        public IReadOnlyBoard Board => _board;
+
+        public IReadOnlyHand Hand => _hand;
+
+        /// <summary>All patterns that clear when matched: rows, columns, then custom patterns.</summary>
+        public IReadOnlyList<BoardPattern> Patterns => _patterns;
+
+        /// <summary>Pieces dealt so far, including the opening hand. The next piece gets instance id PiecesDealt + 1.</summary>
+        public int PiecesDealt { get; private set; }
+
+        public int Score { get; private set; }
+
+        /// <summary>Number of consecutive placements that matched a pattern. 0 = no active combo.</summary>
+        public int Combo { get; private set; }
+
+        /// <summary>Null while the game is in progress.</summary>
+        public GameResolution Resolution { get; private set; }
+
+        public bool IsResolved => Resolution != null;
+
+        /// <summary>Mutable board for tests and in-assembly code only.</summary>
+        internal Board EditableBoard => _board;
+
+        #endregion
+
         public Sim(SimConfig config, ulong seed)
             : this(config, seed, RuleFactory.CreateDefault())
         {
@@ -68,38 +100,6 @@ namespace Squarely.Simulation
             Combo = source.Combo;
             Resolution = source.Resolution;
         }
-
-        #region State
-
-        public ulong Seed { get; }
-
-        /// <summary>Current RNG state, for snapshots. The RNG itself is not exposed, so nothing outside can advance it.</summary>
-        public ulong RandomState => _random.State;
-
-        public IReadOnlyBoard Board => _board;
-
-        public IReadOnlyHand Hand => _hand;
-
-        /// <summary>All patterns that clear when matched: rows, columns, then custom patterns.</summary>
-        public IReadOnlyList<BoardPattern> Patterns => _patterns;
-
-        /// <summary>Pieces dealt so far, including the opening hand. The next piece gets instance id PiecesDealt + 1.</summary>
-        public int PiecesDealt { get; private set; }
-
-        public int Score { get; private set; }
-
-        /// <summary>Number of consecutive placements that matched a pattern. 0 = no active combo.</summary>
-        public int Combo { get; private set; }
-
-        /// <summary>Null while the game is in progress.</summary>
-        public GameResolution Resolution { get; private set; }
-
-        public bool IsResolved => Resolution != null;
-
-        /// <summary>Mutable board for tests and in-assembly code only.</summary>
-        internal Board EditableBoard => _board;
-
-        #endregion
 
         public CommandResult Execute(ISimCommand command)
         {
