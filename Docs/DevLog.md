@@ -115,6 +115,12 @@ Each comment below improved the design:
 | Fast-forward: a new command always snaps, including steps not yet started; transient effects just finish | you (simpler than AI's two-mode proposal; snapping, not skipping, unstarted steps) | One rule, so the board is correct instantly and the game feels responsive |
 | One PR per build step, one chat per PR, the design written into the repo first | you (PR/chat split); AI (persist the design for fresh contexts) | Keeps AI context small and reviews focused |
 
+### 14. `Sim.Preview` and per-match clears (build step 1)
+- **`Sim.Preview(command)`** runs the real command on a private clone of the sim (board, hand, RNG state, score, combo, deal count, resolution) and returns its result. The real sim is untouched.
+- **Rules are now stateless by contract.** The AI found that a stateful rule (the test `ScriptedDealer`, which dequeued pieces) would be used up by previews. The options were stateless rules, cloning rules, or recreating them from the factory. The dealer now receives the `Sim` (`Deal(Sim, DeterministicRandom)`, the same as resolution rules), and `Sim.PiecesDealt` lets the scripted dealer pick by index. **Decision by:** you (AI's recommendation). **Why it matters:** all state lives in `Sim`, which snapshots and save/load will also need.
+- **`PatternsClearedEvent`** now holds one `ClearedMatch` per match, with the cells it emptied, so each match can get its own centroid and effects.
+- Tests: preview equals execute for every move of a full game, previewing every hover position each turn leaves the game trace identical, and previews never consume dealt pieces or resolve the real sim.
+
 ---
 
 ## Highlights (raw material for README / CV)

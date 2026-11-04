@@ -8,6 +8,7 @@ Covers the core sim (namespace `Squarely.Simulation`, tests `Squarely.Simulation
 - **Read-only from outside.** `Sim` exposes `IReadOnlyBoard` and `IReadOnlyHand`. All mutators are `internal`, and the RNG is hidden (only its `RandomState` is readable), so outside code can't break determinism or replays. Tests reach the internals through `InternalsVisibleTo`.
 - **Config is data.** No gameplay numbers in code. `SimConfig` and its children are `[Serializable]` classes with public fields, so Unity can edit them and they can be loaded from remote config.
 - **Rules are chosen by config, built by a factory.** The config names its dealer, scoring rule and resolution rules by string id. `RuleFactory` maps ids to implementations. A new rule means registering a new id, not changing the core loop.
+- **Rules are stateless.** Dealers, scoring and resolution rules hold no mutable state. All state lives in `Sim` (e.g. `PiecesDealt`), so one rule instance can be shared by a sim and its preview clones, and a sim's state is fully described by its own fields.
 - **Config vs. seed.** Config is the game mode (authored, shared). The seed is one run of that mode.
 
 ## Folder layout (`Sim/Src/`)
@@ -18,7 +19,7 @@ One top-level type per file. The folder listing doubles as an index, for example
 Sim.cs          The session: owns state, runs the turn flow
 AssemblyInfo.cs InternalsVisibleTo for tests
 Core/           GridPos, Cell, PieceShape, PieceInstance, Board, Hand, read-only interfaces
-Patterns/       BoardPattern, PatternCell, PatternMatch, PatternMatcher, cell conditions
+Patterns/       BoardPattern, PatternCell, PatternMatch, ClearedMatch, PatternMatcher, cell conditions
 Commands/       ISimCommand, PlacePieceCommand, CommandResult
 Rules/          IPieceDealer, IScoringRule, ScoreResult, defaults, RuleFactory, RuleIds
 Resolution/     IResolutionRule, GameResolution, GameOutcome, NoMovesLeftRule
@@ -37,7 +38,7 @@ Random/         DeterministicRandom
 | `PieceInstance` | One dealt piece: a unique `InstanceId` (sequential, so deterministic) plus its `PieceShape`. Commands refer to pieces by instance id, so two identical shapes in the hand can be told apart. |
 | `Board` | Grid of `Cell`. Public reads (`CanPlace`, `CanPlaceAnywhere`, ...). Internal `SetCell`, `Place`, `ClearCells`. |
 | `Hand` | Fixed slots of `PieceInstance`. Slots give the view stable positions. Internal `Add(piece)` fills the first empty slot, and `Take(instanceId)` removes a piece. |
-| `Sim` | Owns all state and runs the turn flow. The single entry point for gameplay. |
+| `Sim` | Owns all state and runs the turn flow. The single entry point for gameplay: `Execute` and `Preview`. |
 | `DeterministicRandom` | Our own seeded PRNG (xorshift64*). `System.Random` is **not** used, because its output differs between .NET and Unity's Mono. |
 
 ## Patterns (clearing)
@@ -57,7 +58,7 @@ Random/         DeterministicRandom
 
 1. Validate: not resolved, the piece instance is in the hand, and `Board.CanPlace` succeeds. Otherwise fail.
 2. Take the piece from the hand and place it → `PiecePlacedEvent` (piece, slot, origin).
-3. Find all pattern matches and clear their cells → `PatternsClearedEvent` (matches, cleared cells).
+3. Find all pattern matches and clear their cells → `PatternsClearedEvent`: one `ClearedMatch` per match (the match plus the cells it emptied, so a cell shared by a row and a column is in both), and all cleared cells, each once.
 4. The scoring rule computes points from the matched patterns and updates the combo → `ScoreChangedEvent`, `ComboChangedEvent`.
 5. Refill the hand to `HandSize` → one `PieceDealtEvent` per new piece.
 6. Resolution rules are checked in config order, and the first one that resolves wins → `GameResolvedEvent` (outcome Won/Lost, reason id, final score).
@@ -88,7 +89,10 @@ Assembly `Squarely.Presentation`. Status: **agreed design, not implemented yet.*
 
 ### Sim.Preview
 
-`Sim.Preview(ISimCommand)` clones the sim state, runs the real command on the clone and returns its `CommandResult` without touching the real state. It can never disagree with `Execute`, works for any command (placement, bombs, future interactions), and also serves AI or rival players. It is cheap enough to call every hover frame.
+`Sim.Preview(ISimCommand)` clones the sim state, runs the real command on the clone and returns its `CommandResult` without touching the real state. It can never disagree with `Execute`, works for any command (placement, bombs, future interactions), and also serves AI or rival players. It is cheap enough to call every hover frame. **Implemented.**
+
+- The clone copies board, hand, RNG state, score, combo, `PiecesDealt` and resolution. It shares rules (stateless) and patterns (immutable).
+- The result includes the `PieceDealtEvent`s for the pieces that would come next. AI players that must not peek should ignore them.
 
 ### Layers, cell types and theming
 
@@ -120,7 +124,7 @@ The player can act during playback. A new command **snaps** everything still pen
 
 ### Build order (one PR each)
 
-1. **Sim:** `Sim.Preview(ISimCommand)` and cleared cells per match in `PatternsClearedEvent`, with tests.
+1. **Sim:** `Sim.Preview(ISimCommand)` and cleared cells per match in `PatternsClearedEvent`, with tests. **Done.**
 2. **Views:** `Theme` and visual catalog, a single `LayerView` with pooled visuals detached from slots, board background, and shared visuals for hand and ghost.
 3. **Playback:** `EventPlayer`, handlers, shared context, `CueSequence` and the first `CueStep`s, fast-forward by snapping.
 4. **Feedback:** hover and preview states driven by `Sim.Preview`.

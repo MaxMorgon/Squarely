@@ -84,6 +84,14 @@ namespace Squarely.Simulation
 
         #region Mutation
 
+        /// <summary>A deep copy, for preview clones of the sim.</summary>
+        internal Board Clone()
+        {
+            var copy = new Board(Width, Height);
+            Array.Copy(_cells, copy._cells, _cells.Length);
+            return copy;
+        }
+
         internal void SetCell(GridPos pos, Cell cell)
         {
             _cells[IndexOf(pos)] = cell;

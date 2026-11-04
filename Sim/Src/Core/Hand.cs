@@ -47,6 +47,14 @@ namespace Squarely.Simulation
 
         #region Mutation
 
+        /// <summary>A copy with the same slots, for preview clones of the sim. Piece instances are immutable, so they are shared.</summary>
+        internal Hand Clone()
+        {
+            var copy = new Hand(Size);
+            Array.Copy(_slots, copy._slots, _slots.Length);
+            return copy;
+        }
+
         /// <summary>
         /// Puts the piece in the first empty slot and returns that slot.
         /// </summary>
