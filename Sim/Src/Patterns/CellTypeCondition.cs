@@ -7,6 +7,8 @@ namespace Squarely.Simulation
     /// </summary>
     public sealed class CellTypeCondition : ICellCondition
     {
+        public string TypeId { get; }
+
         public CellTypeCondition(string typeId)
         {
             if (string.IsNullOrEmpty(typeId))
@@ -14,8 +16,6 @@ namespace Squarely.Simulation
 
             TypeId = typeId;
         }
-
-        public string TypeId { get; }
 
         public bool Matches(Cell cell)
         {

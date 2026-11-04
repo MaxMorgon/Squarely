@@ -10,6 +10,8 @@ namespace Squarely.Simulation
     {
         private ulong _state;
 
+        public ulong State => _state;
+
         public DeterministicRandom(ulong seed)
         {
             _state = SplitMix64(seed);
@@ -18,8 +20,6 @@ namespace Squarely.Simulation
             if (_state == 0)
                 _state = 0x9E3779B97F4A7C15UL;
         }
-
-        public ulong State => _state;
 
         public static DeterministicRandom FromState(ulong state)
         {

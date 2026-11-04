@@ -7,18 +7,18 @@ namespace Squarely.Simulation
     /// </summary>
     public sealed class PatternMatch
     {
+        public BoardPattern Pattern { get; }
+
+        public GridPos Origin { get; }
+
+        public IReadOnlyList<GridPos> Positions { get; }
+
         public PatternMatch(BoardPattern pattern, GridPos origin, IReadOnlyList<GridPos> positions)
         {
             Pattern = pattern;
             Origin = origin;
             Positions = positions;
         }
-
-        public BoardPattern Pattern { get; }
-
-        public GridPos Origin { get; }
-
-        public IReadOnlyList<GridPos> Positions { get; }
 
         public override string ToString()
         {

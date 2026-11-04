@@ -8,15 +8,15 @@ namespace Squarely.Simulation
     /// </summary>
     public sealed class PieceInstance
     {
+        public int InstanceId { get; }
+
+        public PieceShape Shape { get; }
+
         public PieceInstance(int instanceId, PieceShape shape)
         {
             InstanceId = instanceId;
             Shape = shape ?? throw new ArgumentNullException(nameof(shape));
         }
-
-        public int InstanceId { get; }
-
-        public PieceShape Shape { get; }
 
         public override string ToString()
         {

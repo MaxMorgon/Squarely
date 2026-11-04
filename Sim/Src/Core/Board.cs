@@ -11,6 +11,10 @@ namespace Squarely.Simulation
     {
         private readonly Cell[] _cells;
 
+        public int Width { get; }
+
+        public int Height { get; }
+
         public Board(int width, int height)
         {
             if (width <= 0)
@@ -23,10 +27,6 @@ namespace Squarely.Simulation
             Height = height;
             _cells = new Cell[width * height];
         }
-
-        public int Width { get; }
-
-        public int Height { get; }
 
         #region Reading
 
