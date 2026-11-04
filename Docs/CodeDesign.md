@@ -1,6 +1,6 @@
-# Squarely — Code Design (Sim)
+# Squarely — Code Design
 
-Covers the core sim. Namespace: `Squarely.Simulation` (tests: `Squarely.Simulation.Tests`). The Unity and meta layers get their own sections later.
+Covers the core sim (namespace `Squarely.Simulation`, tests `Squarely.Simulation.Tests`) and the Unity presentation layer (`Squarely.Presentation`, see [Presentation](#presentation-unity)). The meta layer gets its own section later.
 
 ## Principles
 
@@ -75,3 +75,54 @@ Unity plays the returned events in order to animate, so the view never has to di
 - `Board`, `PieceShape`, `PatternMatcher`, scoring and the RNG have unit tests.
 - `Sim` tests use `ScriptedDealer`, which is registered through the `RuleFactory` like any other dealer, for exact scenarios.
 - A determinism test: the same seed and the same commands must produce identical results.
+
+## Presentation (Unity)
+
+Assembly `Squarely.Presentation`. Status: **agreed design, not implemented yet.** Unity shows sim state and sends commands. It never decides game rules.
+
+### Principles
+
+- **Views update from events only.** After `Execute`, the sim is already in its final state while the view is still animating. Views never read sim state during playback. When playback ends, a debug-only check compares the views with `IReadOnlyBoard` to catch drift.
+- **Rule questions go to the sim.** "Can this be placed?", "what will clear?" and "can this hand piece go anywhere?" are answered by `Sim.Preview`, never by Unity code.
+- **Code says what, assets say how.** Code provides targets and states (cells, centroids, "will clear"). Prefabs, themes and cue sequences decide how they look and sound.
+
+### Sim.Preview
+
+`Sim.Preview(ISimCommand)` clones the sim state, runs the real command on the clone and returns its `CommandResult` without touching the real state. It can never disagree with `Execute`, works for any command (placement, bombs, future interactions), and also serves AI or rival players. It is cheap enough to call every hover frame.
+
+### Layers, cell types and theming
+
+- **Board layers (planned in Sim, not yet built).** All layers work the same way, and any cell type (stone, wood, fire, trap...) can sit in any layer. The config binds each cell type to a layer, and a placed piece goes into its type's layer. Behaviour comes from the cell type's data (e.g. blocks placement, cleared by matches), not from the layer index. Logic runs through layers in a consistent order (lowest to highest).
+- **Layers are one future feature, Sim and view together.** Until then the view has no layer concept at all: no layer index, no layer list, no per-layer sorting.
+- **`LayerView`** is a self-contained component that holds one grid of cell visuals. For now the board uses a single instance. When layers arrive, it becomes one instance per layer. Visuals are pooled and spawned only where a cell is non-empty.
+- **Visuals are not owned by grid slots.** A `LayerView` keeps an array of the current visual per slot. On clear, the visual is detached (removed from the array) and handed to the cue that animates it, so a new piece can land in the same slot right away. When its animation ends, the visual returns itself to the pool it came from.
+- **One visual source everywhere.** The board, the hand pieces and the drag ghost all get their visuals from the same catalog.
+- **Theme.** Views never reference visual prefabs directly. A `Theme` asset resolves a cell type id to a visual prefab. Changing theme means swapping one asset. When layers arrive, the theme also defines each layer's sorting order (applied through a Sorting Group on each `LayerView`), and prefabs only order things inside their own layer.
+- **Visual states.** Each cell visual exposes a state (Idle, Ghost, Blocked, WillClear, ...). Code sets the state, and the prefab decides how to show it (Animator, tween, shader parameter).
+- **Board background.** Static empty-slot tiles. It also hosts hover and preview highlights.
+
+### Event playback
+
+- **`EventPlayer`** plays a command's events in order, one async step at a time (Unity `Awaitable`).
+- **One handler per event type** (`PatternsClearedHandler`, `ScoreChangedHandler`, ...). A handler builds the context (cells, world positions, centroid per match, order along a line) and passes it to a cue sequence.
+- **Shared playback context.** Handlers for one command share a context, so later handlers can use earlier results (e.g. the score popup flies from the clear's centroid).
+- **Overlap.** By default each handler waits for the previous one to finish. A handler may start without waiting (e.g. the score count-up runs alongside the combo). If several consecutive events ever need to be handled as one, a handler can take them together. That is added when a case needs it.
+- **`CueSequence`** ScriptableObject: a list of `[SerializeReference] CueStep`s edited in the inspector, e.g. `AnimateCells(state, stagger, order)`, `SpawnParticles(prefab, at: Centroid)`, `PlaySound`, `Wait`, `Parallel`. A new step type is one small class.
+- `PatternsClearedEvent` must give cleared cells **per match**, so each match can have its own centroid and effects.
+
+### Fast-forward
+
+The player can act during playback. A new command **snaps** everything still pending, then starts its own playback right away.
+
+- Every `CueStep` has `Play` and `Snap`. `Snap` applies the step's end state and is called on running steps **and on steps that haven't started yet**. For example, a delayed score step snaps the label to its final value.
+- Transient things have an empty or trivial `Snap`: particles and sounds already playing simply finish, and a detached visual that hasn't animated yet goes back to the pool.
+- So there is one rule with no per-step modes: the board views are correct instantly, and effects already playing finish on their own.
+
+### Build order (one PR each)
+
+1. **Sim:** `Sim.Preview(ISimCommand)` and cleared cells per match in `PatternsClearedEvent`, with tests.
+2. **Views:** `Theme` and visual catalog, a single `LayerView` with pooled visuals detached from slots, board background, and shared visuals for hand and ghost.
+3. **Playback:** `EventPlayer`, handlers, shared context, `CueSequence` and the first `CueStep`s, fast-forward by snapping.
+4. **Feedback:** hover and preview states driven by `Sim.Preview`.
+
+Later: **board layers** as one feature, Sim and view together: cell type definitions with a layer and behaviour flags, one `LayerView` per layer, and per-layer sorting in the theme.

@@ -97,6 +97,26 @@ Each comment below improved the design:
 
 ---
 
+## Session 2 — 2026-11-04
+
+### 13. Presentation architecture design (`Docs/CodeDesign.md` → Presentation)
+- Designed the Unity view layer before writing any code. The result is recorded as an agreed design with a four-PR build order.
+- Key decisions:
+
+| Decision | Decision by | Why it matters |
+|---|---|---|
+| A self-contained `LayerView` (one grid of cell visuals) that later becomes one per board layer | you (layer per view); AI (keep the component, drop the layer plumbing) | Planned mechanics (fire, traps) slot in without restructuring views, with no speculative code now |
+| All layers are the same: any cell type can sit in any layer, the config binds type to layer, behaviour comes from type data | you (AI: behaviour flags on the type, not the layer index) | No special-cased "main layer"; new cell types are pure data |
+| Layers built later as one feature, Sim and view together; no layer concept in the view until then | you | Avoids half-built features and guessing at a layer design that doesn't exist yet |
+| Visuals detached from grid slots and pooled, the same visuals for board, hand and ghost | AI | Clear animations can keep playing while the next piece lands in the same slot |
+| `Theme` asset resolves visuals, and later per-layer sorting order | you (theming); AI (sorting in the theme rather than per prefab, so one prefab can't break layer order) | Reskins and live-ops themes are an asset swap |
+| `Sim.Preview(ISimCommand)`: run the real command on a cloned state | AI; you extended it to any command and AI/rival players | Hover feedback can never disagree with the real rules; it doubles as an AI lookahead tool |
+| Event playback through handlers and editor-authored `CueSequence` assets | AI (structure); you (designer-editable animations, own system over a paid asset) | Designers tune the feel of the game without code changes |
+| Fast-forward: a new command always snaps, including steps not yet started; transient effects just finish | you (simpler than AI's two-mode proposal; snapping, not skipping, unstarted steps) | One rule, so the board is correct instantly and the game feels responsive |
+| One PR per build step, one chat per PR, the design written into the repo first | you (PR/chat split); AI (persist the design for fresh contexts) | Keeps AI context small and reviews focused |
+
+---
+
 ## Highlights (raw material for README / CV)
 
 - Designed a **deterministic, headless puzzle simulation** in C#, decoupled from Unity, with full unit-test coverage running in both .NET and Unity.
