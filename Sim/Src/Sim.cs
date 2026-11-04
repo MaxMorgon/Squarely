@@ -54,7 +54,7 @@ namespace Squarely.Simulation
         private Sim(Sim source)
         {
             Seed = source.Seed;
-            _random = DeterministicRandom.FromState(source._random.State);
+            _random = source._random.Clone();
             _board = source._board.Clone();
             _hand = source._hand.Clone();
             _patterns = source._patterns;
@@ -110,17 +110,23 @@ namespace Squarely.Simulation
         }
 
         /// <summary>
-        /// Runs the command on a copy of the sim and returns what would happen, without changing this sim.
-        /// Uses the real rules, so the result always matches what <see cref="Execute"/> would return now.
-        /// Includes the pieces that would be dealt next, so AI players that must not peek should ignore those events.
+        /// A full run of the command, without changing this sim: the result is exactly what <see cref="Execute"/> would return now,
+        /// with every event it would produce.
         /// </summary>
         public CommandResult Preview(ISimCommand command)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var clone = new Sim(this);
-            return command.Execute(clone);
+            return Clone().Execute(command);
+        }
+
+        /// <summary>
+        /// An independent sim in the same state. Commands executed on either one never affect the other.
+        /// </summary>
+        public Sim Clone()
+        {
+            return new Sim(this);
         }
 
         #region Turn flow

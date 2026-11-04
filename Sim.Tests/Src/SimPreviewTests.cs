@@ -103,6 +103,40 @@ namespace Squarely.Simulation.Tests
 
         #endregion
 
+        #region Clone
+
+        [Test]
+        public void Clone_CanPlayMovesAhead_WithoutChangingOriginal()
+        {
+            var sim = new Sim(DefaultSimConfig.Create(), 5);
+            List<string> before = TestHelpers.DescribeState(sim);
+            Sim clone = sim.Clone();
+
+            for (int move = 0; move < 3; move++)
+                Assert.That(clone.Execute(TestHelpers.FirstValidMove(clone)).Success, Is.True);
+
+            Assert.That(TestHelpers.DescribeState(sim), Is.EqualTo(before));
+            Assert.That(TestHelpers.DescribeState(clone), Is.Not.EqualTo(before));
+        }
+
+        [Test]
+        public void Clone_PlaysOutTheSameGame_AsOriginal()
+        {
+            var sim = new Sim(DefaultSimConfig.Create(), 5);
+            Sim clone = sim.Clone();
+
+            for (int move = 0; move < 20 && !sim.IsResolved; move++)
+            {
+                PlacePieceCommand command = TestHelpers.FirstValidMove(sim);
+
+                Assert.That(TestHelpers.Describe(clone.Execute(command)), Is.EqualTo(TestHelpers.Describe(sim.Execute(command))));
+            }
+
+            Assert.That(TestHelpers.DescribeState(clone), Is.EqualTo(TestHelpers.DescribeState(sim)));
+        }
+
+        #endregion
+
         #region Edge cases
 
         [Test]

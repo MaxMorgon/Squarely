@@ -91,8 +91,9 @@ Assembly `Squarely.Presentation`. Status: **agreed design, not implemented yet.*
 
 `Sim.Preview(ISimCommand)` clones the sim state, runs the real command on the clone and returns its `CommandResult` without touching the real state. It can never disagree with `Execute`, works for any command (placement, bombs, future interactions), and also serves AI or rival players. It is cheap enough to call every hover frame. **Implemented.**
 
-- The clone copies board, hand, RNG state, score, combo, `PiecesDealt` and resolution. It shares rules (stateless) and patterns (immutable).
-- The result includes the `PieceDealtEvent`s for the pieces that would come next. AI players that must not peek should ignore them.
+- It is a full run: the result holds everything a normal `Execute` would, every event included.
+- It is built on the public `Sim.Clone()`, an independent sim in the same state, which multi-move lookahead (AI, tools) can play on freely.
+- A clone copies board, hand, RNG state, score, combo, `PiecesDealt` and resolution. It shares rules (stateless) and patterns (immutable).
 
 ### Layers, cell types and theming
 
