@@ -67,5 +67,18 @@ namespace Squarely.Simulation.Tests
             Assert.That(again.NextULong(), Is.EqualTo(first));
             Assert.That(again.NextULong(), Is.EqualTo(second));
         }
+
+        [Test]
+        public void Clone_ContinuesSameSequence_Independently()
+        {
+            var random = new DeterministicRandom(42);
+            random.NextULong();
+
+            DeterministicRandom clone = random.Clone();
+            ulong fromClone = clone.NextULong();
+            clone.NextULong();
+
+            Assert.That(random.NextULong(), Is.EqualTo(fromClone));
+        }
     }
 }

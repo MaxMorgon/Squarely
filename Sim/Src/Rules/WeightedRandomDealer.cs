@@ -31,7 +31,7 @@ namespace Squarely.Simulation
                 throw new ArgumentException("Dealer needs at least one piece with positive weight.", nameof(pieces));
         }
 
-        public PieceShape Deal(IReadOnlyBoard board, IReadOnlyHand hand, DeterministicRandom random)
+        public PieceShape Deal(Sim sim, DeterministicRandom random)
         {
             int roll = random.NextInt(_totalWeight);
 

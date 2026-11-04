@@ -31,6 +31,12 @@ namespace Squarely.Simulation
             return random;
         }
 
+        /// <summary>An independent copy that continues with the same sequence.</summary>
+        internal DeterministicRandom Clone()
+        {
+            return FromState(_state);
+        }
+
         public ulong NextULong()
         {
             _state ^= _state >> 12;

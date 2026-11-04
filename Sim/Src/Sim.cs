@@ -17,8 +17,6 @@ namespace Squarely.Simulation
         private readonly List<IResolutionRule> _resolutionRules;
         private readonly List<BoardPattern> _patterns;
 
-        private int _nextInstanceId = 1;
-
         public Sim(SimConfig config, ulong seed)
             : this(config, seed, RuleFactory.CreateDefault())
         {
@@ -50,6 +48,27 @@ namespace Squarely.Simulation
             CheckResolution(new List<ISimEvent>());
         }
 
+        /// <summary>
+        /// Copies all mutable state from the source. Rules and patterns are shared: rules are stateless and patterns are immutable.
+        /// </summary>
+        private Sim(Sim source)
+        {
+            Seed = source.Seed;
+            _random = source._random.Clone();
+            _board = source._board.Clone();
+            _hand = source._hand.Clone();
+            _patterns = source._patterns;
+
+            _dealer = source._dealer;
+            _scoringRule = source._scoringRule;
+            _resolutionRules = source._resolutionRules;
+
+            PiecesDealt = source.PiecesDealt;
+            Score = source.Score;
+            Combo = source.Combo;
+            Resolution = source.Resolution;
+        }
+
         #region State
 
         public ulong Seed { get; }
@@ -63,6 +82,9 @@ namespace Squarely.Simulation
 
         /// <summary>All patterns that clear when matched: rows, columns, then custom patterns.</summary>
         public IReadOnlyList<BoardPattern> Patterns => _patterns;
+
+        /// <summary>Pieces dealt so far, including the opening hand. The next piece gets instance id PiecesDealt + 1.</summary>
+        public int PiecesDealt { get; private set; }
 
         public int Score { get; private set; }
 
@@ -85,6 +107,26 @@ namespace Squarely.Simulation
                 throw new ArgumentNullException(nameof(command));
 
             return command.Execute(this);
+        }
+
+        /// <summary>
+        /// A full run of the command, without changing this sim: the result is exactly what <see cref="Execute"/> would return now,
+        /// with every event it would produce.
+        /// </summary>
+        public CommandResult Preview(ISimCommand command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            return Clone().Execute(command);
+        }
+
+        /// <summary>
+        /// An independent sim in the same state. Commands executed on either one never affect the other.
+        /// </summary>
+        public Sim Clone()
+        {
+            return new Sim(this);
         }
 
         #region Turn flow
@@ -126,15 +168,43 @@ namespace Squarely.Simulation
             if (matches.Count == 0)
                 return matches;
 
+            // Per-match cells are collected before clearing, since a cell shared by two matches is cleared once but belongs to both.
+            var clearedMatches = new List<ClearedMatch>(matches.Count);
             var positions = new List<GridPos>();
 
             foreach (PatternMatch match in matches)
+            {
+                clearedMatches.Add(new ClearedMatch(match, FilledInBoardOrder(match.Positions)));
                 positions.AddRange(match.Positions);
+            }
 
             IReadOnlyList<GridPos> clearedCells = _board.ClearCells(positions);
-            events.Add(new PatternsClearedEvent(matches, clearedCells));
+            events.Add(new PatternsClearedEvent(clearedMatches, clearedCells));
 
             return matches;
+        }
+
+        private List<GridPos> FilledInBoardOrder(IReadOnlyList<GridPos> positions)
+        {
+            var filled = new List<GridPos>();
+
+            foreach (GridPos pos in positions)
+            {
+                if (!_board.IsEmpty(pos))
+                    filled.Add(pos);
+            }
+
+            filled.Sort(CompareBoardOrder);
+            return filled;
+        }
+
+        /// <summary>Bottom row first, left to right, the same order as <see cref="Board.ClearCells"/>.</summary>
+        private static int CompareBoardOrder(GridPos a, GridPos b)
+        {
+            if (a.Y != b.Y)
+                return a.Y.CompareTo(b.Y);
+
+            return a.X.CompareTo(b.X);
         }
 
         private void ApplyScore(int cellsPlaced, IReadOnlyList<PatternMatch> matches, List<ISimEvent> events)
@@ -162,9 +232,9 @@ namespace Squarely.Simulation
                 if (!_hand.IsSlotEmpty(slot))
                     continue;
 
-                PieceShape shape = _dealer.Deal(_board, _hand, _random);
-                var piece = new PieceInstance(_nextInstanceId, shape);
-                _nextInstanceId++;
+                PieceShape shape = _dealer.Deal(this, _random);
+                var piece = new PieceInstance(PiecesDealt + 1, shape);
+                PiecesDealt++;
 
                 int dealtSlot = _hand.Add(piece);
                 events.Add(new PieceDealtEvent(piece, dealtSlot));

@@ -126,7 +126,7 @@ namespace Squarely.Simulation.Tests
 
             PatternsClearedEvent cleared = TestHelpers.Single<PatternsClearedEvent>(result.Events);
             Assert.That(cleared.Matches.Count, Is.EqualTo(1));
-            Assert.That(cleared.Matches[0].Pattern.Id, Is.EqualTo("row_0"));
+            Assert.That(cleared.Matches[0].Match.Pattern.Id, Is.EqualTo("row_0"));
             Assert.That(cleared.ClearedCells.Count, Is.EqualTo(3));
             Assert.That(sim.Board.IsEmpty(new GridPos(2, 0)), Is.True);
 
@@ -147,9 +147,48 @@ namespace Squarely.Simulation.Tests
             CommandResult result = sim.Execute(new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 0), new GridPos(2, 2)));
 
             PatternsClearedEvent cleared = TestHelpers.Single<PatternsClearedEvent>(result.Events);
-            Assert.That(cleared.Matches[0].Pattern.Id, Is.EqualTo("pair"));
+            Assert.That(cleared.Matches[0].Match.Pattern.Id, Is.EqualTo("pair"));
             Assert.That(sim.Board.IsEmpty(new GridPos(2, 2)), Is.True);
             Assert.That(sim.Score, Is.EqualTo(2 + 100));
+        }
+
+        [Test]
+        public void Place_CompletingRowAndColumn_GivesCellsPerMatch_SharedCellInBoth()
+        {
+            var dealer = new ScriptedDealer("#", "#");
+            Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(3, 3, 1), dealer);
+            TestHelpers.Fill(sim.EditableBoard, "#../#../.##");
+
+            CommandResult result = sim.Execute(new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 0), new GridPos(0, 0)));
+
+            PatternsClearedEvent cleared = TestHelpers.Single<PatternsClearedEvent>(result.Events);
+            Assert.That(cleared.Matches.Count, Is.EqualTo(2));
+
+            ClearedMatch row = cleared.Matches[0];
+            Assert.That(row.Match.Pattern.Id, Is.EqualTo("row_0"));
+            Assert.That(row.Cells, Is.EqualTo(new[] { new GridPos(0, 0), new GridPos(1, 0), new GridPos(2, 0) }));
+
+            ClearedMatch column = cleared.Matches[1];
+            Assert.That(column.Match.Pattern.Id, Is.EqualTo("column_0"));
+            Assert.That(column.Cells, Is.EqualTo(new[] { new GridPos(0, 0), new GridPos(0, 1), new GridPos(0, 2) }));
+
+            Assert.That(cleared.ClearedCells.Count, Is.EqualTo(5));
+        }
+
+        [Test]
+        public void Place_CompletingPatternWithEmptyCells_ListsOnlyFilledCellsForMatch()
+        {
+            SimConfig config = TestHelpers.SmallConfig(5, 5, 1);
+            config.Clearing.Patterns.Add(new BoardPatternDefinition { Id = "edge", Pattern = "#o", Points = 50 });
+
+            var dealer = new ScriptedDealer("#", "#");
+            Sim sim = TestHelpers.CreateSim(config, dealer);
+
+            CommandResult result = sim.Execute(new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 0), new GridPos(2, 2)));
+
+            ClearedMatch match = TestHelpers.Single<PatternsClearedEvent>(result.Events).Matches[0];
+            Assert.That(match.Match.Positions.Count, Is.EqualTo(2));
+            Assert.That(match.Cells, Is.EqualTo(new[] { new GridPos(2, 2) }));
         }
 
         [Test]
@@ -266,6 +305,15 @@ namespace Squarely.Simulation.Tests
         }
 
         [Test]
+        public void PreviewingEveryMoveEachTurn_DoesNotChangeTheGame()
+        {
+            List<string> plain = PlayGreedy(seed: 99, maxMoves: 200);
+            List<string> withPreviews = PlayGreedy(seed: 99, maxMoves: 200, previewEveryMove: true);
+
+            Assert.That(withPreviews, Is.EqualTo(plain));
+        }
+
+        [Test]
         public void DifferentSeeds_DealDifferentHands()
         {
             var a = new Sim(DefaultSimConfig.Create(), 1);
@@ -287,14 +335,18 @@ namespace Squarely.Simulation.Tests
         /// <summary>
         /// Plays the first valid move each turn and records a trace of what happened.
         /// </summary>
-        private static List<string> PlayGreedy(ulong seed, int maxMoves)
+        /// <param name="previewEveryMove">Before each move, preview every hand piece at every origin, like a player hovering everywhere.</param>
+        private static List<string> PlayGreedy(ulong seed, int maxMoves, bool previewEveryMove = false)
         {
             var sim = new Sim(DefaultSimConfig.Create(), seed);
             var trace = new List<string>();
 
             for (int move = 0; move < maxMoves && !sim.IsResolved; move++)
             {
-                ISimCommand command = FindFirstValidMove(sim);
+                if (previewEveryMove)
+                    PreviewEveryMove(sim);
+
+                ISimCommand command = TestHelpers.FirstValidMove(sim);
                 CommandResult result = sim.Execute(command);
 
                 Assert.That(result.Success, Is.True);
@@ -305,26 +357,18 @@ namespace Squarely.Simulation.Tests
             return trace;
         }
 
-        private static ISimCommand FindFirstValidMove(Sim sim)
+        private static void PreviewEveryMove(Sim sim)
         {
             for (int slot = 0; slot < sim.Hand.Size; slot++)
             {
-                PieceInstance piece = sim.Hand.GetSlot(slot);
+                int instanceId = TestHelpers.SlotInstanceId(sim, slot);
 
                 for (int y = 0; y < sim.Board.Height; y++)
                 {
                     for (int x = 0; x < sim.Board.Width; x++)
-                    {
-                        var origin = new GridPos(x, y);
-
-                        if (sim.Board.CanPlace(piece.Shape, origin))
-                            return new PlacePieceCommand(piece.InstanceId, origin);
-                    }
+                        sim.Preview(new PlacePieceCommand(instanceId, new GridPos(x, y)));
                 }
             }
-
-            Assert.Fail("No valid move although the game is not resolved.");
-            return null;
         }
 
         #endregion

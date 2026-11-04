@@ -29,10 +29,10 @@ dotnet build Squarely.sln
 dotnet test Squarely.sln -v q
 ```
 
-Unity CLI (drives the user's open editor; run from `Unity/`, binary at `%LOCALAPPDATA%\Unity\bin\unity.exe`, pass `--caller plugin --skill unity-cli`):
+Unity CLI (drives the user's open editor; run from `Unity/`, binary at `%LOCALAPPDATA%\Unity\bin\unity.exe`, pass `--caller plugin --skill unity-cli` to `unity command ...` calls; `unity status` rejects them):
 
 ```sh
-unity status --json                      # editor connected? state "ready"
+unity status --json                      # optional: editor connected? state "ready" (no --caller/--skill flags)
 unity command asset refresh              # import new/changed files, generate .meta files (custom command)
 unity command recompile                  # then poll: unity command recompile_status
 unity command console status             # compile errors / console counts
