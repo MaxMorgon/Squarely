@@ -60,7 +60,7 @@ Random/         DeterministicRandom
 2. Take the piece from the hand and place it → `PiecePlacedEvent` (piece, slot, origin).
 3. Find all pattern matches and clear their cells → `PatternsClearedEvent`: one `ClearedMatch` per match (the match plus the cells it emptied, so a cell shared by a row and a column is in both), and all cleared cells, each once.
 4. The scoring rule computes points from the matched patterns and updates the combo → `ScoreChangedEvent`, `ComboChangedEvent`.
-5. Refill the hand to `HandSize` → one `PieceDealtEvent` per new piece.
+5. If the hand is now empty, deal a full new hand → one `PieceDealtEvent` per new piece.
 6. Resolution rules are checked in config order, and the first one that resolves wins → `GameResolvedEvent` (outcome Won/Lost, reason id, final score).
 
 Unity plays the returned events in order to animate, so the view never has to diff state.
@@ -103,8 +103,8 @@ Assembly `Squarely.Presentation`. Status: **agreed design, not implemented yet.*
 - **Visuals are not owned by grid slots.** A `LayerView` keeps an array of the current visual per slot. On clear, the visual is detached (removed from the array) and handed to the cue that animates it, so a new piece can land in the same slot right away. When its animation ends, the visual returns itself to the pool it came from.
 - **One visual source everywhere.** The board, the hand pieces and the drag ghost all get their visuals from the same catalog.
 - **Theme.** Views never reference visual prefabs directly. A `Theme` asset resolves a cell type id to a visual prefab. Changing theme means swapping one asset. When layers arrive, the theme also defines each layer's sorting order (applied through a Sorting Group on each `LayerView`), and prefabs only order things inside their own layer.
-- **Visual states.** Each cell visual exposes a state (Idle, Ghost, Blocked, WillClear, ...). Code sets the state, and the prefab decides how to show it (Animator, tween, shader parameter).
-- **Board background.** Static empty-slot tiles. It also hosts hover and preview highlights.
+- **Visual states.** Each cell visual exposes a state: Idle, or Ghost (the translucent landing preview shown on the board while dragging). Code sets the state, and the prefab decides how to show it (Animator, tween, shader parameter). More states are added when a feature needs them.
+- **Board background.** Static empty-slot tiles only. Hover and preview highlights are a separate view.
 
 ### Event playback
 
@@ -126,7 +126,7 @@ The player can act during playback. A new command **snaps** everything still pen
 ### Build order (one PR each)
 
 1. **Sim:** `Sim.Preview(ISimCommand)` and cleared cells per match in `PatternsClearedEvent`, with tests. **Done.**
-2. **Views:** `Theme` and visual catalog, a single `LayerView` with pooled visuals detached from slots, board background, and shared visuals for hand and ghost.
+2. **Views and input:** `Theme` and visual catalog, a single `LayerView` with pooled visuals detached from slots, board background, shared visuals for hand and ghost, and drag-and-drop placement (views rebuild from sim state until playback exists).
 3. **Playback:** `EventPlayer`, handlers, shared context, `CueSequence` and the first `CueStep`s, fast-forward by snapping.
 4. **Feedback:** hover and preview states driven by `Sim.Preview`.
 

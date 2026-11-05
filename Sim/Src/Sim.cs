@@ -225,13 +225,17 @@ namespace Squarely.Simulation
             }
         }
 
+        /// <summary>Deals a full new hand once every piece in it has been placed.</summary>
         private void RefillHand(List<ISimEvent> events)
         {
             for (int slot = 0; slot < _hand.Size; slot++)
             {
                 if (!_hand.IsSlotEmpty(slot))
-                    continue;
+                    return;
+            }
 
+            for (int slot = 0; slot < _hand.Size; slot++)
+            {
                 PieceShape shape = _dealer.Deal(this, _random);
                 var piece = new PieceInstance(PiecesDealt + 1, shape);
                 PiecesDealt++;
