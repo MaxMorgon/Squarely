@@ -12,6 +12,20 @@ namespace Squarely.Simulation
 
         public int Size => _slots.Length;
 
+        public bool IsEmpty
+        {
+            get
+            {
+                foreach (PieceInstance piece in _slots)
+                {
+                    if (piece != null)
+                        return false;
+                }
+
+                return true;
+            }
+        }
+
         public Hand(int size)
         {
             if (size <= 0)

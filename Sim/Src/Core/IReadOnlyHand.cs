@@ -7,6 +7,9 @@ namespace Squarely.Simulation
     {
         int Size { get; }
 
+        /// <summary>True when every slot is empty.</summary>
+        bool IsEmpty { get; }
+
         /// <summary>The piece in a slot, or null if the slot is empty.</summary>
         PieceInstance GetSlot(int slot);
 
