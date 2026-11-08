@@ -19,3 +19,6 @@ desktop.ini
  
 # Claude Code local (per-user) settings
 .claude/settings.local.json
+
+# Unity Recorder output
+RecordedVideos/

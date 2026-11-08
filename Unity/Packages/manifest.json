@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "com.iddo.squarely.sim": "file:../../Sim/Src",
+    "com.iddo.squarely.sim.tests": "file:../../Sim.Tests/Src",
     "com.unity.2d.animation": "13.0.6",
     "com.unity.2d.aseprite": "3.0.2",
     "com.unity.2d.psdimporter": "12.0.2",
@@ -9,10 +11,13 @@
     "com.unity.2d.tilemap.extras": "6.0.3",
     "com.unity.2d.tooling": "1.0.4",
     "com.unity.collab-proxy": "2.13.6",
+    "com.unity.device-simulator.devices": "1.0.1",
     "com.unity.ide.rider": "3.0.40",
     "com.unity.ide.visualstudio": "2.0.26",
     "com.unity.inputsystem": "1.20.0",
     "com.unity.multiplayer.center": "1.0.1",
+    "com.unity.pipeline": "0.9.1-exp.1",
+    "com.unity.recorder": "5.1.7",
     "com.unity.render-pipelines.universal": "17.3.0",
     "com.unity.test-framework": "1.6.0",
     "com.unity.timeline": "1.8.13",
@@ -51,10 +56,7 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.iddo.squarely.sim": "file:../../Sim/Src",
-    "com.iddo.squarely.sim.tests": "file:../../Sim.Tests/Src",
-    "com.unity.pipeline": "0.9.1-exp.1"
+    "com.unity.modules.xr": "1.0.0"
   },
   "testables": [
     "com.iddo.squarely.sim.tests"
