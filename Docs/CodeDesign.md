@@ -79,7 +79,20 @@ Unity plays the returned events in order to animate, so the view never has to di
 
 ## Presentation (Unity)
 
-Assembly `Squarely.Presentation`. Status: **agreed design, not implemented yet.** Unity shows sim state and sends commands. It never decides game rules.
+Assembly `Squarely.Presentation`. Status: **views and drag input implemented (step 2). Playback and feedback not yet built.** Unity shows sim state and sends commands. It never decides game rules.
+
+### Folder layout (`Unity/Assets/Scripts/Presentation/`)
+
+```
+GameController.cs  Owns the sim, sets up the views, passes commands to the sim
+Theme/             Theme, ThemeEntry
+Visuals/           CellVisual, CellVisualState, CellVisualCatalog (pooling), SpriteStateTint
+Board/             BoardLayout (grid <-> local space), SlotGrid, LayerView, BoardBackground
+Pieces/            PieceView (hand, dragged piece, ghost), HandView
+Input/             PieceDragController
+```
+
+Until playback exists, `GameController` rebuilds the board and hand from the final sim state after each command.
 
 ### Principles
 
@@ -126,7 +139,7 @@ The player can act during playback. A new command **snaps** everything still pen
 ### Build order (one PR each)
 
 1. **Sim:** `Sim.Preview(ISimCommand)` and cleared cells per match in `PatternsClearedEvent`, with tests. **Done.**
-2. **Views and input:** `Theme` and visual catalog, a single `LayerView` with pooled visuals detached from slots, board background, shared visuals for hand and ghost, and drag-and-drop placement (views rebuild from sim state until playback exists).
+2. **Views and input:** `Theme` and visual catalog, a single `LayerView` with pooled visuals detached from slots, board background, shared visuals for hand and ghost, and drag-and-drop placement (views rebuild from sim state until playback exists). **Done.**
 3. **Playback:** `EventPlayer`, handlers, shared context, `CueSequence` and the first `CueStep`s, fast-forward by snapping.
 4. **Feedback:** hover and preview states driven by `Sim.Preview`.
 

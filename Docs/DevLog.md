@@ -134,6 +134,14 @@ Each comment below improved the design:
   - **The board background is empty-slot tiles only.** Highlights get their own view. **Decision by:** you.
   - **A single cell colour for now.** **Decision by:** you.
   - **Presentation tests are unit tests** (layout math, pooling, slots), not integration tests of how they're wired together, since that wiring is expected to change. **Decision by:** you.
+- **`RefillHand` became `DealNewHand`.** The emptiness check moved to the caller (`if (_hand.IsEmpty)`), so the method does what its name says, and `IReadOnlyHand.IsEmpty` is new. **Decision by:** you (AI's version silently did nothing on a non-empty hand).
+
+### 16. Views and drag-and-drop (build step 2)
+- **`Theme`** maps cell type ids to `CellVisual` prefabs (with a fallback) and holds the empty-slot tile. **`CellVisualCatalog`** is the one source of visuals for the board, the hand, the dragged piece and the ghost, with one `ObjectPool` per prefab. A visual returns itself with `Release()`.
+- **`LayerView`** holds board visuals in a `SlotGrid`. `Detach` hands a visual over without releasing it, ready for clear animations in step 3. **`BoardBackground`** only draws tiles.
+- **`PieceDragController`**: picking up a hand piece lifts it above the pointer, and the ghost snaps to the board wherever `Sim.Preview` says the move is legal. Releasing places the piece.
+- The scene, placeholder sprite, prefabs and theme were built in the open editor with a one-off script run through the Unity CLI, not by hand-editing YAML. A reference assigned to an asset in the same run was lost on save, and the smoke test caught it.
+- Tests: 19 EditMode unit tests for `BoardLayout`, `SlotGrid` and `CellVisualCatalog`.
 
 ---
 

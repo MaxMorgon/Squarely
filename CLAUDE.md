@@ -13,6 +13,8 @@ Design and rules: [Docs/Design.md](Docs/Design.md) — read it before working on
 | `Unity/` | Unity 6000.3 (URP 2D) project. Consumes `Sim/Src` and `Sim.Tests/Src` as local UPM packages via `Unity/Packages/manifest.json`. |
 | `Squarely.sln` | Solution for Sim + Sim.Tests (Unity has its own generated projects). |
 | `Unity/Assets/Scripts/Presentation/` | `Squarely.Presentation` asmdef: views, input, event playback. Design: [Docs/CodeDesign.md](Docs/CodeDesign.md#presentation-unity). References `Squarely.Simulation` and `Unity.InputSystem`. |
+| `Unity/Assets/Tests/EditMode/` | `Squarely.Presentation.Tests` asmdef: unit tests for presentation logic (layout, pooling, slots). Not for testing how views are wired together. |
+| `Unity/Assets/Scenes/Main.unity` | The game scene. Placeholder art in `Art/Placeholder/`, prefabs in `Prefabs/`, the `DefaultTheme` in `Themes/`. |
 | `Unity/Assets/Editor/` | `Squarely.Editor` asmdef (Editor-only): editor tools and custom Unity CLI commands (`Cli/`). |
 
 ## Architecture rules

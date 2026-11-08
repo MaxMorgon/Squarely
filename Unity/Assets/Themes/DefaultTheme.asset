@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f508bed114741147899ce09f7ba8e4f, type: 3}
+  m_Name: DefaultTheme
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.Theme
+  _cellVisuals:
+  - TypeId: block
+    Visual: {fileID: 6510316013427610909, guid: ef73fa54cd8632b4da8884baa17a47d1, type: 3}
+  _fallbackCellVisual: {fileID: 6510316013427610909, guid: ef73fa54cd8632b4da8884baa17a47d1, type: 3}
+  _emptyTile: {fileID: 4406137468842074866, guid: 9b0a1debd15001b4f89359d8e8fa23cd, type: 3}
