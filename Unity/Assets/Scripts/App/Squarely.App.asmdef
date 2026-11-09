@@ -1,0 +1,9 @@
+{
+    "name": "Squarely.App",
+    "rootNamespace": "Squarely.App",
+    "references": [
+        "Squarely.Presentation",
+        "Squarely.Simulation"
+    ],
+    "autoReferenced": true
+}
