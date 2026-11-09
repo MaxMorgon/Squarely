@@ -157,6 +157,14 @@ Each comment below improved the design:
 - **Third-party assets.** Odin Inspector and ALINE were considered and dropped for now (`[ContextMenu]` and gizmos are enough). Paid assets in the repo would also need handling before a public showcase.
 - **`Set` over `Show`** for methods that take data and display it. `Show` is reserved for visibility. The rule is in CLAUDE.md, and a follow-up refactor PR renamed `HandView.Show` to `SetHand` and `PieceView.Show` to `SetShape`.
 
+### 18. Parallel agents and groundwork
+- **Parallel AI agents.** Two background agents build separate features at once, each in a permanent git worktree with its own warm Unity `Library/` and a headless batch-mode Unity for import, compile and tests (about 90 s per check). Each agent owns its code and assets and opens small, stacked PRs. The main session pre-reviews with comments marked `[Claude]` before your review. **Decision by:** you (AI proposed batch mode and permanent slots).
+- **One scene, screens as prefabs.** Scenes and self-starting MonoBehaviours hide the flow. Owners initialize what they own through explicit `Initialize(...)` calls, so app flow and UI read in code. **Decision by:** you.
+- **`GameSetup` (config + seed) is the game's entry point**, so a future playtest screen can start any mode without touching the main game. **Decision by:** you (AI proposed the setup object).
+- **Groundwork PR** before the agents start, so they don't both edit the same files: the Game prefab, `GameController.Initialize`, a temporary `GameBootstrap`, TMP essentials, EventSystem, a base `UiCanvas` (portrait 1080×1920) and an empty `GameHud` slot. The drag controller now gets the camera from its owner, since a prefab can't reference a scene camera.
+- **uGUI + TextMeshPro** for UI. **Decision by:** you.
+- **Effect handles** (start/stop VFX across cue steps) flagged for a proper design pass before playback builds them.
+
 ---
 
 ## Highlights (raw material for README / CV)

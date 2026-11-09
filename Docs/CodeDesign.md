@@ -86,6 +86,8 @@ Assembly `Squarely.Presentation`. Status: **views and drag input implemented (st
 
 ```
 GameController.cs  Owns the sim, sets up the views, passes commands to the sim
+GameSetup.cs       What a game starts with: config and seed
+GameBootstrap.cs   Temporary entry point until the app flow owns the game
 Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
 Theme/             CellTheme, CellThemeEntry
 Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
@@ -96,7 +98,15 @@ Input/             PieceDragController
 
 Until playback exists, `GameController` rebuilds the board and hand from the final sim state after each command.
 
+### Scene and prefabs
+
+- **One scene** (`Main.unity`) holds only what every screen shares: the camera, the EventSystem and the entry point. Screens such as the game and the menu are prefabs, created and destroyed by code.
+- **`Prefabs/Game/Game.prefab`** is the whole game: `GameController` with the board, hand, input and `GameHud` under it.
+- **`Prefabs/UI/UiCanvas.prefab`** is the base for every UI screen: an overlay canvas scaled for portrait 1080×1920. Screens are prefab variants of it (`GameHud` is the first).
+
 ### Principles
+
+- **Owners initialize what they own.** The flow reads in code, not in the scene. An owner creates its children and passes them what they need through an explicit `Initialize(...)` (e.g. `GameController.Initialize(GameSetup, Camera)`). `Awake`/`Start` are only for a component setting up itself, never for starting flow or finding other objects.
 
 - **Views update from events only.** After `Execute`, the sim is already in its final state while the view is still animating. Views never read sim state during playback. When playback ends, a debug-only check compares the views with `IReadOnlyBoard` to catch drift.
 - **Rule questions go to the sim.** "Can this be placed?", "what will clear?" and "can this hand piece go anywhere?" are answered by `Sim.Preview`, never by Unity code.
@@ -120,7 +130,7 @@ Until playback exists, `GameController` rebuilds the board and hand from the fin
 - **Themes are modular.** Each area gets its own theme asset (`CellTheme` now, e.g. `MenuTheme` later). Views never reference cell view prefabs directly. A `CellTheme` asset resolves a cell type id to a view prefab. Changing theme means swapping one asset. When layers arrive, the theme also defines each layer's sorting order (applied through a Sorting Group on each `LayerView`), and prefabs only order things inside their own layer.
 - **Cell view states.** Each cell view exposes a state: Idle, or Ghost (the translucent landing preview shown on the board while dragging). Code sets the state, and the prefab decides how to show it (Animator, tween, shader parameter). More states are added when a feature needs them.
 - **Board background.** Static empty-slot tiles only. Hover and preview highlights are a separate view.
-- **Edit-time previews.** Anything whose size or position comes only from config or serialized values draws a gizmo preview of it, so the scene is WYSIWYG without entering play mode. Such views expose `DrawGizmos(...)` taking the config values they need, and `GameController` calls them from `OnDrawGizmos` because it holds the config. Today: board outline and grid (`BoardBackground`), hand slot pick-up areas (`HandView`).
+- **Edit-time previews.** Anything whose size or position comes only from config or serialized values draws a gizmo preview of it, so the scene is WYSIWYG without entering play mode. Such views expose `DrawGizmos(...)` taking the config values they need, and `GameController` calls them from `OnDrawGizmos` with its setup's config, or at edit time with its gizmo preview config. Today: board outline and grid (`BoardBackground`), hand slot pick-up areas (`HandView`).
 - **Drag feel is view-only.** `PieceDragController` computes the landing cell from a logical drag target (pointer plus lift), never from the dragged view's transform. The dragged view follows the target in one place (`MoveDraggedView`), so lag, tilt or other feel can go there without changing placement.
 
 ### Event playback

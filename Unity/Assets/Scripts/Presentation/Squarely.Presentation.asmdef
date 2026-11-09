@@ -3,7 +3,9 @@
     "rootNamespace": "Squarely.Presentation",
     "references": [
         "Squarely.Simulation",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI"
     ],
     "autoReferenced": true
 }
