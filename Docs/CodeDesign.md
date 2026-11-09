@@ -87,13 +87,13 @@ Assembly `Squarely.Presentation`. Status: **views and drag input implemented (st
 ```
 GameController.cs  Owns the sim, sets up the views, passes commands to the sim
 GameSetup.cs       What a game starts with: config and seed
-GameBootstrap.cs   Temporary entry point until the app flow owns the game
 Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
 Theme/             CellTheme, CellThemeEntry
 Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
+Screens/           MenuScreen (UI screens: report the player's choices as C# events)
 ```
 
 Until playback exists, `GameController` rebuilds the board and hand from the final sim state after each command.
@@ -173,3 +173,10 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 
 - `IAppState` has `Enter` and `Exit`. `AppStateMachine.ChangeState(next)` exits the current state, then enters the next.
 - A change requested during `Enter` or `Exit` (e.g. a screen event fired while setting up) is queued and runs after the current transition, so exits and enters always come in pairs. Transitions are synchronous for now; async transitions (fades, loading) come when a feature needs them.
+
+### Entry point and flow
+
+- **`AppRoot`** is the only component in the scene that starts anything. Its `Start` builds the default `GameSetup` and an `AppFlow`, then goes to the menu. It holds the screen prefabs (`AppScreens`), the camera, the default game mode and the seed.
+- **`AppFlow`** lists every place the app can go (`GoToMenu`, `GoToGame(setup)`). Each call creates a fresh state with what it needs and hands it to the state machine. States call these methods to move on, so reading `AppFlow` and the states shows the whole flow.
+- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequested`. **`GameState`** creates the Game prefab and calls `GameController.Initialize(setup, camera)`. Each destroys what it created in `Exit`.
+- A playtest screen will start games through the same `GoToGame(setup)` with its own setup.
