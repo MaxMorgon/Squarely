@@ -1,0 +1,40 @@
+SQUARELY TODO
+
+MVP
+- Score + combo display
+- Game over / restart UI
+
+Presentation
+- Drag feel: lag + rotation lerp
+- Playback: EventPlayer, handlers, CueSequence, fast-forward
+- Debug drift check: views vs board
+- Hover/preview feedback via Sim.Preview
+- Real art, sound, theme
+
+Meta
+- Meta layer design doc
+- Progression, currencies, quests, events
+- Main menu (MenuTheme)
+
+Sim
+- Board layers (Sim + views together)
+- Special cells: stone, wood, fire, traps, bombs
+- Pattern content: pixel art, shapes, tattoo
+- Resolution rules: target score, move limit
+
+Config / live ops
+- Tune scoring + combos
+- Remote config
+- Replays (save config + seed + commands)
+- Daily challenge (shared seed)
+- Server-side run validation
+- Analytics from sim events
+
+Open questions
+- Fair dealing (at least one piece fits)?
+- Undo / continue / revive in v1?
+- Endless only, or level modes too?
+
+Tooling / repo
+- More [CliCommand]s for repeated ops
+- Showcase: README, public repo? (paid assets)
