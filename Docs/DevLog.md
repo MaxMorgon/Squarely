@@ -134,6 +134,28 @@ Each comment below improved the design:
   - **The board background is empty-slot tiles only.** Highlights get their own view. **Decision by:** you.
   - **A single cell colour for now.** **Decision by:** you.
   - **Presentation tests are unit tests** (layout math, pooling, slots), not integration tests of how they're wired together, since that wiring is expected to change. **Decision by:** you.
+- **`RefillHand` became `DealNewHand`.** The emptiness check moved to the caller (`if (_hand.IsEmpty)`), so the method does what its name says, and `IReadOnlyHand.IsEmpty` is new. **Decision by:** you (AI's version silently did nothing on a non-empty hand).
+
+### 16. Views and drag-and-drop (build step 2)
+- **`Theme`** maps cell type ids to `CellVisual` prefabs (with a fallback) and holds the empty-slot tile. **`CellVisualCatalog`** is the one source of visuals for the board, the hand, the dragged piece and the ghost, with one `ObjectPool` per prefab. A visual returns itself with `Release()`.
+- **`LayerView`** holds board visuals in a `SlotGrid`. `Detach` hands a visual over without releasing it, ready for clear animations in step 3. **`BoardBackground`** only draws tiles.
+- **`PieceDragController`**: picking up a hand piece lifts it above the pointer, and the ghost snaps to the board wherever `Sim.Preview` says the move is legal. Releasing places the piece.
+- The scene, placeholder sprite, prefabs and theme were built in the open editor with a one-off script run through the Unity CLI, not by hand-editing YAML. A reference assigned to an asset in the same run was lost on save, and the smoke test caught it.
+- Tests: 19 EditMode unit tests for `BoardLayout`, `SlotGrid` and `CellVisualCatalog`.
+
+---
+
+## Session 4 — 2026-11-09
+
+### 17. PR 8 review
+- **PR workflow.** After "review submitted", the AI replies to every comment with its plan or pushback. After "go", it fixes, then merges unless told otherwise. **Decision by:** you.
+- **One `Grid<T>` in Sim** replaces the view-only `SlotGrid`. `Board` stores its cells in it, and `LayerView` stores its views in it. It lives in Sim, not a new shared assembly, because Sim is already the Unity-free assembly everything references. **Decision by:** you (AI chose Sim over a common project).
+- **Renames toward standard terms.** `CellVisual` → `CellView`, `CellVisualCatalog` → `CellViewPool` (it pools, not offers options), `SpriteStateTint` → `CellStateSpriteTint`, `BoardLayout` → `BoardSpace` ("layout" suggests the board's shape), `Theme` → `CellTheme` (themes are modular, one per area). **Decision by:** you (AI proposed `BoardSpace`, `CellViewPool` and theme per area).
+- **Sim config is an asset** (`SimConfigAsset`), and the sim uses the asset's live config, so tuning in play mode applies right away. That trades away reproducing a run from seed + inputs while tweaking. **Decision by:** you, aware of the determinism cost.
+- **Edit-time gizmo previews** for anything sized only by config (board, hand slots), as a standard for WYSIWYG scenes. Plain gizmos rather than a paid drawing asset for now. **Decision by:** you.
+- **Drag feel is prepared, not built.** Placement now reads a logical drag target, not the dragged view, so lag and tilt can be added in one method later. **Decision by:** you (AI found that the old code would skew placement once the view lagged).
+- **Third-party assets.** Odin Inspector and ALINE were considered and dropped for now (`[ContextMenu]` and gizmos are enough). Paid assets in the repo would also need handling before a public showcase.
+- **`Set` over `Show`** for methods that take data and display it. `Show` is reserved for visibility. A follow-up refactor PR applies it.
 
 ---
 

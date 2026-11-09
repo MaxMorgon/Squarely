@@ -1,0 +1,180 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d92916fdf75c0b4aad0f31ecddb4577, type: 3}
+  m_Name: DefaultSimConfig
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.SimConfigAsset
+  _config:
+    BoardWidth: 8
+    BoardHeight: 8
+    HandSize: 3
+    DealerId: weighted_random
+    ScoringRuleId: default
+    ResolutionRuleIds:
+    - no_moves_left
+    Pieces:
+    - Id: dot
+      Pattern: '#'
+      Weight: 1
+      CellTypeId: block
+    - Id: line2_h
+      Pattern: '##'
+      Weight: 1
+      CellTypeId: block
+    - Id: line2_v
+      Pattern: '#/#'
+      Weight: 1
+      CellTypeId: block
+    - Id: line3_h
+      Pattern: '###'
+      Weight: 1
+      CellTypeId: block
+    - Id: line3_v
+      Pattern: '#/#/#'
+      Weight: 1
+      CellTypeId: block
+    - Id: line4_h
+      Pattern: '####'
+      Weight: 1
+      CellTypeId: block
+    - Id: line4_v
+      Pattern: '#/#/#/#'
+      Weight: 1
+      CellTypeId: block
+    - Id: line5_h
+      Pattern: '#####'
+      Weight: 1
+      CellTypeId: block
+    - Id: line5_v
+      Pattern: '#/#/#/#/#'
+      Weight: 1
+      CellTypeId: block
+    - Id: square2
+      Pattern: '##/##'
+      Weight: 1
+      CellTypeId: block
+    - Id: square3
+      Pattern: '###/###/###'
+      Weight: 1
+      CellTypeId: block
+    - Id: rect2x3
+      Pattern: '##/##/##'
+      Weight: 1
+      CellTypeId: block
+    - Id: rect3x2
+      Pattern: '###/###'
+      Weight: 1
+      CellTypeId: block
+    - Id: corner_bl
+      Pattern: '#./##'
+      Weight: 1
+      CellTypeId: block
+    - Id: corner_br
+      Pattern: .#/##
+      Weight: 1
+      CellTypeId: block
+    - Id: corner_tl
+      Pattern: '##/#.'
+      Weight: 1
+      CellTypeId: block
+    - Id: corner_tr
+      Pattern: '##/.#'
+      Weight: 1
+      CellTypeId: block
+    - Id: bigcorner_bl
+      Pattern: '#../#../###'
+      Weight: 1
+      CellTypeId: block
+    - Id: bigcorner_br
+      Pattern: ..#/..#/###
+      Weight: 1
+      CellTypeId: block
+    - Id: bigcorner_tl
+      Pattern: '###/#../#..'
+      Weight: 1
+      CellTypeId: block
+    - Id: bigcorner_tr
+      Pattern: '###/..#/..#'
+      Weight: 1
+      CellTypeId: block
+    - Id: l_1
+      Pattern: '#./#./##'
+      Weight: 1
+      CellTypeId: block
+    - Id: l_2
+      Pattern: '###/#..'
+      Weight: 1
+      CellTypeId: block
+    - Id: l_3
+      Pattern: '##/.#/.#'
+      Weight: 1
+      CellTypeId: block
+    - Id: l_4
+      Pattern: ..#/###
+      Weight: 1
+      CellTypeId: block
+    - Id: j_1
+      Pattern: .#/.#/##
+      Weight: 1
+      CellTypeId: block
+    - Id: j_2
+      Pattern: '#../###'
+      Weight: 1
+      CellTypeId: block
+    - Id: j_3
+      Pattern: '##/#./#.'
+      Weight: 1
+      CellTypeId: block
+    - Id: j_4
+      Pattern: '###/..#'
+      Weight: 1
+      CellTypeId: block
+    - Id: t_down
+      Pattern: '###/.#.'
+      Weight: 1
+      CellTypeId: block
+    - Id: t_up
+      Pattern: .#./###
+      Weight: 1
+      CellTypeId: block
+    - Id: t_right
+      Pattern: '#./##/#.'
+      Weight: 1
+      CellTypeId: block
+    - Id: t_left
+      Pattern: .#/##/.#
+      Weight: 1
+      CellTypeId: block
+    - Id: s_h
+      Pattern: .##/##.
+      Weight: 1
+      CellTypeId: block
+    - Id: z_h
+      Pattern: '##./.##'
+      Weight: 1
+      CellTypeId: block
+    - Id: s_v
+      Pattern: '#./##/.#'
+      Weight: 1
+      CellTypeId: block
+    - Id: z_v
+      Pattern: .#/##/#.
+      Weight: 1
+      CellTypeId: block
+    Clearing:
+      ClearRows: 1
+      ClearColumns: 1
+      LinePoints: 10
+      Patterns: []
+    Scoring:
+      PointsPerCellPlaced: 1
+      MultiMatchBonusPerExtra: 10
+      ComboBonusPercent: 50
