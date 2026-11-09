@@ -124,6 +124,19 @@ Each comment below improved the design:
 
 ---
 
+## Session 3 — 2026-11-05
+
+### 15. Hand refills when empty, step 2 scope
+- **The hand refills only when it is empty.** After the last of the 3 pieces is placed, a full new hand is dealt, instead of each slot refilling right away. **Decision by:** you. **Why it matters:** the player has to plan around all three pieces, which is the genre's core tension.
+- Step 2 scope refined before building:
+  - **Drag-and-drop placement** moves into step 2, so the views and ghost get exercised for real. Until playback exists, the views rebuild from sim state after each command. **Decision by:** you (AI proposed both options).
+  - **Ghost** = the translucent landing preview snapped to the board while dragging, separate from the dragged piece. **Visual states** are only Idle and Ghost until a feature needs more. **Decision by:** you.
+  - **The board background is empty-slot tiles only.** Highlights get their own view. **Decision by:** you.
+  - **A single cell colour for now.** **Decision by:** you.
+  - **Presentation tests are unit tests** (layout math, pooling, slots), not integration tests of how they're wired together, since that wiring is expected to change. **Decision by:** you.
+
+---
+
 ## Highlights (raw material for README / CV)
 
 - Designed a **deterministic, headless puzzle simulation** in C#, decoupled from Unity, with full unit-test coverage running in both .NET and Unity.

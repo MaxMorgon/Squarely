@@ -76,7 +76,7 @@ namespace Squarely.Simulation
             _resolutionRules = rules.CreateResolutionRules(config);
 
             // The opening hand is part of the initial state; the view reads it directly.
-            RefillHand(new List<ISimEvent>());
+            DealNewHand(new List<ISimEvent>());
             CheckResolution(new List<ISimEvent>());
         }
 
@@ -155,7 +155,9 @@ namespace Squarely.Simulation
             List<PatternMatch> matches = ClearMatches(events);
 
             ApplyScore(piece.Shape.CellCount, matches, events);
-            RefillHand(events);
+            if (_hand.IsEmpty)
+                DealNewHand(events);
+
             CheckResolution(events);
 
             return CommandResult.Succeeded(events);
@@ -225,13 +227,11 @@ namespace Squarely.Simulation
             }
         }
 
-        private void RefillHand(List<ISimEvent> events)
+        /// <summary>Deals a piece into every slot of the empty hand.</summary>
+        private void DealNewHand(List<ISimEvent> events)
         {
             for (int slot = 0; slot < _hand.Size; slot++)
             {
-                if (!_hand.IsSlotEmpty(slot))
-                    continue;
-
                 PieceShape shape = _dealer.Deal(this, _random);
                 var piece = new PieceInstance(PiecesDealt + 1, shape);
                 PiecesDealt++;

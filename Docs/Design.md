@@ -11,7 +11,7 @@ A block-placement puzzle game (the genre of 1010!, Block Blast, etc.), built as 
 - Pieces are polyomino shapes (single cell up to e.g. 3×3 square, lines up to 5, L/T/S/Z shapes).
 - Pieces **cannot be rotated**.
 - The player has a **hand of 3 pieces** (configurable). They can be placed in any order.
-- The hand is always kept full: after each placement, the empty slot is refilled immediately.
+- The hand refills only when it is empty: once all 3 pieces are placed, a full new hand is dealt.
 
 ### Placement
 - A piece can be placed anywhere it fits entirely on empty cells inside the board.

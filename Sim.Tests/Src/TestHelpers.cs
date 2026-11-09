@@ -64,6 +64,9 @@ namespace Squarely.Simulation.Tests
             {
                 PieceInstance piece = sim.Hand.GetSlot(slot);
 
+                if (piece == null)
+                    continue;
+
                 for (int y = 0; y < sim.Board.Height; y++)
                 {
                     for (int x = 0; x < sim.Board.Width; x++)
@@ -102,6 +105,24 @@ namespace Squarely.Simulation.Tests
                 throw new InvalidOperationException($"No {typeof(T).Name} found.");
 
             return found;
+        }
+
+        public static List<T> All<T>(IReadOnlyList<ISimEvent> events) where T : class, ISimEvent
+        {
+            var found = new List<T>();
+
+            foreach (ISimEvent simEvent in events)
+            {
+                if (simEvent is T match)
+                    found.Add(match);
+            }
+
+            return found;
+        }
+
+        public static bool HasEvent<T>(CommandResult result) where T : class, ISimEvent
+        {
+            return All<T>(result.Events).Count > 0;
         }
 
         #endregion

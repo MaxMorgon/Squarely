@@ -48,9 +48,9 @@ namespace Squarely.Simulation.Tests
         #region Placement
 
         [Test]
-        public void Place_ValidMove_Succeeds_AndRefillsSameSlot()
+        public void Place_ValidMove_Succeeds_AndLeavesSlotEmpty()
         {
-            var dealer = new ScriptedDealer("#", "##", "###", "#/#");
+            var dealer = new ScriptedDealer("#", "##", "###");
             Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(8, 8, 3), dealer);
             int firstId = TestHelpers.SlotInstanceId(sim, 0);
 
@@ -59,11 +59,30 @@ namespace Squarely.Simulation.Tests
             Assert.That(result.Success, Is.True);
             Assert.That(sim.Board.IsEmpty(new GridPos(0, 0)), Is.False);
             Assert.That(sim.Hand.FindSlot(firstId), Is.EqualTo(-1));
-            Assert.That(sim.Hand.GetSlot(0).Shape.Id, Is.EqualTo("scripted_3"));
-            Assert.That(sim.Hand.GetSlot(0).InstanceId, Is.EqualTo(4));
+            Assert.That(sim.Hand.IsSlotEmpty(0), Is.True);
+            Assert.That(TestHelpers.HasEvent<PieceDealtEvent>(result), Is.False);
+        }
 
-            PieceDealtEvent dealt = TestHelpers.Single<PieceDealtEvent>(result.Events);
-            Assert.That(dealt.Slot, Is.EqualTo(0));
+        [Test]
+        public void Place_LastPieceInHand_DealsFullNewHand()
+        {
+            var dealer = new ScriptedDealer("#", "#", "#", "##", "###", "#/#");
+            Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(8, 8, 3), dealer);
+
+            sim.Execute(new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 0), new GridPos(0, 0)));
+            sim.Execute(new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 1), new GridPos(2, 2)));
+            CommandResult result = sim.Execute(new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 2), new GridPos(4, 4)));
+
+            List<PieceDealtEvent> dealt = TestHelpers.All<PieceDealtEvent>(result.Events);
+
+            Assert.That(dealt.Count, Is.EqualTo(3));
+
+            for (int slot = 0; slot < 3; slot++)
+            {
+                Assert.That(dealt[slot].Slot, Is.EqualTo(slot));
+                Assert.That(dealt[slot].Piece.InstanceId, Is.EqualTo(slot + 4));
+                Assert.That(sim.Hand.GetSlot(slot).Shape.Id, Is.EqualTo($"scripted_{slot + 3}"));
+            }
         }
 
         [Test]
@@ -194,8 +213,8 @@ namespace Squarely.Simulation.Tests
         [Test]
         public void Place_EventsComeInTurnOrder()
         {
-            var dealer = new ScriptedDealer("###", "#", "#", "#");
-            Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(3, 3, 3), dealer);
+            var dealer = new ScriptedDealer("###", "#");
+            Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(3, 3, 1), dealer);
 
             CommandResult result = sim.Execute(new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 0), new GridPos(0, 0)));
 
@@ -361,6 +380,9 @@ namespace Squarely.Simulation.Tests
         {
             for (int slot = 0; slot < sim.Hand.Size; slot++)
             {
+                if (sim.Hand.IsSlotEmpty(slot))
+                    continue;
+
                 int instanceId = TestHelpers.SlotInstanceId(sim, slot);
 
                 for (int y = 0; y < sim.Board.Height; y++)

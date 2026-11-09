@@ -22,7 +22,7 @@ namespace Squarely.Simulation.Tests
                 CommandResult executed = sim.Execute(command);
 
                 Assert.That(preview, Is.EqualTo(TestHelpers.Describe(executed)), $"Move {move}: {command}");
-                sawClear |= HasEvent<PatternsClearedEvent>(executed);
+                sawClear |= TestHelpers.HasEvent<PatternsClearedEvent>(executed);
             }
 
             Assert.That(sim.IsResolved, Is.True, "The game should run to its end, so resolution is covered too.");
@@ -61,30 +61,30 @@ namespace Squarely.Simulation.Tests
         [Test]
         public void Preview_ClearingMove_DoesNotChangeState()
         {
-            var dealer = new ScriptedDealer("##", "#", "#", "#");
-            Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(3, 3, 3), dealer);
+            var dealer = new ScriptedDealer("##", "#");
+            Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(3, 3, 1), dealer);
             sim.EditableBoard.SetCell(new GridPos(2, 0), Cell.Block);
             List<string> before = TestHelpers.DescribeState(sim);
 
             CommandResult preview = sim.Preview(new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 0), new GridPos(0, 0)));
 
-            Assert.That(HasEvent<PatternsClearedEvent>(preview), Is.True);
-            Assert.That(HasEvent<PieceDealtEvent>(preview), Is.True);
+            Assert.That(TestHelpers.HasEvent<PatternsClearedEvent>(preview), Is.True);
+            Assert.That(TestHelpers.HasEvent<PieceDealtEvent>(preview), Is.True);
             Assert.That(TestHelpers.DescribeState(sim), Is.EqualTo(before));
         }
 
         [Test]
         public void Preview_DoesNotUseUpDealtPieces()
         {
-            var dealer = new ScriptedDealer("#", "#", "#", "##/##");
-            Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(8, 8, 3), dealer);
+            var dealer = new ScriptedDealer("#", "##/##");
+            Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(8, 8, 1), dealer);
             var command = new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 0), new GridPos(0, 0));
 
             PieceDealtEvent previewDealt = TestHelpers.Single<PieceDealtEvent>(sim.Preview(command).Events);
             PieceDealtEvent executedDealt = TestHelpers.Single<PieceDealtEvent>(sim.Execute(command).Events);
 
-            Assert.That(previewDealt.Piece.Shape.Id, Is.EqualTo("scripted_3"));
-            Assert.That(executedDealt.Piece.Shape.Id, Is.EqualTo("scripted_3"));
+            Assert.That(previewDealt.Piece.Shape.Id, Is.EqualTo("scripted_1"));
+            Assert.That(executedDealt.Piece.Shape.Id, Is.EqualTo("scripted_1"));
             Assert.That(executedDealt.Piece.InstanceId, Is.EqualTo(previewDealt.Piece.InstanceId));
         }
 
@@ -160,16 +160,5 @@ namespace Squarely.Simulation.Tests
         }
 
         #endregion
-
-        private static bool HasEvent<T>(CommandResult result) where T : ISimEvent
-        {
-            foreach (ISimEvent simEvent in result.Events)
-            {
-                if (simEvent is T)
-                    return true;
-            }
-
-            return false;
-        }
     }
 }
