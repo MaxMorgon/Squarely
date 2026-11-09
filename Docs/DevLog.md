@@ -155,7 +155,7 @@ Each comment below improved the design:
 - **Edit-time gizmo previews** for anything sized only by config (board, hand slots), as a standard for WYSIWYG scenes. Plain gizmos rather than a paid drawing asset for now. **Decision by:** you.
 - **Drag feel is prepared, not built.** Placement now reads a logical drag target, not the dragged view, so lag and tilt can be added in one method later. **Decision by:** you (AI found that the old code would skew placement once the view lagged).
 - **Third-party assets.** Odin Inspector and ALINE were considered and dropped for now (`[ContextMenu]` and gizmos are enough). Paid assets in the repo would also need handling before a public showcase.
-- **`Set` over `Show`** for methods that take data and display it. `Show` is reserved for visibility. A follow-up refactor PR applies it.
+- **`Set` over `Show`** for methods that take data and display it. `Show` is reserved for visibility. The rule is in CLAUDE.md, and a follow-up refactor PR renamed `HandView.Show` to `SetHand` and `PieceView.Show` to `SetShape`.
 
 ---
 

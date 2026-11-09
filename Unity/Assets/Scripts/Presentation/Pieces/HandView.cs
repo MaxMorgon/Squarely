@@ -36,7 +36,7 @@ namespace Squarely.Presentation
             }
         }
 
-        public void Show(IReadOnlyHand hand)
+        public void SetHand(IReadOnlyHand hand)
         {
             for (int slot = 0; slot < _slots.Length; slot++)
             {
@@ -47,7 +47,7 @@ namespace Squarely.Presentation
                 if (piece == null)
                     _slots[slot].Clear();
                 else
-                    _slots[slot].Show(piece.Shape, _viewPool, _cellSize, CellViewState.Idle);
+                    _slots[slot].SetShape(piece.Shape, _viewPool, _cellSize, CellViewState.Idle);
             }
         }
 

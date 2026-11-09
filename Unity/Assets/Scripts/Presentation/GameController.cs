@@ -115,7 +115,7 @@ namespace Squarely.Presentation
         private void RefreshViews()
         {
             _layerView.Rebuild(_sim.Board);
-            _handView.Show(_sim.Hand);
+            _handView.SetHand(_sim.Hand);
         }
     }
 }

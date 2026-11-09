@@ -16,7 +16,7 @@ namespace Squarely.Presentation
         /// <summary>Local position of the center of the shape's origin cell (offset 0,0).</summary>
         public Vector2 OriginLocal { get; private set; }
 
-        public void Show(PieceShape shape, CellViewPool viewPool, float cellSize, CellViewState state)
+        public void SetShape(PieceShape shape, CellViewPool viewPool, float cellSize, CellViewState state)
         {
             Clear();
 

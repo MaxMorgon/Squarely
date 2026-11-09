@@ -54,6 +54,7 @@ Standard C# conventions (Microsoft naming: `PascalCase` types/methods/properties
 - **Very short `if` bodies:** two lines, no braces. Never put the body on the same line as the `if`.
 - **Regions over comment banners** for grouping members (`#region Public API`), unless a comment is genuinely clearer.
 - **Member order:** constants and fields, then properties, then constructors, then methods.
+- **`Set…` for data, `Show`/`Hide` for visibility.** A method that takes data and displays it is `Set…` (`SetHand`, `SetShape`), never `Show…`. `Show`/`Hide` only change visibility, and are added when something needs them.
 
 ```csharp
 public int Clamp(int value)

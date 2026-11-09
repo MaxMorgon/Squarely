@@ -99,10 +99,10 @@ namespace Squarely.Presentation
             _hasCheckedOrigin = false;
             _hand.SetSlotVisible(slot, false);
 
-            _dragged.Show(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Idle);
+            _dragged.SetShape(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Idle);
             _dragged.gameObject.SetActive(true);
 
-            _ghost.Show(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Ghost);
+            _ghost.SetShape(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Ghost);
             _ghost.gameObject.SetActive(false);
 
             UpdateDrag(world);
