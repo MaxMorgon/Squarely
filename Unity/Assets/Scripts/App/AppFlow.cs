@@ -36,7 +36,7 @@ namespace Squarely.App
 
         public void GoToGame(GameSetup setup)
         {
-            _stateMachine.ChangeState(new GameState(_screens.Game, _screenRoot, _camera, setup));
+            _stateMachine.ChangeState(new GameState(this, _screens, _screenRoot, _camera, setup));
         }
     }
 }

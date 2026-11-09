@@ -33,6 +33,9 @@ namespace Squarely.Presentation
 
         public bool IsResolved => _sim.IsResolved;
 
+        /// <summary>The game resolved. Gives the resolution and the final score.</summary>
+        public event Action<GameResolution, int> GameEnded;
+
         private SimConfig Config => _setup.Config;
 
         #region Unity
@@ -112,7 +115,7 @@ namespace Squarely.Presentation
             RefreshViews();
 
             if (_sim.IsResolved)
-                Debug.Log($"Game over: {_sim.Resolution}, score {_sim.Score}. Use the New Game context menu to restart.");
+                GameEnded?.Invoke(_sim.Resolution, _sim.Score);
         }
 
         #endregion

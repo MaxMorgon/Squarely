@@ -93,7 +93,7 @@ Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
-Screens/           MenuScreen (UI screens: report the player's choices as C# events)
+Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
 ```
 
 Until playback exists, `GameController` rebuilds the board and hand from the final sim state after each command.
@@ -179,4 +179,5 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 - **`AppRoot`** is the only component in the scene that starts anything. Its `Start` builds the default `GameSetup` and an `AppFlow`, then goes to the menu. It holds the screen prefabs (`AppScreens`), the camera, the default game mode and the seed.
 - **`AppFlow`** lists every place the app can go (`GoToMenu`, `GoToGame(setup)`). Each call creates a fresh state with what it needs and hands it to the state machine. States call these methods to move on, so reading `AppFlow` and the states shows the whole flow.
 - **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequested`. **`GameState`** creates the Game prefab and calls `GameController.Initialize(setup, camera)`. Each destroys what it created in `Exit`.
+- **Game over.** `GameController` raises `GameEnded` (resolution, final score). `GameState` then creates `GameOverScreen` over the game: Restart closes it and calls `GameController.NewGame()` with the same setup, Menu goes to the menu.
 - A playtest screen will start games through the same `GoToGame(setup)` with its own setup.
