@@ -9,7 +9,10 @@ namespace Squarely.Presentation
     /// </summary>
     public sealed class GameController : MonoBehaviour
     {
-        [SerializeField] private Theme _theme;
+        [Tooltip("The game mode. Edits apply live, also in play mode. Board and hand size changes need a play mode restart.")]
+        [SerializeField] private SimConfigAsset _simConfig;
+
+        [SerializeField] private CellTheme _cellTheme;
 
         [Tooltip("0 picks a new seed for every game.")]
         [SerializeField] private int _seed;
@@ -25,29 +28,43 @@ namespace Squarely.Presentation
         [SerializeField] private HandView _handView;
         [SerializeField] private PieceDragController _dragController;
 
-        private SimConfig _config;
+        private BoardSpace _boardSpace;
+        private int _handSize;
         private Sim _sim;
 
         public bool IsResolved => _sim.IsResolved;
+
+        private SimConfig Config => _simConfig.Config;
 
         #region Unity
 
         private void Start()
         {
-            _config = DefaultSimConfig.Create();
-
-            var poolRoot = new GameObject("Cell Visual Pool").transform;
+            var poolRoot = new GameObject("Cell View Pool").transform;
             poolRoot.SetParent(transform, false);
 
-            var catalog = new CellVisualCatalog(_theme.ResolveCellVisual, poolRoot);
-            var layout = new BoardLayout(_config.BoardWidth, _config.BoardHeight, _cellSize);
+            var viewPool = new CellViewPool(_cellTheme.ResolveCellView, poolRoot);
+            _boardSpace = new BoardSpace(Config.BoardWidth, Config.BoardHeight, _cellSize);
+            _handSize = Config.HandSize;
 
-            _background.Build(layout, _theme.EmptyTile);
-            _layerView.Initialize(layout, catalog);
-            _handView.Initialize(_config.HandSize, catalog, _cellSize);
-            _dragController.Initialize(this, _handView, _boardRoot, layout, catalog);
+            _background.Build(_boardSpace, _cellTheme.EmptyTile);
+            _layerView.Initialize(_boardSpace, viewPool);
+            _handView.Initialize(_handSize, viewPool, _cellSize);
+            _dragController.Initialize(this, _handView, _boardRoot, _boardSpace, viewPool);
 
             NewGame();
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (_simConfig == null || Config.BoardWidth <= 0 || Config.BoardHeight <= 0)
+                return;
+
+            if (_background != null)
+                _background.DrawGizmos(new BoardSpace(Config.BoardWidth, Config.BoardHeight, _cellSize));
+
+            if (_handView != null)
+                _handView.DrawGizmos(Config.HandSize, _cellSize);
         }
 
         #endregion
@@ -57,8 +74,14 @@ namespace Squarely.Presentation
         [ContextMenu("New Game")]
         public void NewGame()
         {
+            if (Config.BoardWidth != _boardSpace.Width || Config.BoardHeight != _boardSpace.Height || Config.HandSize != _handSize)
+            {
+                Debug.LogError("Board or hand size changed since play mode started. Restart play mode to apply it.");
+                return;
+            }
+
             ulong seed = _seed != 0 ? (ulong)_seed : (ulong)DateTime.Now.Ticks;
-            _sim = new Sim(_config, seed);
+            _sim = new Sim(Config, seed);
             Debug.Log($"New game, seed {seed}.");
 
             RefreshViews();

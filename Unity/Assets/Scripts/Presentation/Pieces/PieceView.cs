@@ -9,17 +9,14 @@ namespace Squarely.Presentation
     /// </summary>
     public sealed class PieceView : MonoBehaviour
     {
-        private readonly List<CellVisual> _visuals = new List<CellVisual>();
+        private readonly List<CellView> _views = new List<CellView>();
 
         public PieceShape Shape { get; private set; }
 
         /// <summary>Local position of the center of the shape's origin cell (offset 0,0).</summary>
         public Vector2 OriginLocal { get; private set; }
 
-        /// <summary>World position of the center of the shape's origin cell.</summary>
-        public Vector3 OriginWorld => transform.TransformPoint(OriginLocal);
-
-        public void Show(PieceShape shape, CellVisualCatalog catalog, float cellSize, CellVisualState state)
+        public void Show(PieceShape shape, CellViewPool viewPool, float cellSize, CellViewState state)
         {
             Clear();
 
@@ -28,20 +25,20 @@ namespace Squarely.Presentation
 
             foreach (GridPos offset in shape.Offsets)
             {
-                CellVisual visual = catalog.Get(shape.CellTypeId, transform);
-                visual.transform.localPosition = OriginLocal + new Vector2(offset.X, offset.Y) * cellSize;
-                visual.SetState(state);
-                _visuals.Add(visual);
+                CellView view = viewPool.Get(shape.CellTypeId, transform);
+                view.transform.localPosition = OriginLocal + new Vector2(offset.X, offset.Y) * cellSize;
+                view.SetState(state);
+                _views.Add(view);
             }
         }
 
-        /// <summary>Releases all visuals, leaving the view empty.</summary>
+        /// <summary>Releases all views, leaving the view empty.</summary>
         public void Clear()
         {
-            foreach (CellVisual visual in _visuals)
-                visual.Release();
+            foreach (CellView view in _views)
+                view.Release();
 
-            _visuals.Clear();
+            _views.Clear();
             Shape = null;
         }
     }

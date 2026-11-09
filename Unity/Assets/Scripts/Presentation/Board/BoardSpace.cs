@@ -6,7 +6,7 @@ namespace Squarely.Presentation
     /// <summary>
     /// Converts between board cells and positions in the board's local space. The board is centered on the local origin.
     /// </summary>
-    public sealed class BoardLayout
+    public sealed class BoardSpace
     {
         public int Width { get; }
 
@@ -14,7 +14,7 @@ namespace Squarely.Presentation
 
         public float CellSize { get; }
 
-        public BoardLayout(int width, int height, float cellSize)
+        public BoardSpace(int width, int height, float cellSize)
         {
             Width = width;
             Height = height;

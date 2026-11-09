@@ -3,13 +3,13 @@ using System;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// One cell type and the visual prefab that shows it.
+    /// One cell type and the view prefab that shows it.
     /// </summary>
     [Serializable]
-    public sealed class ThemeEntry
+    public sealed class CellThemeEntry
     {
         public string TypeId;
 
-        public CellVisual Visual;
+        public CellView View;
     }
 }

@@ -18,7 +18,7 @@ One top-level type per file. The folder listing doubles as an index, for example
 ```
 Sim.cs          The session: owns state, runs the turn flow
 AssemblyInfo.cs InternalsVisibleTo for tests
-Core/           GridPos, Cell, PieceShape, PieceInstance, Board, Hand, read-only interfaces
+Core/           GridPos, Grid<T>, Cell, PieceShape, PieceInstance, Board, Hand, read-only interfaces
 Patterns/       BoardPattern, PatternCell, PatternMatch, ClearedMatch, PatternMatcher, cell conditions
 Commands/       ISimCommand, PlacePieceCommand, CommandResult
 Rules/          IPieceDealer, IScoringRule, ScoreResult, defaults, RuleFactory, RuleIds
@@ -33,6 +33,7 @@ Random/         DeterministicRandom
 | Type | Responsibility |
 |---|---|
 | `GridPos` | `readonly struct` (X, Y). Origin bottom-left. |
+| `Grid<T>` | Fixed-size rectangular storage, one value per `GridPos`. Shared by `Board` and the board views. |
 | `Cell` | `readonly struct` with a string `TypeId`, where `null` means empty, so a default cell is empty. String ids let new cell types arrive through data. Board **layers** (e.g. fire) will be separate per-cell grids, independent of the type. |
 | `PieceShape` | Immutable definition: `Id`, `Offsets` (normalized so the min X/Y is 0), `Width`, `Height`, `CellTypeId`. Built from a text pattern such as `"##/#."`. |
 | `PieceInstance` | One dealt piece: a unique `InstanceId` (sequential, so deterministic) plus its `PieceShape`. Commands refer to pieces by instance id, so two identical shapes in the hand can be told apart. |
@@ -85,9 +86,10 @@ Assembly `Squarely.Presentation`. Status: **views and drag input implemented (st
 
 ```
 GameController.cs  Owns the sim, sets up the views, passes commands to the sim
-Theme/             Theme, ThemeEntry
-Visuals/           CellVisual, CellVisualState, CellVisualCatalog (pooling), SpriteStateTint
-Board/             BoardLayout (grid <-> local space), SlotGrid, LayerView, BoardBackground
+Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
+Theme/             CellTheme, CellThemeEntry
+Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
+Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
 ```
@@ -112,12 +114,14 @@ Until playback exists, `GameController` rebuilds the board and hand from the fin
 
 - **Board layers (planned in Sim, not yet built).** All layers work the same way, and any cell type (stone, wood, fire, trap...) can sit in any layer. The config binds each cell type to a layer, and a placed piece goes into its type's layer. Behaviour comes from the cell type's data (e.g. blocks placement, cleared by matches), not from the layer index. Logic runs through layers in a consistent order (lowest to highest).
 - **Layers are one future feature, Sim and view together.** Until then the view has no layer concept at all: no layer index, no layer list, no per-layer sorting.
-- **`LayerView`** is a self-contained component that holds one grid of cell visuals. For now the board uses a single instance. When layers arrive, it becomes one instance per layer. Visuals are pooled and spawned only where a cell is non-empty.
-- **Visuals are not owned by grid slots.** A `LayerView` keeps an array of the current visual per slot. On clear, the visual is detached (removed from the array) and handed to the cue that animates it, so a new piece can land in the same slot right away. When its animation ends, the visual returns itself to the pool it came from.
-- **One visual source everywhere.** The board, the hand pieces and the drag ghost all get their visuals from the same catalog.
-- **Theme.** Views never reference visual prefabs directly. A `Theme` asset resolves a cell type id to a visual prefab. Changing theme means swapping one asset. When layers arrive, the theme also defines each layer's sorting order (applied through a Sorting Group on each `LayerView`), and prefabs only order things inside their own layer.
-- **Visual states.** Each cell visual exposes a state: Idle, or Ghost (the translucent landing preview shown on the board while dragging). Code sets the state, and the prefab decides how to show it (Animator, tween, shader parameter). More states are added when a feature needs them.
+- **`LayerView`** is a self-contained component that holds one `Grid<CellView>`. For now the board uses a single instance. When layers arrive, it becomes one instance per layer. Views are pooled and spawned only where a cell is non-empty.
+- **Views are not owned by grid slots.** A `LayerView` keeps a grid of the current view per slot. On clear, the view is detached (removed from the grid) and handed to the cue that animates it, so a new piece can land in the same slot right away. When its animation ends, the view returns itself to the pool it came from.
+- **One view source everywhere.** The board, the hand pieces and the drag ghost all get their cell views from the same `CellViewPool`.
+- **Themes are modular.** Each area gets its own theme asset (`CellTheme` now, e.g. `MenuTheme` later). Views never reference cell view prefabs directly. A `CellTheme` asset resolves a cell type id to a view prefab. Changing theme means swapping one asset. When layers arrive, the theme also defines each layer's sorting order (applied through a Sorting Group on each `LayerView`), and prefabs only order things inside their own layer.
+- **Cell view states.** Each cell view exposes a state: Idle, or Ghost (the translucent landing preview shown on the board while dragging). Code sets the state, and the prefab decides how to show it (Animator, tween, shader parameter). More states are added when a feature needs them.
 - **Board background.** Static empty-slot tiles only. Hover and preview highlights are a separate view.
+- **Edit-time previews.** Anything whose size or position comes only from config or serialized values draws a gizmo preview of it, so the scene is WYSIWYG without entering play mode. Such views expose `DrawGizmos(...)` taking the config values they need, and `GameController` calls them from `OnDrawGizmos` because it holds the config. Today: board outline and grid (`BoardBackground`), hand slot pick-up areas (`HandView`).
+- **Drag feel is view-only.** `PieceDragController` computes the landing cell from a logical drag target (pointer plus lift), never from the dragged view's transform. The dragged view follows the target in one place (`MoveDraggedView`), so lag, tilt or other feel can go there without changing placement.
 
 ### Event playback
 
@@ -133,13 +137,13 @@ Until playback exists, `GameController` rebuilds the board and hand from the fin
 The player can act during playback. A new command **snaps** everything still pending, then starts its own playback right away.
 
 - Every `CueStep` has `Play` and `Snap`. `Snap` applies the step's end state and is called on running steps **and on steps that haven't started yet**. For example, a delayed score step snaps the label to its final value.
-- Transient things have an empty or trivial `Snap`: particles and sounds already playing simply finish, and a detached visual that hasn't animated yet goes back to the pool.
+- Transient things have an empty or trivial `Snap`: particles and sounds already playing simply finish, and a detached view that hasn't animated yet goes back to the pool.
 - So there is one rule with no per-step modes: the board views are correct instantly, and effects already playing finish on their own.
 
 ### Build order (one PR each)
 
 1. **Sim:** `Sim.Preview(ISimCommand)` and cleared cells per match in `PatternsClearedEvent`, with tests. **Done.**
-2. **Views and input:** `Theme` and visual catalog, a single `LayerView` with pooled visuals detached from slots, board background, shared visuals for hand and ghost, and drag-and-drop placement (views rebuild from sim state until playback exists). **Done.**
+2. **Views and input:** `CellTheme` and `CellViewPool`, a single `LayerView` with pooled views detached from slots, board background, shared visuals for hand and ghost, and drag-and-drop placement (views rebuild from sim state until playback exists). **Done.**
 3. **Playback:** `EventPlayer`, handlers, shared context, `CueSequence` and the first `CueStep`s, fast-forward by snapping.
 4. **Feedback:** hover and preview states driven by `Sim.Preview`.
 

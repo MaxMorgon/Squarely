@@ -21,27 +21,28 @@ namespace Squarely.Presentation
         private GameController _game;
         private HandView _hand;
         private Transform _boardRoot;
-        private BoardLayout _layout;
-        private CellVisualCatalog _catalog;
+        private BoardSpace _boardSpace;
+        private CellViewPool _viewPool;
 
         private PieceView _dragged;
         private PieceView _ghost;
 
         private int _dragSlot = -1;
         private PieceInstance _dragPiece;
+        private Vector3 _dragTarget;
         private bool _hasCheckedOrigin;
         private GridPos _checkedOrigin;
         private bool _canPlace;
 
         private bool IsDragging => _dragPiece != null;
 
-        public void Initialize(GameController game, HandView hand, Transform boardRoot, BoardLayout layout, CellVisualCatalog catalog)
+        public void Initialize(GameController game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool)
         {
             _game = game;
             _hand = hand;
             _boardRoot = boardRoot;
-            _layout = layout;
-            _catalog = catalog;
+            _boardSpace = boardSpace;
+            _viewPool = viewPool;
 
             _dragged = CreatePieceView("Dragged Piece", transform);
             _dragged.gameObject.AddComponent<SortingGroup>().sortingOrder = _draggedSortingOrder;
@@ -98,10 +99,10 @@ namespace Squarely.Presentation
             _hasCheckedOrigin = false;
             _hand.SetSlotVisible(slot, false);
 
-            _dragged.Show(piece.Shape, _catalog, _layout.CellSize, CellVisualState.Idle);
+            _dragged.Show(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Idle);
             _dragged.gameObject.SetActive(true);
 
-            _ghost.Show(piece.Shape, _catalog, _layout.CellSize, CellVisualState.Ghost);
+            _ghost.Show(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Ghost);
             _ghost.gameObject.SetActive(false);
 
             UpdateDrag(world);
@@ -109,10 +110,13 @@ namespace Squarely.Presentation
 
         private void UpdateDrag(Vector3 world)
         {
-            _dragged.transform.position = world + Vector3.up * _liftOffset;
+            _dragTarget = world + Vector3.up * _liftOffset;
+            MoveDraggedView();
 
-            Vector3 originOnBoard = _boardRoot.InverseTransformPoint(_dragged.OriginWorld);
-            GridPos origin = _layout.NearestCell(originOnBoard);
+            // Placement uses the target, not the dragged view, so view effects never shift where the piece lands.
+            Vector3 originWorld = _dragTarget + _dragged.transform.parent.TransformVector(_dragged.OriginLocal);
+            Vector3 originOnBoard = _boardRoot.InverseTransformPoint(originWorld);
+            GridPos origin = _boardSpace.NearestCell(originOnBoard);
 
             if (_hasCheckedOrigin && origin == _checkedOrigin)
                 return;
@@ -124,7 +128,13 @@ namespace Squarely.Presentation
             _ghost.gameObject.SetActive(_canPlace);
 
             if (_canPlace)
-                _ghost.transform.localPosition = _layout.CellCenter(origin) - _ghost.OriginLocal;
+                _ghost.transform.localPosition = _boardSpace.CellCenter(origin) - _ghost.OriginLocal;
+        }
+
+        /// <summary>Moves the dragged piece's view toward the drag target. The single place for drag feel such as lag and tilt.</summary>
+        private void MoveDraggedView()
+        {
+            _dragged.transform.position = _dragTarget;
         }
 
         private void EndDrag()

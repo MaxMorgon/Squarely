@@ -136,7 +136,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8cb8e3d5cbe063149af146cf00fdeea8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CellVisual
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CellView
 --- !u!114 &7978915702494184596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,7 +148,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82a09a6982093d340abb40122da52b1f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.SpriteStateTint
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CellStateSpriteTint
   _renderer: {fileID: 8554437661271883749}
   _idle: {r: 1, g: 0.62, b: 0.22, a: 1}
   _ghost: {r: 1, g: 0.62, b: 0.22, a: 0.35}

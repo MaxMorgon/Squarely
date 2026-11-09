@@ -228,7 +228,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eda3b1a0d57cc404b98cd51aa08621b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.GameController
-  _theme: {fileID: 11400000, guid: 01c6dba172a1cc1479f056b3e00c5b84, type: 2}
+  _simConfig: {fileID: 11400000, guid: bbabd39d8dadbd14e894501e1bdc6a16, type: 2}
+  _cellTheme: {fileID: 11400000, guid: 01c6dba172a1cc1479f056b3e00c5b84, type: 2}
   _seed: 0
   _cellSize: 1
   _boardRoot: {fileID: 102460679}

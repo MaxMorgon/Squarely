@@ -145,6 +145,20 @@ Each comment below improved the design:
 
 ---
 
+## Session 4 — 2026-11-09
+
+### 17. PR 8 review
+- **PR workflow.** After "review submitted", the AI replies to every comment with its plan or pushback. After "go", it fixes, then merges unless told otherwise. **Decision by:** you.
+- **One `Grid<T>` in Sim** replaces the view-only `SlotGrid`. `Board` stores its cells in it, and `LayerView` stores its views in it. It lives in Sim, not a new shared assembly, because Sim is already the Unity-free assembly everything references. **Decision by:** you (AI chose Sim over a common project).
+- **Renames toward standard terms.** `CellVisual` → `CellView`, `CellVisualCatalog` → `CellViewPool` (it pools, not offers options), `SpriteStateTint` → `CellStateSpriteTint`, `BoardLayout` → `BoardSpace` ("layout" suggests the board's shape), `Theme` → `CellTheme` (themes are modular, one per area). **Decision by:** you (AI proposed `BoardSpace`, `CellViewPool` and theme per area).
+- **Sim config is an asset** (`SimConfigAsset`), and the sim uses the asset's live config, so tuning in play mode applies right away. That trades away reproducing a run from seed + inputs while tweaking. **Decision by:** you, aware of the determinism cost.
+- **Edit-time gizmo previews** for anything sized only by config (board, hand slots), as a standard for WYSIWYG scenes. Plain gizmos rather than a paid drawing asset for now. **Decision by:** you.
+- **Drag feel is prepared, not built.** Placement now reads a logical drag target, not the dragged view, so lag and tilt can be added in one method later. **Decision by:** you (AI found that the old code would skew placement once the view lagged).
+- **Third-party assets.** Odin Inspector and ALINE were considered and dropped for now (`[ContextMenu]` and gizmos are enough). Paid assets in the repo would also need handling before a public showcase.
+- **`Set` over `Show`** for methods that take data and display it. `Show` is reserved for visibility. A follow-up refactor PR applies it.
+
+---
+
 ## Highlights (raw material for README / CV)
 
 - Designed a **deterministic, headless puzzle simulation** in C#, decoupled from Unity, with full unit-test coverage running in both .NET and Unity.

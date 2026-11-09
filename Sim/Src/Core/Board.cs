@@ -9,35 +9,32 @@ namespace Squarely.Simulation
     /// </summary>
     public sealed class Board : IReadOnlyBoard
     {
-        private readonly Cell[] _cells;
+        private readonly Grid<Cell> _cells;
 
-        public int Width { get; }
+        public int Width => _cells.Width;
 
-        public int Height { get; }
+        public int Height => _cells.Height;
 
         public Board(int width, int height)
+            : this(new Grid<Cell>(width, height))
         {
-            if (width <= 0)
-                throw new ArgumentOutOfRangeException(nameof(width), "Board width must be positive.");
+        }
 
-            if (height <= 0)
-                throw new ArgumentOutOfRangeException(nameof(height), "Board height must be positive.");
-
-            Width = width;
-            Height = height;
-            _cells = new Cell[width * height];
+        private Board(Grid<Cell> cells)
+        {
+            _cells = cells;
         }
 
         #region Reading
 
         public bool Contains(GridPos pos)
         {
-            return pos.X >= 0 && pos.X < Width && pos.Y >= 0 && pos.Y < Height;
+            return _cells.Contains(pos);
         }
 
         public Cell GetCell(GridPos pos)
         {
-            return _cells[IndexOf(pos)];
+            return _cells[pos];
         }
 
         public bool IsEmpty(GridPos pos)
@@ -72,14 +69,6 @@ namespace Squarely.Simulation
             return false;
         }
 
-        private int IndexOf(GridPos pos)
-        {
-            if (!Contains(pos))
-                throw new ArgumentOutOfRangeException(nameof(pos), $"Position {pos} is outside the {Width}x{Height} board.");
-
-            return pos.Y * Width + pos.X;
-        }
-
         #endregion
 
         #region Mutation
@@ -87,14 +76,12 @@ namespace Squarely.Simulation
         /// <summary>A deep copy, for preview clones of the sim.</summary>
         internal Board Clone()
         {
-            var copy = new Board(Width, Height);
-            Array.Copy(_cells, copy._cells, _cells.Length);
-            return copy;
+            return new Board(_cells.Clone());
         }
 
         internal void SetCell(GridPos pos, Cell cell)
         {
-            _cells[IndexOf(pos)] = cell;
+            _cells[pos] = cell;
         }
 
         internal void Place(PieceShape shape, GridPos origin)
@@ -114,10 +101,10 @@ namespace Squarely.Simulation
         /// </summary>
         internal IReadOnlyList<GridPos> ClearCells(IEnumerable<GridPos> positions)
         {
-            var toClear = new bool[_cells.Length];
+            var toClear = new Grid<bool>(Width, Height);
 
             foreach (GridPos pos in positions)
-                toClear[IndexOf(pos)] = true;
+                toClear[pos] = true;
 
             var cleared = new List<GridPos>();
 
@@ -127,7 +114,7 @@ namespace Squarely.Simulation
                 {
                     var pos = new GridPos(x, y);
 
-                    if (!toClear[IndexOf(pos)] || IsEmpty(pos))
+                    if (!toClear[pos] || IsEmpty(pos))
                         continue;
 
                     SetCell(pos, Cell.Empty);

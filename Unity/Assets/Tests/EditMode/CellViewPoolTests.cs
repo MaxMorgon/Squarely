@@ -5,22 +5,22 @@ using Object = UnityEngine.Object;
 
 namespace Squarely.Presentation.Tests
 {
-    public class CellVisualCatalogTests
+    public class CellViewPoolTests
     {
-        private CellVisual _blockPrefab;
-        private CellVisual _stonePrefab;
+        private CellView _blockPrefab;
+        private CellView _stonePrefab;
         private Transform _poolRoot;
         private Transform _parent;
-        private CellVisualCatalog _catalog;
+        private CellViewPool _viewPool;
 
         [SetUp]
         public void SetUp()
         {
-            _blockPrefab = new GameObject("Block").AddComponent<CellVisual>();
-            _stonePrefab = new GameObject("Stone").AddComponent<CellVisual>();
+            _blockPrefab = new GameObject("Block").AddComponent<CellView>();
+            _stonePrefab = new GameObject("Stone").AddComponent<CellView>();
             _poolRoot = new GameObject("Pool").transform;
             _parent = new GameObject("Parent").transform;
-            _catalog = new CellVisualCatalog(Resolve, _poolRoot);
+            _viewPool = new CellViewPool(Resolve, _poolRoot);
         }
 
         [TearDown]
@@ -33,55 +33,55 @@ namespace Squarely.Presentation.Tests
         }
 
         [Test]
-        public void Get_ReturnsActiveIdleVisual_UnderParent()
+        public void Get_ReturnsActiveIdleView_UnderParent()
         {
-            CellVisual visual = _catalog.Get("block", _parent);
+            CellView view = _viewPool.Get("block", _parent);
 
-            Assert.That(visual.gameObject.activeSelf, Is.True);
-            Assert.That(visual.State, Is.EqualTo(CellVisualState.Idle));
-            Assert.That(visual.transform.parent, Is.EqualTo(_parent));
+            Assert.That(view.gameObject.activeSelf, Is.True);
+            Assert.That(view.State, Is.EqualTo(CellViewState.Idle));
+            Assert.That(view.transform.parent, Is.EqualTo(_parent));
         }
 
         [Test]
         public void Get_TwiceWithoutRelease_ReturnsDifferentInstances()
         {
-            CellVisual first = _catalog.Get("block", _parent);
-            CellVisual second = _catalog.Get("block", _parent);
+            CellView first = _viewPool.Get("block", _parent);
+            CellView second = _viewPool.Get("block", _parent);
 
             Assert.That(second, Is.Not.SameAs(first));
         }
 
         [Test]
-        public void Release_DeactivatesVisual_AndMovesItToPoolRoot()
+        public void Release_DeactivatesView_AndMovesItToPoolRoot()
         {
-            CellVisual visual = _catalog.Get("block", _parent);
+            CellView view = _viewPool.Get("block", _parent);
 
-            visual.Release();
+            view.Release();
 
-            Assert.That(visual.gameObject.activeSelf, Is.False);
-            Assert.That(visual.transform.parent, Is.EqualTo(_poolRoot));
+            Assert.That(view.gameObject.activeSelf, Is.False);
+            Assert.That(view.transform.parent, Is.EqualTo(_poolRoot));
         }
 
         [Test]
         public void Get_AfterRelease_ReusesInstance_InIdleState()
         {
-            CellVisual first = _catalog.Get("block", _parent);
-            first.SetState(CellVisualState.Ghost);
+            CellView first = _viewPool.Get("block", _parent);
+            first.SetState(CellViewState.Ghost);
             first.Release();
 
-            CellVisual second = _catalog.Get("block", _parent);
+            CellView second = _viewPool.Get("block", _parent);
 
             Assert.That(second, Is.SameAs(first));
-            Assert.That(second.State, Is.EqualTo(CellVisualState.Idle));
+            Assert.That(second.State, Is.EqualTo(CellViewState.Idle));
         }
 
         [Test]
-        public void Get_ReleasedVisualOfOtherType_IsNotReused()
+        public void Get_ReleasedViewOfOtherType_IsNotReused()
         {
-            CellVisual block = _catalog.Get("block", _parent);
+            CellView block = _viewPool.Get("block", _parent);
             block.Release();
 
-            CellVisual stone = _catalog.Get("stone", _parent);
+            CellView stone = _viewPool.Get("stone", _parent);
 
             Assert.That(stone, Is.Not.SameAs(block));
             Assert.That(stone.name, Does.StartWith("Stone"));
@@ -90,16 +90,16 @@ namespace Squarely.Presentation.Tests
         [Test]
         public void Get_UnresolvedType_Throws()
         {
-            Assert.Throws<InvalidOperationException>(() => _catalog.Get("unknown", _parent));
+            Assert.Throws<InvalidOperationException>(() => _viewPool.Get("unknown", _parent));
         }
 
         [Test]
-        public void Release_VisualNotFromCatalog_Throws()
+        public void Release_ViewNotFromPool_Throws()
         {
             Assert.Throws<InvalidOperationException>(() => _blockPrefab.Release());
         }
 
-        private CellVisual Resolve(string typeId)
+        private CellView Resolve(string typeId)
         {
             switch (typeId)
             {
