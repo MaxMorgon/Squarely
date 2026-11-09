@@ -36,7 +36,7 @@ namespace Squarely.Simulation
             {
                 GridPos pos = origin + cell.Offset;
 
-                if (!board.Contains(pos) || !cell.Condition.Matches(board.GetCell(pos)))
+                if (!board.IsWithinBounds(pos) || !cell.Condition.Matches(board.GetCell(pos)))
                     return false;
             }
 

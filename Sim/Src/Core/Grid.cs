@@ -32,7 +32,7 @@ namespace Squarely.Simulation
             set => _items[IndexOf(pos)] = value;
         }
 
-        public bool Contains(GridPos pos)
+        public bool IsWithinBounds(GridPos pos)
         {
             return pos.X >= 0 && pos.X < Width && pos.Y >= 0 && pos.Y < Height;
         }
@@ -47,7 +47,7 @@ namespace Squarely.Simulation
 
         private int IndexOf(GridPos pos)
         {
-            if (!Contains(pos))
+            if (!IsWithinBounds(pos))
                 throw new ArgumentOutOfRangeException(nameof(pos), $"Position {pos} is outside the {Width}x{Height} grid.");
 
             return pos.Y * Width + pos.X;

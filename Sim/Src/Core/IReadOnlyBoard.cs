@@ -9,7 +9,7 @@ namespace Squarely.Simulation
 
         int Height { get; }
 
-        bool Contains(GridPos pos);
+        bool IsWithinBounds(GridPos pos);
 
         Cell GetCell(GridPos pos);
 
