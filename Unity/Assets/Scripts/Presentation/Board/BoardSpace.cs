@@ -21,7 +21,7 @@ namespace Squarely.Presentation
             CellSize = cellSize;
         }
 
-        public bool Contains(GridPos pos)
+        public bool IsWithinBounds(GridPos pos)
         {
             return pos.X >= 0 && pos.X < Width && pos.Y >= 0 && pos.Y < Height;
         }

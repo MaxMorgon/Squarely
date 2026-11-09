@@ -27,9 +27,9 @@ namespace Squarely.Simulation
 
         #region Reading
 
-        public bool Contains(GridPos pos)
+        public bool IsWithinBounds(GridPos pos)
         {
-            return _cells.Contains(pos);
+            return _cells.IsWithinBounds(pos);
         }
 
         public Cell GetCell(GridPos pos)
@@ -48,7 +48,7 @@ namespace Squarely.Simulation
             {
                 GridPos pos = origin + offset;
 
-                if (!Contains(pos) || !IsEmpty(pos))
+                if (!IsWithinBounds(pos) || !IsEmpty(pos))
                     return false;
             }
 

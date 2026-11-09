@@ -60,7 +60,7 @@ namespace Squarely.Presentation.Tests
             GridPos pos = boardSpace.NearestCell(new Vector2(-4.8f, 4.8f));
 
             Assert.That(pos, Is.EqualTo(new GridPos(-1, 8)));
-            Assert.That(boardSpace.Contains(pos), Is.False);
+            Assert.That(boardSpace.IsWithinBounds(pos), Is.False);
         }
 
         private static void AssertNear(Vector2 actual, Vector2 expected)

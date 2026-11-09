@@ -45,15 +45,15 @@ namespace Squarely.Simulation.Tests
         }
 
         [Test]
-        public void Contains_IsTrueOnlyInsideTheGrid()
+        public void IsWithinBounds_IsTrueOnlyInsideTheGrid()
         {
             var grid = new Grid<int>(4, 2);
 
-            Assert.That(grid.Contains(new GridPos(0, 0)), Is.True);
-            Assert.That(grid.Contains(new GridPos(3, 1)), Is.True);
-            Assert.That(grid.Contains(new GridPos(4, 0)), Is.False);
-            Assert.That(grid.Contains(new GridPos(0, 2)), Is.False);
-            Assert.That(grid.Contains(new GridPos(-1, 0)), Is.False);
+            Assert.That(grid.IsWithinBounds(new GridPos(0, 0)), Is.True);
+            Assert.That(grid.IsWithinBounds(new GridPos(3, 1)), Is.True);
+            Assert.That(grid.IsWithinBounds(new GridPos(4, 0)), Is.False);
+            Assert.That(grid.IsWithinBounds(new GridPos(0, 2)), Is.False);
+            Assert.That(grid.IsWithinBounds(new GridPos(-1, 0)), Is.False);
         }
 
         [Test]
