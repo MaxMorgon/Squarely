@@ -172,4 +172,4 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 ### State machine
 
 - `IAppState` has `Enter` and `Exit`. `AppStateMachine.ChangeState(next)` exits the current state, then enters the next.
-- A change requested during `Enter` or `Exit` (e.g. a screen event fired while setting up) is queued and runs after the current transition, so exits and enters always come in pairs. Transitions are synchronous for now; async transitions (fades, loading) come when a feature needs them.
+- Calling `ChangeState` from inside `Enter` or `Exit` throws `InvalidOperationException`: a state moves on from a later callback (a button, a screen event), never while it is being entered or exited. Transitions are synchronous for now; async transitions (fades, loading) come when a feature needs them.
