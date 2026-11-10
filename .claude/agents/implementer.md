@@ -31,25 +31,22 @@ If any of these is missing or the brief is ambiguous on something that changes t
 
 ## Unity: headless only
 
-**Never run `unity command ...` or the `unity` CLI.** It drives the user's open editor on the main checkout, not your slot.
+**Never run `unity command ...` or the `unity` CLI.** It drives the user's open editor on the main checkout, not your slot. A hook blocks it.
 
-Use the editor binary in batch mode on your slot's project:
+Verify with the repo script; it runs dotnet test, then Unity import + compile + EditMode tests, and prints only errors and totals (~1–2 min):
 
 ```sh
-UNITY="/c/Program Files/Unity/Hub/Editor/6000.3.26f1/Editor/Unity.exe"
-
-# Import + compile (also generates .meta files for new files and folders)
-"$UNITY" -batchmode -nographics -quit -projectPath "<slot>/Unity" -logFile "<slot>/Unity/Logs/batch-compile.log"
-
-# EditMode tests (no -quit; ~90 s)
-"$UNITY" -batchmode -nographics -projectPath "<slot>/Unity" -runTests -testPlatform EditMode -testResults "<slot>/Unity/Logs/editmode-results.xml" -logFile "<slot>/Unity/Logs/batch-tests.log"
-
-# Editor setup scripts (e.g. building a prefab)
-"$UNITY" -batchmode -nographics -quit -projectPath "<slot>/Unity" -executeMethod <Namespace.Class.Method> -logFile "<slot>/Unity/Logs/batch-method.log"
+bash <slot>/Tools/verify.sh <slot>               # everything
+bash <slot>/Tools/verify.sh <slot> --sim-only    # just dotnet test, for quick loops
 ```
 
-- Check the exit code. On failure, grep the log for `error CS` and `Exception`. Don't read the whole log.
-- For test results, read only the totals on the `<test-run ...>` line of the results XML, plus any failed test cases.
+For editor setup scripts (e.g. building a prefab), run the batch-mode editor directly. Take the version from `Unity/ProjectSettings/ProjectVersion.txt`:
+
+```sh
+"/c/Program Files/Unity/Hub/Editor/<version>/Editor/Unity.exe" -batchmode -nographics -quit -projectPath "<slot>/Unity" -executeMethod <Namespace.Class.Method> -logFile "<slot>/Unity/Logs/batch-method.log"
+```
+
+- On failure, grep the log for `error CS` and `Exception`. Don't read the whole log.
 - Let Unity generate `.meta` files with the import run. Never hand-write GUIDs.
 - Create prefabs and other complex assets with an `-executeMethod` editor script, not by hand-writing YAML. Afterwards, grep new serialized fields in the YAML for `{fileID: 0}` (unwired references).
 - Builder scripts are throwaway: delete the script (and its `.meta`) and commit only the asset. The user edits prefabs by hand afterwards, so a kept builder goes stale. Keep one only if the brief says the asset will be regenerated.
@@ -58,23 +55,22 @@ UNITY="/c/Program Files/Unity/Hub/Editor/6000.3.26f1/Editor/Unity.exe"
 ## Definition of done
 
 All of these, in order:
-1. `dotnet test <slot>/Squarely.sln -v q` passes (if Sim or Sim.Tests changed, or always if unsure).
-2. The headless compile has no errors, and the EditMode tests pass.
-3. Every new file and folder under `Unity/Assets/` and `Src/` has its `.meta`; none are orphaned.
-4. `git status` shows only intended changes: no stray `ProjectSettings/`, `Packages/` or scene edits.
-5. Commit in small, logical commits with clear messages, each ending with:
+1. `bash <slot>/Tools/verify.sh <slot>` passes: Sim tests, Unity compile and EditMode tests.
+2. Every new file and folder under `Unity/Assets/` and `Src/` has its `.meta`; none are orphaned.
+3. `git status` shows only intended changes: no stray `ProjectSettings/`, `Packages/` or scene edits.
+4. Commit in small, logical commits with clear messages, each ending with:
    ```
    Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
    ```
-6. `git push -u origin <branch>` and open the PR: `gh pr create --base <base> --head <branch> --title ... --body ...`. The body covers:
+5. `git push -u origin <branch>` and open the PR: `gh pr create --base <base> --head <branch> --title ... --body ...`. The body covers:
    - **What:** the change, in a few bullets.
    - **Decisions:** choices the brief left open, and why.
-   - **Verified:** exactly what ran and passed (dotnet test, headless compile, EditMode tests).
+   - **Verified:** exactly what ran and passed (the verify.sh output totals).
    - **Needs the editor:** what the user must check in play mode or the scene, since you can't.
    - **Out of scope / noticed:** anything you saw but didn't change.
    - End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
    Never merge.
-7. Leave the slot clean and detached: `git -C <slot> switch --detach`, so the branch can be checked out elsewhere.
+6. Leave the slot clean and detached: `git -C <slot> switch --detach`, so the branch can be checked out elsewhere.
 
 If you can't get to done (tests fail, a blocker outside the brief), still commit and push what you have to the branch, open a **draft** PR describing the blocker, and leave the slot detached.
 
