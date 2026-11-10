@@ -28,7 +28,7 @@ namespace Squarely.App
         public void Enter()
         {
             _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
-            _game = new GameController(_view, _setup, _context.Camera);
+            _game = new GameController(_view, _setup, _context.Camera, _context.Texts.GameHud);
             _game.GameEnded += OnGameEnded;
             _game.StartGame();
         }
@@ -51,6 +51,7 @@ namespace Squarely.App
         private void OnGameEnded(GameResolution resolution, int finalScore)
         {
             _gameOver = Object.Instantiate(_context.ScreenPrefabs.GameOver, _context.ScreenRoot);
+            _gameOver.Initialize(_context.Texts.GameOver);
             _gameOver.RestartRequested += OnRestartRequested;
             _gameOver.MenuRequested += OnMenuRequested;
             _gameOver.SetResult(resolution, finalScore);

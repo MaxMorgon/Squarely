@@ -96,6 +96,7 @@ Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
 Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
 Hud/               ScoreView (score and combo, on GameHud)
+Texts/             TextsConfig and its per-screen groups (MenuTexts, GameHudTexts, GameOverTexts)
 ```
 
 Until playback exists, `GameController` has `GameView` rebuild the board, hand and score from the final sim state after each command.
@@ -113,6 +114,7 @@ Until playback exists, `GameController` has `GameView` rebuild the board, hand a
 - **Views update from events only.** After `Execute`, the sim is already in its final state while the view is still animating. Views never read sim state during playback. When playback ends, a debug-only check compares the views with `IReadOnlyBoard` to catch drift.
 - **Rule questions go to the sim.** "Can this be placed?", "what will clear?" and "can this hand piece go anywhere?" are answered by `Sim.Preview`, never by Unity code.
 - **Code says what, assets say how.** Code provides targets and states (cells, centroids, "will clear"). Prefabs, themes and cue sequences decide how they look and sound.
+- **Texts live in one asset.** `TextsConfig` (`Config/DefaultTexts.asset`) holds every text the player reads, in one `[Serializable]` group per screen; each group is meant to become one Localization string table. `AppRoot` references it once, `AppContext` hands it to the states, and each view gets its own group through its `Initialize`. Views pick which text to show (win or lose title) and fill in format strings (`{0}`); the asset says what the text is. No prefab references the asset.
 
 ### Sim.Preview
 
@@ -179,7 +181,7 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 ### Entry point and flow
 
 - **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed. Its `Start` builds the default `GameSetup` and an `AppContext`, creates the `AppStateMachine` and enters the menu.
-- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup. It has no behaviour.
+- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup, texts. It has no behaviour.
 - **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, setup)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
 - **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequested`. **`GameState`** creates the Game prefab (`GameView`), builds a `GameController` from it, the setup and the camera, and calls `StartGame()`. Each destroys what it created in `Exit`.
 - **Game over.** `GameController` raises `GameEnded` (resolution, final score) when the game resolves, also if it resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.

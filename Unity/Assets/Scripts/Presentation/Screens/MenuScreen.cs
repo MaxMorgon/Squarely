@@ -1,4 +1,5 @@
 using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,9 @@ namespace Squarely.Presentation
     /// </summary>
     public sealed class MenuScreen : MonoBehaviour
     {
+        [SerializeField] private TMP_Text _titleLabel;
         [SerializeField] private Button _playButton;
+        [SerializeField] private TMP_Text _playLabel;
 
         /// <summary>The player asked to start a game.</summary>
         public event Action PlayRequested;
@@ -22,5 +25,11 @@ namespace Squarely.Presentation
         }
 
         #endregion
+
+        public void Initialize(MenuTexts texts)
+        {
+            _titleLabel.text = texts.Title;
+            _playLabel.text = texts.Play;
+        }
     }
 }

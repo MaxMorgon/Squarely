@@ -12,6 +12,7 @@ namespace Squarely.Presentation
         private readonly GameView _view;
         private readonly GameSetup _setup;
         private readonly Camera _camera;
+        private readonly GameHudTexts _hudTexts;
 
         private Sim _sim;
 
@@ -22,7 +23,8 @@ namespace Squarely.Presentation
 
         /// <param name="view">The game's scene objects, not yet initialized.</param>
         /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
-        public GameController(GameView view, GameSetup setup, Camera camera)
+        /// <param name="hudTexts">The texts the game's HUD shows.</param>
+        public GameController(GameView view, GameSetup setup, Camera camera, GameHudTexts hudTexts)
         {
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
@@ -30,6 +32,7 @@ namespace Squarely.Presentation
             _view = view;
             _setup = setup ?? throw new ArgumentNullException(nameof(setup));
             _camera = camera;
+            _hudTexts = hudTexts;
         }
 
         #region Commands
@@ -37,7 +40,7 @@ namespace Squarely.Presentation
         /// <summary>Sets up the view for the setup's game mode and starts the game. Call once, after subscribing to <see cref="GameEnded"/>.</summary>
         public void StartGame()
         {
-            _view.Initialize(_setup.Config, _camera, this);
+            _view.Initialize(_setup.Config, _camera, this, _hudTexts);
 
             ulong seed = _setup.Seed ?? (ulong)DateTime.Now.Ticks;
             _sim = new Sim(_setup.Config, seed);

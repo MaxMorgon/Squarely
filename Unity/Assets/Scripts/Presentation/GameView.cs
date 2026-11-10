@@ -46,9 +46,10 @@ namespace Squarely.Presentation
 
         #endregion
 
-        /// <summary>Builds the board and hand views for the game mode and connects drag input to the game. Call once.</summary>
+        /// <summary>Builds the board, hand and HUD views for the game mode and connects drag input to the game. Call once.</summary>
         /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
-        public void Initialize(SimConfig config, Camera camera, GameController game)
+        /// <param name="hudTexts">The texts the HUD shows.</param>
+        public void Initialize(SimConfig config, Camera camera, GameController game, GameHudTexts hudTexts)
         {
             _config = config;
 
@@ -62,6 +63,7 @@ namespace Squarely.Presentation
             _layerView.Initialize(boardSpace, viewPool);
             _handView.Initialize(config.HandSize, viewPool, _cellSize);
             _dragController.Initialize(camera, game, _handView, _boardRoot, boardSpace, viewPool);
+            _scoreView.Initialize(hudTexts);
         }
 
         /// <summary>Shows the board, the hand, the score and the combo.</summary>

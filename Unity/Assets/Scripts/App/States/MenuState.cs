@@ -22,6 +22,7 @@ namespace Squarely.App
         public void Enter()
         {
             _screen = Object.Instantiate(_context.ScreenPrefabs.Menu, _context.ScreenRoot);
+            _screen.Initialize(_context.Texts.Menu);
             _screen.PlayRequested += OnPlayRequested;
         }
 

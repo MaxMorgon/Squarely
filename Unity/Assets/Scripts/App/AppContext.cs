@@ -21,12 +21,16 @@ namespace Squarely.App
         /// <summary>The game started from the menu's Play button.</summary>
         public GameSetup DefaultGameSetup { get; }
 
-        public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, GameSetup defaultGameSetup)
+        /// <summary>Every text the screens show.</summary>
+        public TextsConfig Texts { get; }
+
+        public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, GameSetup defaultGameSetup, TextsConfig texts)
         {
             ScreenPrefabs = screenPrefabs;
             ScreenRoot = screenRoot;
             Camera = camera;
             DefaultGameSetup = defaultGameSetup;
+            Texts = texts;
         }
     }
 }

@@ -15,7 +15,11 @@ namespace Squarely.Presentation
         [SerializeField] private TMP_Text _titleLabel;
         [SerializeField] private TMP_Text _scoreLabel;
         [SerializeField] private Button _restartButton;
+        [SerializeField] private TMP_Text _restartLabel;
         [SerializeField] private Button _menuButton;
+        [SerializeField] private TMP_Text _menuLabel;
+
+        private GameOverTexts _texts;
 
         /// <summary>The player asked to play again with the same setup.</summary>
         public event Action RestartRequested;
@@ -33,10 +37,17 @@ namespace Squarely.Presentation
 
         #endregion
 
+        public void Initialize(GameOverTexts texts)
+        {
+            _texts = texts;
+            _restartLabel.text = texts.Restart;
+            _menuLabel.text = texts.Menu;
+        }
+
         public void SetResult(GameResolution resolution, int finalScore)
         {
-            _titleLabel.text = resolution.Outcome == GameOutcome.Won ? "You win!" : "Game over";
-            _scoreLabel.text = $"Score: {finalScore}";
+            _titleLabel.text = resolution.Outcome == GameOutcome.Won ? _texts.WinTitle : _texts.LoseTitle;
+            _scoreLabel.text = string.Format(_texts.ScoreFormat, finalScore);
         }
     }
 }
