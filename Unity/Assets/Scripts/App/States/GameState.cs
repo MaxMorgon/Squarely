@@ -5,8 +5,8 @@ using UnityEngine;
 namespace Squarely.App
 {
     /// <summary>
-    /// Runs games with the given setup. When a game ends it shows the game-over screen:
-    /// Restart plays again with the same setup, Menu goes back to the menu.
+    /// Runs one game with the given setup. When it ends it shows the game-over screen:
+    /// Restart starts a fresh game with the same setup, Menu goes back to the menu.
     /// </summary>
     public sealed class GameState : IAppState
     {
@@ -33,7 +33,12 @@ namespace Squarely.App
 
         public void Exit()
         {
-            CloseGameOver();
+            if (_gameOver != null)
+            {
+                _gameOver.RestartRequested -= OnRestartRequested;
+                _gameOver.MenuRequested -= OnMenuRequested;
+                Object.Destroy(_gameOver.gameObject);
+            }
 
             _game.GameEnded -= OnGameEnded;
             Object.Destroy(_game.gameObject);
@@ -51,24 +56,12 @@ namespace Squarely.App
 
         private void OnRestartRequested()
         {
-            CloseGameOver();
-            _game.NewGame();
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _setup));
         }
 
         private void OnMenuRequested()
         {
             _stateMachine.ChangeState(new MenuState(_context, _stateMachine));
-        }
-
-        private void CloseGameOver()
-        {
-            if (_gameOver == null)
-                return;
-
-            _gameOver.RestartRequested -= OnRestartRequested;
-            _gameOver.MenuRequested -= OnMenuRequested;
-            Object.Destroy(_gameOver.gameObject);
-            _gameOver = null;
         }
 
         #endregion
