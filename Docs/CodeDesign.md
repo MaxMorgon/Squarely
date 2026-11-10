@@ -93,6 +93,7 @@ Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
+Hud/               ScoreView (score and combo, on GameHud)
 Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
 ```
 

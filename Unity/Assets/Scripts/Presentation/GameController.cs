@@ -22,6 +22,7 @@ namespace Squarely.Presentation
         [SerializeField] private LayerView _layerView;
         [SerializeField] private HandView _handView;
         [SerializeField] private PieceDragController _dragController;
+        [SerializeField] private ScoreView _scoreView;
 
         [Tooltip("Edit time only: the game mode whose board and hand size the gizmos preview.")]
         [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
@@ -113,6 +114,7 @@ namespace Squarely.Presentation
         {
             _layerView.Rebuild(_sim.Board);
             _handView.SetHand(_sim.Hand);
+            _scoreView.SetScore(_sim.Score, _sim.Combo);
         }
 
         private SimConfig GizmoConfig()
