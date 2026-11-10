@@ -3,7 +3,6 @@ SQUARELY TODO
 MVP
 - Score + combo display
 - Game over / restart UI
-- 
 
 Presentation
 - Playback: EventPlayer, handlers, CueSequence, fast-forward
