@@ -31,7 +31,7 @@ namespace Squarely.Presentation
 
         public bool IsResolved => _sim.IsResolved;
 
-        /// <summary>The game resolved. Gives the resolution and the final score.</summary>
+        /// <summary>The game resolved, after a move or right on the first deal. Gives the resolution and the final score.</summary>
         public event Action<GameResolution, int> GameEnded;
 
         private SimConfig Config => _setup.Config;
@@ -79,6 +79,9 @@ namespace Squarely.Presentation
             Debug.Log($"New game, seed {seed}.");
 
             RefreshViews();
+
+            if (_sim.IsResolved)
+                GameEnded?.Invoke(_sim.Resolution, _sim.Score);
         }
 
         /// <summary>Whether placing the piece at the origin is a legal move.</summary>
