@@ -6,16 +6,11 @@ namespace Squarely.Presentation
 {
     /// <summary>
     /// Owns the sim for one game, sets up the views and passes player commands to the sim.
+    /// Does nothing until its owner calls <see cref="Initialize"/>.
     /// </summary>
     public sealed class GameController : MonoBehaviour
     {
-        [Tooltip("The game mode. Edits apply live, also in play mode. Board and hand size changes need a play mode restart.")]
-        [SerializeField] private SimConfigAsset _simConfig;
-
         [SerializeField] private CellTheme _cellTheme;
-
-        [Tooltip("0 picks a new seed for every game.")]
-        [SerializeField] private int _seed;
 
         [Tooltip("Board cell size in world units.")]
         [SerializeField] private float _cellSize = 1f;
@@ -28,18 +23,44 @@ namespace Squarely.Presentation
         [SerializeField] private HandView _handView;
         [SerializeField] private PieceDragController _dragController;
 
+        [Tooltip("Edit time only: the game mode whose board and hand size the gizmos preview.")]
+        [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
+
+        private GameSetup _setup;
         private BoardSpace _boardSpace;
         private int _handSize;
         private Sim _sim;
 
         public bool IsResolved => _sim.IsResolved;
 
-        private SimConfig Config => _simConfig.Config;
+        private SimConfig Config => _setup.Config;
 
         #region Unity
 
-        private void Start()
+        private void OnDrawGizmos()
         {
+            SimConfig config = GizmoConfig();
+
+            if (config == null || config.BoardWidth <= 0 || config.BoardHeight <= 0)
+                return;
+
+            if (_background != null)
+                _background.DrawGizmos(new BoardSpace(config.BoardWidth, config.BoardHeight, _cellSize));
+
+            if (_handView != null)
+                _handView.DrawGizmos(config.HandSize, _cellSize);
+        }
+
+        #endregion
+
+        #region Commands
+
+        /// <summary>Sets up the views for the setup's game mode and starts the first game. Call once.</summary>
+        /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
+        public void Initialize(GameSetup setup, Camera camera)
+        {
+            _setup = setup ?? throw new ArgumentNullException(nameof(setup));
+
             var poolRoot = new GameObject("Cell View Pool").transform;
             poolRoot.SetParent(transform, false);
 
@@ -50,26 +71,10 @@ namespace Squarely.Presentation
             _background.Build(_boardSpace, _cellTheme.EmptyTile);
             _layerView.Initialize(_boardSpace, viewPool);
             _handView.Initialize(_handSize, viewPool, _cellSize);
-            _dragController.Initialize(this, _handView, _boardRoot, _boardSpace, viewPool);
+            _dragController.Initialize(camera, this,_handView, _boardRoot, _boardSpace, viewPool);
 
             NewGame();
         }
-
-        private void OnDrawGizmos()
-        {
-            if (_simConfig == null || Config.BoardWidth <= 0 || Config.BoardHeight <= 0)
-                return;
-
-            if (_background != null)
-                _background.DrawGizmos(new BoardSpace(Config.BoardWidth, Config.BoardHeight, _cellSize));
-
-            if (_handView != null)
-                _handView.DrawGizmos(Config.HandSize, _cellSize);
-        }
-
-        #endregion
-
-        #region Commands
 
         [ContextMenu("New Game")]
         public void NewGame()
@@ -80,7 +85,7 @@ namespace Squarely.Presentation
                 return;
             }
 
-            ulong seed = _seed != 0 ? (ulong)_seed : (ulong)DateTime.Now.Ticks;
+            ulong seed = _setup.Seed ?? (ulong)DateTime.Now.Ticks;
             _sim = new Sim(Config, seed);
             Debug.Log($"New game, seed {seed}.");
 
@@ -116,6 +121,17 @@ namespace Squarely.Presentation
         {
             _layerView.Rebuild(_sim.Board);
             _handView.SetHand(_sim.Hand);
+        }
+
+        private SimConfig GizmoConfig()
+        {
+            if (_setup != null)
+                return _setup.Config;
+
+            if (_gizmoPreviewConfig != null)
+                return _gizmoPreviewConfig.Config;
+
+            return null;
         }
     }
 }

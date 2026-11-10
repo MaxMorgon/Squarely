@@ -10,14 +10,13 @@ namespace Squarely.Presentation
     /// </summary>
     public sealed class PieceDragController : MonoBehaviour
     {
-        [SerializeField] private Camera _camera;
-
         [Tooltip("How far above the pointer the dragged piece floats, in world units.")]
         [SerializeField] private float _liftOffset = 2f;
 
         [Tooltip("Sorting order of the dragged piece, above everything on the board.")]
         [SerializeField] private int _draggedSortingOrder = 100;
 
+        private Camera _camera;
         private GameController _game;
         private HandView _hand;
         private Transform _boardRoot;
@@ -36,8 +35,9 @@ namespace Squarely.Presentation
 
         private bool IsDragging => _dragPiece != null;
 
-        public void Initialize(GameController game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool)
+        public void Initialize(Camera camera, GameController game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool)
         {
+            _camera = camera;
             _game = game;
             _hand = hand;
             _boardRoot = boardRoot;
