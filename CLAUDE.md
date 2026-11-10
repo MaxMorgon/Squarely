@@ -47,6 +47,12 @@ Custom commands are `[CliCommand]` static methods in `Unity/Assets/Editor/Cli/` 
 
 After changing Sim or Sim.Tests code, run `dotnet test Squarely.sln -v q` once at the end of the task (not after every edit) and make sure it passes before calling work done. Skip it for doc-only or Unity-only changes. Unity-side changes can't be verified from the CLI — say so and ask the user to check in the editor.
 
+Headless checks (for a checkout with no editor open, e.g. a worktree slot; CI runs the Sim part on every PR):
+
+```sh
+bash Tools/verify.sh [checkout] [--sim-only]   # dotnet test, then Unity import + compile + EditMode tests; prints errors and totals only
+```
+
 ## Code style
 
 Standard C# conventions (Microsoft naming: `PascalCase` types/methods/properties, `camelCase` locals/parameters, `_camelCase` private fields, `I` prefix for interfaces), with these preferences:
@@ -78,13 +84,26 @@ Not: `if (value < 0) return 0;`
 
 ## Conventions
 
+- **Reuse before adding.** Before writing a new type, helper or data structure, search for one that already does the job, or that can be cleanly generalized to cover both uses (e.g. `Grid<T>`, shared by `Board` and `LayerView`). Don't merge things that only look alike but change for different reasons.
 - **One top-level type per file** (class, struct, interface, enum), file named after the type. Only exception: a type nested inside another type.
 - Namespaces mirror assemblies: `Squarely.Simulation`, `Squarely.Simulation.Tests`. (Not `Squarely.Sim` — it would clash with the `Sim` class.)
-- Sources go under `Src/` in each package. Every new file/folder there (and under `Unity/Assets/`) needs a Unity `.meta` file — let Unity generate it; don't hand-write GUIDs. After adding files, run `unity command asset refresh` and commit the generated `.meta` files with them. If the editor isn't connected, ask the user to focus Unity instead.
+- Sources go under `Src/` in each package. Every new file/folder there (and under `Unity/Assets/`) needs a Unity `.meta` file — let Unity generate it; don't hand-write GUIDs. After adding files, run `unity command asset refresh` and commit the generated `.meta` files with them. If the editor isn't connected, ask the user to focus Unity instead. In a worktree slot, run `Tools/verify.sh` instead (its import generates them).
 - Nullable and implicit usings are disabled; write explicit `using` directives.
-- New Sim features come with tests in `Sim.Tests`.
+- **Doc comments say what, not how.** Describe the behaviour and contract, not internals ("runs on a copy") or one caller's case ("AI players should ignore X"). Mention a limitation only if it matters and the contract doesn't imply it.
+- **Tests:** new Sim features come with tests in `Sim.Tests`. Unit tests by default (Sim logic, and presentation logic like layout, pooling, slots). No tests that pin how views are wired together. Broad scenario tests only for contracts that fail silently (determinism, preview equals execute); ask before adding others.
+
+## Parallel agents
+
+Implementation agents (`.claude/agents/implementer.md`) work in permanent worktree slots `A:\WORK\Squarely-worktrees\agent-1` and `agent-2`, which have a warm `Unity/Library`. Not the Agent tool's `isolation: "worktree"` (cold Library every time).
+
+- Per task: `git switch -c <branch> origin/<base>` in the slot; when done, leave it clean and `git switch --detach`.
+- Agents never run `unity command` (it drives the user's editor on the main checkout; a hook blocks it). They verify with `Tools/verify.sh <slot>`.
+- Agents own their code and assets, open stacked PRs, and never merge. Two agents don't touch the same scene or prefab.
 
 ## Working with the user
 
 - Work in small steps; show plans/drafts for review before large changes.
-- Commit or push only when asked.
+- Commit or push only when asked. An implementer brief counts as asking for that task's branch and PR.
+- `git reset --hard` and force pushes only on the user's explicit command (settings make them prompt).
+- **PR review loop.** When the user says "review submitted": the main session runs implementers in review mode ([implementer.md](.claude/agents/implementer.md#review-mode)), one per stack of PRs. Each one checks every comment on its merits, fixes and resolves the ones it agrees with that are simple, and replies only where it pushes back or the result isn't obvious, leaving those threads open. The main session decides anything that spans PRs (shared configs, repo-wide rules) and passes it in the brief. On "go": the open agreed items are applied, then the main session merges, unless a comment or the message says otherwise. Every PR comment Claude writes starts with `**[Claude]**`.
+- **`TODO.txt` is the user's tracker.** Don't read or edit it unless asked; mention finished items in chat instead. Commit the user's current version as-is, in its own commit, at least once per PR.

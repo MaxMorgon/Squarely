@@ -93,7 +93,11 @@ Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
+<<<<<<< HEAD
 Screens/           MenuScreen (UI screens: report the player's choices as C# events)
+=======
+Hud/               ScoreView (score and combo, on GameHud)
+>>>>>>> origin/main
 ```
 
 Until playback exists, `GameController` rebuilds the board and hand from the final sim state after each command.

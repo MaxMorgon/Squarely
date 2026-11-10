@@ -167,6 +167,20 @@ Each comment below improved the design:
 
 ---
 
+## Session 5 — 2026-11-10
+
+### 19. AI workflow hardening
+- **Implementer agent.** The parallel-agent workflow went from a per-task prompt to a defined `implementer` subagent: slot and branch hygiene, headless verification, a definition of done and a fixed PR description format (What / Decisions / Verified / Needs the editor). The three agents (`implementer`, `reviewer`, `workflow-reviewer`) are now tracked in git. **Decision by:** both (you asked whether implementers were defined, AI proposed the agent).
+- **Prefab builder scripts are throwaway.** Agents build prefabs with a batch-mode editor script, commit the asset and delete the script, because hand edits afterwards would make a kept builder stale. **Decision by:** AI, agreed by you.
+- **Workflow review** by the `workflow-reviewer` agent. Its main finding was that the system wasn't visible: rules sat in local AI memory, and guardrails were prose, not enforced. Acting on it:
+  - **Project rules moved into CLAUDE.md** (tests, doc comments, PR review loop, `TODO.txt`, worktree slots), so subagents and readers of the repo see them. Memory keeps only personal preferences. **Decision by:** you.
+  - **`Tools/verify.sh`**: one script for dotnet test plus Unity batch import, compile and EditMode tests. It prints only errors and totals, reads the Unity version from the project, and refuses a project open in the editor. A full run on a slot takes about 40 s. **Decision by:** both.
+  - **CI:** GitHub Actions runs the Sim tests on every PR and push to `main`. **Decision by:** you.
+  - **Enforced guardrails:** a hook blocks `unity command` from subagents (tested with a real subagent), and `git reset --hard` and force pushes always prompt. **Decision by:** you (AI corrected the reviewer's suggested deny path and hook trigger).
+- **README deferred** until the project is closer to releasable. **Decision by:** you.
+
+---
+
 ## Highlights (raw material for README / CV)
 
 - Designed a **deterministic, headless puzzle simulation** in C#, decoupled from Unity, with full unit-test coverage running in both .NET and Unity.
@@ -174,3 +188,4 @@ Each comment below improved the design:
 - **Command/event architecture**: replayable command objects and an ordered event stream for animation, analytics and meta systems.
 - **Defensive API design**: read-only views over sim state and a hidden RNG, so the presentation layer can't break determinism.
 - **AI-assisted development with engineering discipline**: a written AI working agreement, explicit style and architecture rules, and PR-based review of all AI-generated code, with architectural feedback driving the design.
+- **Multi-agent pipeline with enforced guardrails**: implementer and reviewer subagents working in parallel worktrees, a headless Unity verification script, CI, and hooks that keep agents from touching the developer's open editor.
