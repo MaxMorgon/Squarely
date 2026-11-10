@@ -9,7 +9,7 @@ namespace Squarely.App
     /// </summary>
     public sealed class AppRoot : MonoBehaviour
     {
-        [SerializeField] private AppScreens _screens;
+        [SerializeField] private AppScreenPrefabs _screenPrefabs;
 
         [Tooltip("The camera that renders the game.")]
         [SerializeField] private Camera _camera;
@@ -29,7 +29,7 @@ namespace Squarely.App
             ulong? seed = _seed != 0 ? (ulong)_seed : (ulong?)null;
             var defaultGameSetup = new GameSetup(_defaultMode.Config, seed);
 
-            _flow = new AppFlow(_screens, transform, _camera, defaultGameSetup);
+            _flow = new AppFlow(_screenPrefabs, transform, _camera, defaultGameSetup);
             _flow.GoToMenu();
         }
 

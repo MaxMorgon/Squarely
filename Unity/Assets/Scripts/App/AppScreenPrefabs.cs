@@ -8,7 +8,7 @@ namespace Squarely.App
     /// The screen prefabs the app states create.
     /// </summary>
     [Serializable]
-    public sealed class AppScreens
+    public sealed class AppScreenPrefabs
     {
         [SerializeField] private MenuScreen _menu;
         [SerializeField] private GameController _game;

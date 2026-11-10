@@ -10,7 +10,7 @@ namespace Squarely.App
     public sealed class AppFlow
     {
         private readonly AppStateMachine _stateMachine = new AppStateMachine();
-        private readonly AppScreens _screens;
+        private readonly AppScreenPrefabs _screens;
         private readonly Transform _screenRoot;
         private readonly Camera _camera;
 
@@ -21,7 +21,7 @@ namespace Squarely.App
         /// <param name="screenRoot">Parent of every screen the states create.</param>
         /// <param name="camera">The camera that renders the game.</param>
         /// <param name="defaultGameSetup">The game started from the menu.</param>
-        public AppFlow(AppScreens screens, Transform screenRoot, Camera camera, GameSetup defaultGameSetup)
+        public AppFlow(AppScreenPrefabs screens, Transform screenRoot, Camera camera, GameSetup defaultGameSetup)
         {
             _screens = screens;
             _screenRoot = screenRoot;
