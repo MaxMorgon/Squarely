@@ -14,6 +14,7 @@ namespace Squarely.App
         private readonly AppStateMachine _stateMachine;
         private readonly GameSetup _setup;
 
+        private GameView _view;
         private GameController _game;
         private GameOverScreen _gameOver;
 
@@ -26,9 +27,10 @@ namespace Squarely.App
 
         public void Enter()
         {
-            _game = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
+            _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
+            _game = new GameController(_view, _setup, _context.Camera);
             _game.GameEnded += OnGameEnded;
-            _game.Initialize(_setup, _context.Camera);
+            _game.StartGame();
         }
 
         public void Exit()
@@ -41,7 +43,7 @@ namespace Squarely.App
             }
 
             _game.GameEnded -= OnGameEnded;
-            Object.Destroy(_game.gameObject);
+            Object.Destroy(_view.gameObject);
         }
 
         #region Game over
