@@ -19,7 +19,7 @@ namespace Squarely.Presentation
         public bool IsResolved => _sim.IsResolved;
 
         /// <summary>The game resolved, after a move or right on the first deal. Gives the resolution and the final score.</summary>
-        public event Action<GameResolution, int> GameEnded;
+        public event Action<GameResolution, int> GameEndEvent;
 
         /// <param name="view">The game's scene objects, not yet initialized.</param>
         /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
@@ -37,7 +37,7 @@ namespace Squarely.Presentation
 
         #region Commands
 
-        /// <summary>Sets up the view for the setup's game mode and starts the game. Call once, after subscribing to <see cref="GameEnded"/>.</summary>
+        /// <summary>Sets up the view for the setup's game mode and starts the game. Call once, after subscribing to <see cref="GameEndEvent"/>.</summary>
         public void StartGame()
         {
             _view.Initialize(_setup.Config, _camera, this, _hudTexts);
@@ -49,7 +49,7 @@ namespace Squarely.Presentation
             RefreshView();
 
             if (_sim.IsResolved)
-                GameEnded?.Invoke(_sim.Resolution, _sim.Score);
+                GameEndEvent?.Invoke(_sim.Resolution, _sim.Score);
         }
 
         /// <summary>Whether placing the piece at the origin is a legal move.</summary>
@@ -72,7 +72,7 @@ namespace Squarely.Presentation
             RefreshView();
 
             if (_sim.IsResolved)
-                GameEnded?.Invoke(_sim.Resolution, _sim.Score);
+                GameEndEvent?.Invoke(_sim.Resolution, _sim.Score);
         }
 
         #endregion

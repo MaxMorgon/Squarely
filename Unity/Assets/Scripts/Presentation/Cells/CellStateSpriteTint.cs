@@ -21,16 +21,16 @@ namespace Squarely.Presentation
 
         private void OnEnable()
         {
-            _view.StateChanged += Apply;
-            Apply(_view.State);
+            _view.StateChangeEvent += OnStateChanged;
+            OnStateChanged(_view.State);
         }
 
         private void OnDisable()
         {
-            _view.StateChanged -= Apply;
+            _view.StateChangeEvent -= OnStateChanged;
         }
 
-        private void Apply(CellViewState state)
+        private void OnStateChanged(CellViewState state)
         {
             _renderer.color = state == CellViewState.Ghost ? _ghost : _idle;
         }

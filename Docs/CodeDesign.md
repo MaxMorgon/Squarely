@@ -85,7 +85,7 @@ Assembly `Squarely.Presentation`. Status: **views and drag input implemented (st
 ### Folder layout (`Unity/Assets/Scripts/Presentation/`)
 
 ```
-GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, raises GameEnded
+GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, raises GameEndEvent
 GameView.cs        MonoBehaviour on the Game prefab: its scene objects and settings, builds and sets the views, gizmos
 GameSetup.cs       What a game starts with: config and seed
 Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
@@ -183,6 +183,6 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 - **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed. Its `Start` builds the default `GameSetup` and an `AppContext`, creates the `AppStateMachine` and enters the menu.
 - **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup, texts. It has no behaviour.
 - **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, setup)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
-- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequested`. **`GameState`** creates the Game prefab (`GameView`), builds a `GameController` from it, the setup and the camera, and calls `StartGame()`. Each destroys what it created in `Exit`.
-- **Game over.** `GameController` raises `GameEnded` (resolution, final score) when the game resolves, also if it resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.
+- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequestEvent`. **`GameState`** creates the Game prefab (`GameView`), builds a `GameController` from it, the setup and the camera, and calls `StartGame()`. Each destroys what it created in `Exit`.
+- **Game over.** `GameController` raises `GameEndEvent` (resolution, final score) when the game resolves, also if it resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.
 - A playtest screen will start games the same way, with a `GameState` built from its own setup.

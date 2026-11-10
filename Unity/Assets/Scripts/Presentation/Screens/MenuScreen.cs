@@ -15,13 +15,13 @@ namespace Squarely.Presentation
         [SerializeField] private TMP_Text _playLabel;
 
         /// <summary>The player asked to start a game.</summary>
-        public event Action PlayRequested;
+        public event Action PlayRequestEvent;
 
         #region Unity
 
         private void Awake()
         {
-            _playButton.onClick.AddListener(() => PlayRequested?.Invoke());
+            _playButton.onClick.AddListener(() => PlayRequestEvent?.Invoke());
         }
 
         #endregion

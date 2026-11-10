@@ -22,17 +22,17 @@ namespace Squarely.Presentation
         private GameOverTexts _texts;
 
         /// <summary>The player asked to play again with the same setup.</summary>
-        public event Action RestartRequested;
+        public event Action RestartRequestEvent;
 
         /// <summary>The player asked to go back to the menu.</summary>
-        public event Action MenuRequested;
+        public event Action MenuRequestEvent;
 
         #region Unity
 
         private void Awake()
         {
-            _restartButton.onClick.AddListener(() => RestartRequested?.Invoke());
-            _menuButton.onClick.AddListener(() => MenuRequested?.Invoke());
+            _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
+            _menuButton.onClick.AddListener(() => MenuRequestEvent?.Invoke());
         }
 
         #endregion
