@@ -58,24 +58,19 @@ namespace Squarely.App.Tests
         }
 
         [Test]
-        public void ChangeState_RequestedDuringEnter_RunsAfterEnterCompletes()
+        public void ChangeState_RequestedDuringEnter_Throws()
         {
             var a = new FakeState("A", _log);
             var b = new FakeState("B", _log);
-            a.OnEnter = () =>
-            {
-                _machine.ChangeState(b);
-                _log.Add("A.EnterDone");
-            };
+            a.OnEnter = () => _machine.ChangeState(b);
 
-            _machine.ChangeState(a);
-
-            Assert.That(_log, Is.EqualTo(new[] { "A.Enter", "A.EnterDone", "A.Exit", "B.Enter" }));
-            Assert.That(_machine.Current, Is.SameAs(b));
+            Assert.Throws<InvalidOperationException>(() => _machine.ChangeState(a));
+            Assert.That(_log, Is.EqualTo(new[] { "A.Enter" }));
+            Assert.That(_machine.Current, Is.SameAs(a));
         }
 
         [Test]
-        public void ChangeState_RequestedDuringExit_RunsAfterCurrentTransition()
+        public void ChangeState_RequestedDuringExit_Throws()
         {
             var a = new FakeState("A", _log);
             var b = new FakeState("B", _log);
@@ -83,27 +78,8 @@ namespace Squarely.App.Tests
             _machine.ChangeState(a);
             a.OnExit = () => _machine.ChangeState(c);
 
-            _machine.ChangeState(b);
-
-            Assert.That(_log, Is.EqualTo(new[] { "A.Enter", "A.Exit", "B.Enter", "B.Exit", "C.Enter" }));
-            Assert.That(_machine.Current, Is.SameAs(c));
-        }
-
-        [Test]
-        public void ChangeState_SeveralRequestedDuringEnter_RunInRequestOrder()
-        {
-            var a = new FakeState("A", _log);
-            var b = new FakeState("B", _log);
-            var c = new FakeState("C", _log);
-            a.OnEnter = () =>
-            {
-                _machine.ChangeState(b);
-                _machine.ChangeState(c);
-            };
-
-            _machine.ChangeState(a);
-
-            Assert.That(_log, Is.EqualTo(new[] { "A.Enter", "A.Exit", "B.Enter", "B.Exit", "C.Enter" }));
+            Assert.Throws<InvalidOperationException>(() => _machine.ChangeState(b));
+            Assert.That(_log, Is.EqualTo(new[] { "A.Enter", "A.Exit" }));
         }
 
         [Test]
