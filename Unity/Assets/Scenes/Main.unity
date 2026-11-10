@@ -358,6 +358,7 @@ MonoBehaviour:
   _screenPrefabs:
     _menu: {fileID: 6752922966993574350, guid: 7cc23822fa09b6e4f80364ff2ebdc174, type: 3}
     _game: {fileID: 4383475621636752744, guid: 4fe61a6296aeef64db47290550acedde, type: 3}
+    _gameOver: {fileID: 3722214199150667668, guid: 6b02b097b0279524dabb362b2708d40b, type: 3}
   _camera: {fileID: 851879383}
   _defaultMode: {fileID: 11400000, guid: bbabd39d8dadbd14e894501e1bdc6a16, type: 2}
   _seed: 0

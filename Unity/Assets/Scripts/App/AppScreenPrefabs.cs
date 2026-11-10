@@ -12,9 +12,12 @@ namespace Squarely.App
     {
         [SerializeField] private MenuScreen _menu;
         [SerializeField] private GameController _game;
+        [SerializeField] private GameOverScreen _gameOver;
 
         public MenuScreen Menu => _menu;
 
         public GameController Game => _game;
+
+        public GameOverScreen GameOver => _gameOver;
     }
 }

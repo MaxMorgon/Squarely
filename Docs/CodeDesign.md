@@ -94,7 +94,7 @@ Board/             BoardSpace (cells <-> board local space), LayerView, BoardBac
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
 Hud/               ScoreView (score and combo, on GameHud)
-Screens/           MenuScreen (UI screens: report the player's choices as C# events)
+Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
 ```
 
 Until playback exists, `GameController` rebuilds the board and hand from the final sim state after each command.
@@ -179,6 +179,7 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 
 - **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed. Its `Start` builds the default `GameSetup` and an `AppContext`, creates the `AppStateMachine` and enters the menu.
 - **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup. It has no behaviour.
-- **States transition themselves.** Each state takes the context, the state machine if it moves on, and its own arguments (`MenuState(context, stateMachine)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
+- **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, setup)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
 - **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequested`. **`GameState`** creates the Game prefab and calls `GameController.Initialize(setup, camera)`. Each destroys what it created in `Exit`.
+- **Game over.** `GameController` raises `GameEnded` (resolution, final score) when the game resolves, also if it resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.
 - A playtest screen will start games the same way, with a `GameState` built from its own setup.

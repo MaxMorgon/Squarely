@@ -33,7 +33,7 @@ namespace Squarely.App
 
         private void OnPlayRequested()
         {
-            _stateMachine.ChangeState(new GameState(_context, _context.DefaultGameSetup));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultGameSetup));
         }
     }
 }

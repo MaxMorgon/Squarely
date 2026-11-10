@@ -28,11 +28,12 @@ namespace Squarely.Presentation
         [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
 
         private GameSetup _setup;
-        private BoardSpace _boardSpace;
-        private int _handSize;
         private Sim _sim;
 
         public bool IsResolved => _sim.IsResolved;
+
+        /// <summary>The game resolved, after a move or right on the first deal. Gives the resolution and the final score.</summary>
+        public event Action<GameResolution, int> GameEnded;
 
         private SimConfig Config => _setup.Config;
 
@@ -56,7 +57,7 @@ namespace Squarely.Presentation
 
         #region Commands
 
-        /// <summary>Sets up the views for the setup's game mode and starts the first game. Call once.</summary>
+        /// <summary>Sets up the views for the setup's game mode and starts the game. Call once.</summary>
         /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
         public void Initialize(GameSetup setup, Camera camera)
         {
@@ -66,31 +67,22 @@ namespace Squarely.Presentation
             poolRoot.SetParent(transform, false);
 
             var viewPool = new CellViewPool(_cellTheme.ResolveCellView, poolRoot);
-            _boardSpace = new BoardSpace(Config.BoardWidth, Config.BoardHeight, _cellSize);
-            _handSize = Config.HandSize;
+            var boardSpace = new BoardSpace(Config.BoardWidth, Config.BoardHeight, _cellSize);
+            int handSize = Config.HandSize;
 
-            _background.Build(_boardSpace, _cellTheme.EmptyTile);
-            _layerView.Initialize(_boardSpace, viewPool);
-            _handView.Initialize(_handSize, viewPool, _cellSize);
-            _dragController.Initialize(camera, this,_handView, _boardRoot, _boardSpace, viewPool);
-
-            NewGame();
-        }
-
-        [ContextMenu("New Game")]
-        public void NewGame()
-        {
-            if (Config.BoardWidth != _boardSpace.Width || Config.BoardHeight != _boardSpace.Height || Config.HandSize != _handSize)
-            {
-                Debug.LogError("Board or hand size changed since play mode started. Restart play mode to apply it.");
-                return;
-            }
+            _background.Build(boardSpace, _cellTheme.EmptyTile);
+            _layerView.Initialize(boardSpace, viewPool);
+            _handView.Initialize(handSize, viewPool, _cellSize);
+            _dragController.Initialize(camera, this,_handView, _boardRoot, boardSpace, viewPool);
 
             ulong seed = _setup.Seed ?? (ulong)DateTime.Now.Ticks;
             _sim = new Sim(Config, seed);
             Debug.Log($"New game, seed {seed}.");
 
             RefreshViews();
+
+            if (_sim.IsResolved)
+                GameEnded?.Invoke(_sim.Resolution, _sim.Score);
         }
 
         /// <summary>Whether placing the piece at the origin is a legal move.</summary>
@@ -113,7 +105,7 @@ namespace Squarely.Presentation
             RefreshViews();
 
             if (_sim.IsResolved)
-                Debug.Log($"Game over: {_sim.Resolution}, score {_sim.Score}. Use the New Game context menu to restart.");
+                GameEnded?.Invoke(_sim.Resolution, _sim.Score);
         }
 
         #endregion
