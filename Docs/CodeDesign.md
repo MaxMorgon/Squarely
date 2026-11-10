@@ -1,6 +1,6 @@
 # Squarely — Code Design
 
-Covers the core sim (namespace `Squarely.Simulation`, tests `Squarely.Simulation.Tests`) and the Unity presentation layer (`Squarely.Presentation`, see [Presentation](#presentation-unity)). The meta layer gets its own section later.
+Covers the core sim (namespace `Squarely.Simulation`, tests `Squarely.Simulation.Tests`), the Unity presentation layer (`Squarely.Presentation`, see [Presentation](#presentation-unity)) and the app flow (`Squarely.App`, see [App flow](#app-flow-unity)). The meta layer gets its own section later.
 
 ## Principles
 
@@ -160,3 +160,17 @@ The player can act during playback. A new command **snaps** everything still pen
 4. **Feedback:** hover and preview states driven by `Sim.Preview`.
 
 Later: **board layers** as one feature, Sim and view together: cell type definitions with a layer and behaviour flags, one `LayerView` per layer, and per-layer sorting in the theme.
+
+## App flow (Unity)
+
+Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up and moves between them: menu, game, game over. It references `Squarely.Presentation`; Presentation never references App, and reports what happens through C# events that the states subscribe to.
+
+### Principles
+
+- **The flow reads in code.** Every screen change is a `ChangeState` call in a state class. Nothing in a scene or prefab starts the flow on its own.
+- **States own their screens.** A state creates its screen prefabs in `Enter`, initializes them explicitly, and destroys them in `Exit`.
+
+### State machine
+
+- `IAppState` has `Enter` and `Exit`. `AppStateMachine.ChangeState(next)` exits the current state, then enters the next.
+- Calling `ChangeState` from inside `Enter` or `Exit` throws `InvalidOperationException`: a state moves on from a later callback (a button, a screen event), never while it is being entered or exited. Transitions are synchronous for now; async transitions (fades, loading) come when a feature needs them.
