@@ -5,11 +5,11 @@ namespace Squarely.App
 {
     /// <summary>
     /// The app's entry point and the only object in the scene that starts anything.
-    /// Builds the app flow from its serialized setup and opens the menu.
+    /// Builds the app context from its serialized setup and opens the menu.
     /// </summary>
     public sealed class AppRoot : MonoBehaviour
     {
-        [SerializeField] private AppScreens _screens;
+        [SerializeField] private AppScreenPrefabs _screenPrefabs;
 
         [Tooltip("The camera that renders the game.")]
         [SerializeField] private Camera _camera;
@@ -20,7 +20,7 @@ namespace Squarely.App
         [Tooltip("0 picks a new seed for every game.")]
         [SerializeField] private int _seed;
 
-        private AppFlow _flow;
+        private AppStateMachine _stateMachine;
 
         #region Unity
 
@@ -28,9 +28,10 @@ namespace Squarely.App
         {
             ulong? seed = _seed != 0 ? (ulong)_seed : (ulong?)null;
             var defaultGameSetup = new GameSetup(_defaultMode.Config, seed);
+            var context = new AppContext(_screenPrefabs, transform, _camera, defaultGameSetup);
 
-            _flow = new AppFlow(_screens, transform, _camera, defaultGameSetup);
-            _flow.GoToMenu();
+            _stateMachine = new AppStateMachine();
+            _stateMachine.ChangeState(new MenuState(context, _stateMachine));
         }
 
         #endregion

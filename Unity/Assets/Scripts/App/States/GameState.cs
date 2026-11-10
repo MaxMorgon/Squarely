@@ -10,29 +10,25 @@ namespace Squarely.App
     /// </summary>
     public sealed class GameState : IAppState
     {
-        private readonly AppFlow _flow;
-        private readonly AppScreens _screens;
-        private readonly Transform _screenRoot;
-        private readonly Camera _camera;
+        private readonly AppContext _context;
+        private readonly AppStateMachine _stateMachine;
         private readonly GameSetup _setup;
 
         private GameController _game;
         private GameOverScreen _gameOver;
 
-        public GameState(AppFlow flow, AppScreens screens, Transform screenRoot, Camera camera, GameSetup setup)
+        public GameState(AppContext context, AppStateMachine stateMachine, GameSetup setup)
         {
-            _flow = flow;
-            _screens = screens;
-            _screenRoot = screenRoot;
-            _camera = camera;
+            _context = context;
+            _stateMachine = stateMachine;
             _setup = setup;
         }
 
         public void Enter()
         {
-            _game = Object.Instantiate(_screens.Game, _screenRoot);
+            _game = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
             _game.GameEnded += OnGameEnded;
-            _game.Initialize(_setup, _camera);
+            _game.Initialize(_setup, _context.Camera);
         }
 
         public void Exit()
@@ -47,7 +43,7 @@ namespace Squarely.App
 
         private void OnGameEnded(GameResolution resolution, int finalScore)
         {
-            _gameOver = Object.Instantiate(_screens.GameOver, _screenRoot);
+            _gameOver = Object.Instantiate(_context.ScreenPrefabs.GameOver, _context.ScreenRoot);
             _gameOver.RestartRequested += OnRestartRequested;
             _gameOver.MenuRequested += OnMenuRequested;
             _gameOver.SetResult(resolution, finalScore);
@@ -61,7 +57,7 @@ namespace Squarely.App
 
         private void OnMenuRequested()
         {
-            _flow.GoToMenu();
+            _stateMachine.ChangeState(new MenuState(_context, _stateMachine));
         }
 
         private void CloseGameOver()

@@ -355,7 +355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f26498955792f04caec159140f01d75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Squarely.App::Squarely.App.AppRoot
-  _screens:
+  _screenPrefabs:
     _menu: {fileID: 6752922966993574350, guid: 7cc23822fa09b6e4f80364ff2ebdc174, type: 3}
     _game: {fileID: 4383475621636752744, guid: 4fe61a6296aeef64db47290550acedde, type: 3}
     _gameOver: {fileID: 3722214199150667668, guid: 6b02b097b0279524dabb362b2708d40b, type: 3}
