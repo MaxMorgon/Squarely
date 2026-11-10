@@ -399,6 +399,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ScoreView
   _scoreLabel: {fileID: 1099394407353447574}
   _comboLabel: {fileID: 8631450252019595542}
+  _minShownCombo: 2
 --- !u!224 &9217318995935163581 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6982809586462479234, guid: 3cdb78125574fee4c984cae2aa2ec629, type: 3}
