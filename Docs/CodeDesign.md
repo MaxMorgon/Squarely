@@ -94,6 +94,7 @@ Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
+Hud/               ScoreView (score and combo, on GameHud)
 ```
 
 Until playback exists, `GameController` rebuilds the board and hand from the final sim state after each command.
