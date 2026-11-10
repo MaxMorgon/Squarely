@@ -16,6 +16,8 @@ The prompt gives you:
 
 If any of these is missing or the brief is ambiguous on something that changes the design, stop and report the question. Don't guess.
 
+If the prompt says **review mode**, you are addressing review comments on existing PRs instead: skip to [Review mode](#review-mode).
+
 ## Before coding
 
 1. Check the slot is clean and detached: `git -C <slot> status` and `git -C <slot> branch --show-current` (empty output = detached). If not, stop and report it; don't clean up someone else's work.
@@ -77,3 +79,49 @@ If you can't get to done (tests fail, a blocker outside the brief), still commit
 ## Report back
 
 Return in a few lines: PR URL, branch, what was verified, what needs the user's eyes in the editor, and any open questions. No restating of the diff.
+
+## Review mode
+
+The prompt gives the slot, the PR number(s) (for a stack, bottom first) and any decisions the main session already made for comments that span PRs. The branches exist; you open no new PR.
+
+### Setup
+
+1. Check the slot is clean and detached, as above.
+2. `git -C <slot> fetch`, then per PR `git -C <slot> switch -C <branch> origin/<branch>`.
+3. Read `CLAUDE.md`, `Docs/CodeDesign.md` and `.claude/agents/reviewer.md`. Per PR read the description (`gh pr view <n>`), the diff (`gh pr diff <n>`) and every review thread:
+
+```sh
+gh api graphql -F n=<n> -f query='query($n:Int!){repository(owner:"MaxMorgon",name:"Squarely"){pullRequest(number:$n){reviewThreads(first:100){nodes{id isResolved path line comments(first:50){nodes{databaseId body}}}}}}}'
+```
+
+Skip resolved threads. Everything is posted from the user's account: a comment starting with `**[Claude]**` is a Claude suggestion the user hasn't endorsed unless they replied agreeing; any other comment is the user's.
+
+### Judge each thread on its merits
+
+Check the comment against the code, the rules and the PR's purpose, as if someone else had written both the code and the comment. Agreeing is not the default, and neither is defending what's there. Then take exactly one of these:
+
+- **Agree, and the fix is simple and unambiguous:** fix it, commit, reply `**[Claude]** Done in <short sha>: <one line>.`, resolve the thread.
+- **Push back, or the result isn't obvious** (you disagree, there's a real choice to make, it changes a contract or other PRs, or it's bigger than the comment suggests): reply with your reasons, the options and your recommendation. No code change. Leave the thread open.
+- **Spans PRs:** follow the main session's decision from the prompt and reply saying where it will land. With no decision given, reply with your recommendation and leave it open.
+
+Replies stay short: what you did, or why not and what you propose.
+
+```sh
+gh api repos/MaxMorgon/Squarely/pulls/<n>/comments/<comment databaseId>/replies -f body='**[Claude]** ...'
+gh api graphql -f id=<thread id> -f query='mutation($id:ID!){resolveReviewThread(input:{threadId:$id}){thread{isResolved}}}'
+```
+
+Reply only after the fix is pushed, so the sha in the reply exists on GitHub.
+
+### Push
+
+- Verify with `Tools/verify.sh` before each push, as in the definition of done.
+- Never force push or rebase. For a stack, after pushing a lower branch, merge it into the branch above (`git merge origin/<lower branch>`), resolve conflicts, verify, push.
+- Never merge a PR and never change its base.
+- Leave the slot clean and detached at the end.
+
+When the prompt says **go**: apply the open threads the user agreed to (read their replies), reply `Done in <sha>` and resolve, as above.
+
+### Report back
+
+Per PR: threads fixed and resolved (one line each), threads left open with a link and the one-line reason, what needs the user's eyes in the editor.
