@@ -133,6 +133,7 @@ Until playback exists, `GameController` rebuilds the board and hand from the fin
 - **Board background.** Static empty-slot tiles only. Hover and preview highlights are a separate view.
 - **Edit-time previews.** Anything whose size or position comes only from config or serialized values draws a gizmo preview of it, so the scene is WYSIWYG without entering play mode. Such views expose `DrawGizmos(...)` taking the config values they need, and `GameController` calls them from `OnDrawGizmos` with its setup's config, or at edit time with its gizmo preview config. Today: board outline and grid (`BoardBackground`), hand slot pick-up areas (`HandView`).
 - **Drag feel is view-only.** `PieceDragController` computes the landing cell from a logical drag target (pointer plus lift), never from the dragged view's transform. The dragged view follows the target in one place (`MoveDraggedView`), so lag, tilt or other feel can go there without changing placement.
+- **UI blocks world input.** A press that starts over UI (`EventSystem.current.IsPointerOverGameObject`) never starts a drag. World input that checks this runs in `LateUpdate`, after the EventSystem has processed the frame's press (touch states only exist from then).
 
 ### Event playback
 
