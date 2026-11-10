@@ -76,7 +76,7 @@ namespace Squarely.Presentation
 
         private void RefreshView()
         {
-            _view.SetState(_sim.Board, _sim.Hand);
+            _view.SetState(_sim.Board, _sim.Hand, _sim.Score, _sim.Combo);
         }
     }
 }

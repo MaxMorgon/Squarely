@@ -86,7 +86,7 @@ Assembly `Squarely.Presentation`. Status: **views and drag input implemented (st
 
 ```
 GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, raises GameEnded
-GameView.cs        MonoBehaviour on the Game prefab: its scene objects and settings, builds the views, gizmos
+GameView.cs        MonoBehaviour on the Game prefab: its scene objects and settings, builds and sets the views, gizmos
 GameSetup.cs       What a game starts with: config and seed
 Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
 Theme/             CellTheme, CellThemeEntry
@@ -95,9 +95,10 @@ Board/             BoardSpace (cells <-> board local space), LayerView, BoardBac
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
 Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
+Hud/               ScoreView (score and combo, on GameHud)
 ```
 
-Until playback exists, `GameController` has `GameView` rebuild the board and hand from the final sim state after each command.
+Until playback exists, `GameController` has `GameView` rebuild the board, hand and score from the final sim state after each command.
 
 ### Scene and prefabs
 
