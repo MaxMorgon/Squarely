@@ -87,7 +87,6 @@ Assembly `Squarely.Presentation`. Status: **views and drag input implemented (st
 ```
 GameController.cs  Owns the sim, sets up the views, passes commands to the sim
 GameSetup.cs       What a game starts with: config and seed
-GameBootstrap.cs   Temporary entry point until the app flow owns the game
 Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
 Theme/             CellTheme, CellThemeEntry
 Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
@@ -95,6 +94,7 @@ Board/             BoardSpace (cells <-> board local space), LayerView, BoardBac
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
 Hud/               ScoreView (score and combo, on GameHud)
+Screens/           MenuScreen (UI screens: report the player's choices as C# events)
 ```
 
 Until playback exists, `GameController` rebuilds the board and hand from the final sim state after each command.
@@ -174,3 +174,11 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 
 - `IAppState` has `Enter` and `Exit`. `AppStateMachine.ChangeState(next)` exits the current state, then enters the next.
 - Calling `ChangeState` from inside `Enter` or `Exit` throws `InvalidOperationException`: a state moves on from a later callback (a button, a screen event), never while it is being entered or exited. Transitions are synchronous for now; async transitions (fades, loading) come when a feature needs them.
+
+### Entry point and flow
+
+- **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed. Its `Start` builds the default `GameSetup` and an `AppContext`, creates the `AppStateMachine` and enters the menu.
+- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup. It has no behaviour.
+- **States transition themselves.** Each state takes the context, the state machine if it moves on, and its own arguments (`MenuState(context, stateMachine)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
+- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequested`. **`GameState`** creates the Game prefab and calls `GameController.Initialize(setup, camera)`. Each destroys what it created in `Exit`.
+- A playtest screen will start games the same way, with a `GameState` built from its own setup.
