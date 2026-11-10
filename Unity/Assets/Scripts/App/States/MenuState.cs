@@ -8,22 +8,20 @@ namespace Squarely.App
     /// </summary>
     public sealed class MenuState : IAppState
     {
-        private readonly AppFlow _flow;
-        private readonly MenuScreen _screenPrefab;
-        private readonly Transform _screenRoot;
+        private readonly AppContext _context;
+        private readonly AppStateMachine _stateMachine;
 
         private MenuScreen _screen;
 
-        public MenuState(AppFlow flow, MenuScreen screenPrefab, Transform screenRoot)
+        public MenuState(AppContext context, AppStateMachine stateMachine)
         {
-            _flow = flow;
-            _screenPrefab = screenPrefab;
-            _screenRoot = screenRoot;
+            _context = context;
+            _stateMachine = stateMachine;
         }
 
         public void Enter()
         {
-            _screen = Object.Instantiate(_screenPrefab, _screenRoot);
+            _screen = Object.Instantiate(_context.ScreenPrefabs.Menu, _context.ScreenRoot);
             _screen.PlayRequested += OnPlayRequested;
         }
 
@@ -35,7 +33,7 @@ namespace Squarely.App
 
         private void OnPlayRequested()
         {
-            _flow.GoToGame(_flow.DefaultGameSetup);
+            _stateMachine.ChangeState(new GameState(_context, _context.DefaultGameSetup));
         }
     }
 }

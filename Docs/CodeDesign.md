@@ -176,7 +176,8 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 
 ### Entry point and flow
 
-- **`AppRoot`** is the only component in the scene that starts anything. Its `Start` builds the default `GameSetup` and an `AppFlow`, then goes to the menu. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed.
-- **`AppFlow`** lists every place the app can go (`GoToMenu`, `GoToGame(setup)`). Each call creates a fresh state with what it needs and hands it to the state machine. States call these methods to move on, so reading `AppFlow` and the states shows the whole flow.
+- **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed. Its `Start` builds the default `GameSetup` and an `AppContext`, creates the `AppStateMachine` and enters the menu.
+- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup. It has no behaviour.
+- **States transition themselves.** Each state takes the context, the state machine if it moves on, and its own arguments (`MenuState(context, stateMachine)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
 - **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequested`. **`GameState`** creates the Game prefab and calls `GameController.Initialize(setup, camera)`. Each destroys what it created in `Exit`.
-- A playtest screen will start games through the same `GoToGame(setup)` with its own setup.
+- A playtest screen will start games the same way, with a `GameState` built from its own setup.

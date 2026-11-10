@@ -8,25 +8,21 @@ namespace Squarely.App
     /// </summary>
     public sealed class GameState : IAppState
     {
-        private readonly GameController _gamePrefab;
-        private readonly Transform _screenRoot;
-        private readonly Camera _camera;
+        private readonly AppContext _context;
         private readonly GameSetup _setup;
 
         private GameController _game;
 
-        public GameState(GameController gamePrefab, Transform screenRoot, Camera camera, GameSetup setup)
+        public GameState(AppContext context, GameSetup setup)
         {
-            _gamePrefab = gamePrefab;
-            _screenRoot = screenRoot;
-            _camera = camera;
+            _context = context;
             _setup = setup;
         }
 
         public void Enter()
         {
-            _game = Object.Instantiate(_gamePrefab, _screenRoot);
-            _game.Initialize(_setup, _camera);
+            _game = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
+            _game.Initialize(_setup, _context.Camera);
         }
 
         public void Exit()
