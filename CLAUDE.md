@@ -57,6 +57,7 @@ Standard C# conventions (Microsoft naming: `PascalCase` types/methods/properties
 - **Regions over comment banners** for grouping members (`#region Public API`), unless a comment is genuinely clearer.
 - **Member order:** constants and fields, then properties, then constructors, then methods.
 - **`Set…` for data, `Show`/`Hide` for visibility.** A method that takes data and displays it is `Set…` (`SetHand`, `SetShape`), never `Show…`. `Show`/`Hide` only change visibility, and are added when something needs them.
+- **C# events are `<Noun><Verb>Event`, present tense** (`PlayRequestEvent`, `GameEndEvent`, `StateChangeEvent`), and their handlers `On<Noun><Verb>ed` (`OnPlayRequested`, `OnGameEnded`). This is for C# `event` members only. Sim event types (`ISimEvent`: `ComboChangedEvent`, `GameResolvedEvent`, ...) record what already happened in a command and stay past tense.
 
 ```csharp
 public int Clamp(int value)
