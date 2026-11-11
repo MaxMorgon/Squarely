@@ -38,6 +38,11 @@ namespace Squarely.Presentation
         /// </summary>
         public event Action<GameResolution, int> GameEndEvent;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        /// <summary>Debug only: the debug overlay asked for a fresh game. The controller's owner restarts it.</summary>
+        public event Action RestartRequestEvent;
+#endif
+
         /// <param name="view">The game's view. Its owner initializes it, with this controller as its placer, before <see cref="StartGame"/>.</param>
         public GameController(GameView view, GameSetup setup)
         {
@@ -145,6 +150,12 @@ namespace Squarely.Presentation
             _view.Player.Snap();
             SetViewFromSim(_simBeforeLastMove);
             _view.Player.Play(_lastMoveEvents, _lastMoveDropPoint);
+        }
+
+        /// <summary>Debug only: asks the controller's owner for a fresh game, see <see cref="RestartRequestEvent"/>.</summary>
+        public void RequestRestart()
+        {
+            RestartRequestEvent?.Invoke();
         }
 
         /// <summary>Compares the views with the sim and logs one error listing every difference.</summary>

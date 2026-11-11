@@ -30,10 +30,39 @@ namespace Squarely.Simulation
             return matches;
         }
 
+        /// <summary>Whether any of the patterns matches anywhere on the board. Allocates nothing.</summary>
+        public static bool AnyMatch(IReadOnlyBoard board, IReadOnlyList<BoardPattern> patterns)
+        {
+            for (int i = 0; i < patterns.Count; i++)
+            {
+                BoardPattern pattern = patterns[i];
+
+                if (pattern.Anchor.HasValue)
+                {
+                    if (IsMatchAt(board, pattern, pattern.Anchor.Value))
+                        return true;
+
+                    continue;
+                }
+
+                for (int y = 0; y <= board.Height - pattern.Height; y++)
+                {
+                    for (int x = 0; x <= board.Width - pattern.Width; x++)
+                    {
+                        if (IsMatchAt(board, pattern, new GridPos(x, y)))
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public static bool IsMatchAt(IReadOnlyBoard board, BoardPattern pattern, GridPos origin)
         {
-            foreach (PatternCell cell in pattern.Cells)
+            for (int i = 0; i < pattern.Cells.Count; i++)
             {
+                PatternCell cell = pattern.Cells[i];
                 GridPos pos = origin + cell.Offset;
 
                 if (!board.IsWithinBounds(pos) || !cell.Condition.Matches(board.GetCell(pos)))

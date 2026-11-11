@@ -53,12 +53,23 @@ namespace Squarely.Presentation.Tests
         }
 
         [Test]
-        public void FromPointer_DelaysFollowOrderOfDistanceToDropPoint()
+        public void FromPointer_StartsFromPlacedCellNearestDropPoint()
         {
-            // Distances from (0.5, -1): sqrt(1.25), sqrt(1.25), sqrt(3.25), sqrt(7.25).
+            GridPos[] placed = { new GridPos(2, 1), new GridPos(3, 1) };
+
+            // Starts from (3, 1): distances 1, sqrt(2), sqrt(5), sqrt(10) from the end of the row back.
+            float[] delays = CellOrdering.Delays(CellOrder.FromPointer, Row, placed, new Vector2(3.4f, 1.2f), Stagger);
+
+            AssertDelays(delays, 0.3f, 0.2f, 0.1f, 0f);
+        }
+
+        [Test]
+        public void FromPointer_NothingPlaced_StartsFromTargetCellNearestDropPoint()
+        {
+            // (0, 0) and (1, 0) are equally near: the first listed wins.
             float[] delays = CellOrdering.Delays(CellOrder.FromPointer, Row, null, new Vector2(0.5f, -1f), Stagger);
 
-            AssertDelays(delays, 0f, 0f, 0.1f, 0.2f);
+            AssertDelays(delays, 0f, 0.1f, 0.2f, 0.3f);
         }
 
         [Test]
@@ -74,10 +85,10 @@ namespace Squarely.Presentation.Tests
         {
             GridPos[] placed = { new GridPos(2, 1), new GridPos(3, 1) };
 
+            // From (2.5, 1): (2, 0) and (3, 0) first, then (1, 0), then (0, 0).
             float[] delays = CellOrdering.Delays(CellOrder.FromPointer, Row, placed, null, Stagger);
 
-            float[] expected = CellOrdering.Delays(CellOrder.FromPointer, Row, null, new Vector2(2.5f, 1f), Stagger);
-            AssertDelays(delays, expected);
+            AssertDelays(delays, 0.2f, 0.1f, 0f, 0f);
         }
 
         [Test]

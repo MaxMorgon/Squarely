@@ -51,7 +51,7 @@ namespace Squarely.Presentation
                 createFunc: () => Create(prefab, pool),
                 actionOnGet: view => view.gameObject.SetActive(true),
                 actionOnRelease: OnRelease,
-                actionOnDestroy: view => DestroyObject(view.gameObject));
+                actionOnDestroy: DestroyView);
 
             _pools.Add(prefab, pool);
             return pool;
@@ -70,12 +70,16 @@ namespace Squarely.Presentation
             view.transform.SetParent(_poolRoot, false);
         }
 
-        private static void DestroyObject(GameObject gameObject)
+        private static void DestroyView(CellView view)
         {
+            // Unity clears every pool when play mode exits, after the scene's objects are already destroyed.
+            if (view == null)
+                return;
+
             if (Application.isPlaying)
-                Object.Destroy(gameObject);
+                Object.Destroy(view.gameObject);
             else
-                Object.DestroyImmediate(gameObject);
+                Object.DestroyImmediate(view.gameObject);
         }
     }
 }

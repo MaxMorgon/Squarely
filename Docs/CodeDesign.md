@@ -6,7 +6,7 @@ Covers the core sim (namespace `Squarely.Simulation`, tests `Squarely.Simulation
 
 - **Commands in, events out.** The outside world (Unity, tests, replays) only changes the sim through command objects passed to `Sim.Execute(command)`. Each returns a `CommandResult` holding the list of events that happened.
 - **Read-only from outside.** `Sim` exposes `IReadOnlyBoard` and `IReadOnlyHand`. All mutators are `internal`, and the RNG is hidden (only its `RandomState` is readable), so outside code can't break determinism or replays. Tests reach the internals through `InternalsVisibleTo`.
-- **Config is data.** No gameplay numbers in code. `SimConfig` and its children are `[Serializable]` classes with public fields, so Unity can edit them and they can be loaded from remote config.
+- **Config is data.** No gameplay numbers in code. `SimConfig` and its children are `[Serializable]` classes with public fields, so Unity can edit them and they can be loaded from remote config. A `Sim` takes a deep copy of its config when it is created: edits to the config apply from the next game, and seed plus commands always reproduce a run.
 - **Rules are chosen by config, built by a factory.** The config names its dealer, scoring rule and resolution rules by string id. `RuleFactory` maps ids to implementations. A new rule means registering a new id, not changing the core loop.
 - **Rules are stateless.** Dealers, scoring and resolution rules hold no mutable state. All state lives in `Sim` (e.g. `PiecesDealt`), so one rule instance can be shared by a sim and its preview clones, and a sim's state is fully described by its own fields.
 - **Config vs. seed.** Config is the game mode (authored, shared). The seed is one run of that mode.
@@ -23,7 +23,7 @@ Patterns/       BoardPattern, PatternCell, PatternMatch, ClearedMatch, PatternMa
 Commands/       ISimCommand, PlacePieceCommand, CommandResult
 Rules/          IPieceDealer, IScoringRule, ScoreResult, defaults, RuleFactory, RuleIds
 Resolution/     IResolutionRule, GameResolution, GameOutcome, NoMovesLeftRule
-Config/         SimConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
+Config/         SimConfig, DealingConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
 Events/         ISimEvent + one file per event
 Random/         DeterministicRandom
 ```
@@ -34,7 +34,7 @@ Random/         DeterministicRandom
 |---|---|
 | `GridPos` | `readonly struct` (X, Y). Origin bottom-left. |
 | `Grid<T>` | Fixed-size rectangular storage, one value per `GridPos`. Shared by `Board` and the board views. |
-| `Cell` | `readonly struct` with a string `TypeId`, where `null` means empty, so a default cell is empty. String ids let new cell types arrive through data. Board **layers** (e.g. fire) will be separate per-cell grids, independent of the type. |
+| `Cell` | `readonly struct` with a string `TypeId`, where `null` means empty, so a default cell is empty. String ids let new cell types arrive through data. Board **layers** (planned) will each be a grid of cells, and the config binds each cell type to a layer (see [Layers, cell types and theming](#layers-cell-types-and-theming)). |
 | `PieceShape` | Immutable definition: `Id`, `Offsets` (normalized so the min X/Y is 0), `Width`, `Height`, `CellTypeId`. Built from a text pattern such as `"##/#."`. |
 | `PieceInstance` | One dealt piece: a unique `InstanceId` (sequential, so deterministic) plus its `PieceShape`. Commands refer to pieces by instance id, so two identical shapes in the hand can be told apart. |
 | `Board` | Grid of `Cell`. Public reads (`CanPlace`, `CanPlaceAnywhere`, ...). Internal `SetCell`, `Place`, `ClearCells`. |
@@ -61,7 +61,7 @@ Random/         DeterministicRandom
 2. Take the piece from the hand and place it → `PiecePlacedEvent` (piece, slot, origin).
 3. Find all pattern matches and clear their cells → `PatternsClearedEvent`: one `ClearedMatch` per match (the match plus the cells it emptied, so a cell shared by a row and a column is in both), and all cleared cells, each once.
 4. The scoring rule computes points from the matched patterns and updates the combo → `ScoreChangedEvent`, `ComboChangedEvent`.
-5. If the hand is now empty, deal a full new hand → one `PieceDealtEvent` per new piece.
+5. If the hand is now empty, the dealer deals a full new hand at once (`IPieceDealer.DealHand`, so it can judge the hand as a whole against the board) → one `PieceDealtEvent` per new piece. The default `WeightedRandomDealer` deals by weight, with an optional helpful piece guarantee (`DealingConfig`, rule in [Design.md](Design.md#dealing)).
 6. Resolution rules are checked in config order, and the first one that resolves wins → `GameResolvedEvent` (outcome Won/Lost, reason id, final score).
 
 Unity plays the returned events in order to animate, so the view never has to diff state.
@@ -69,7 +69,7 @@ Unity plays the returned events in order to animate, so the view never has to di
 ## Extensibility (next)
 
 - **Mechanics** (blockers, special cells, power-ups) become `IMechanic` hooks at fixed points in the turn flow, created through the `RuleFactory` like the other rules.
-- **Board layers** hold per-cell state that is independent of the cell's type. Pattern conditions will be able to check them.
+- **Board layers** stack grids of cells: each cell type is bound to a layer, so e.g. fire can sit over a block in the same slot. Pattern conditions will be able to check them.
 - **Modes** are just a config: board, pieces, patterns and rule ids.
 
 ## Testing
@@ -88,7 +88,7 @@ Assembly `Squarely.Presentation`. Status: **views, drag input and event playback
 GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, plays their events, raises GameEndEvent
 GameView.cs        MonoBehaviour on the Game prefab: its scene objects and settings, builds and sets the views, owns the EventPlayer, gizmos
 GameSetup.cs       What a game starts with: config and seed
-Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
+Config/            SimConfigAsset (SimConfig as an editable asset; edits apply from the next game)
 Theme/             CellTheme, CellThemeEntry
 Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
@@ -150,13 +150,13 @@ Implemented. `GameController.Place` executes a command and hands its events to t
 
 - **`EventPlayer`** (built by `GameView`) plays a command's events in order, one async step at a time (Unity `Awaitable`). Events without a handler are skipped.
 - **One handler per event type** (`PiecePlacedHandler`, `PatternsClearedHandler`, `ScoreChangedHandler`, `ComboChangedHandler`, `PieceDealtHandler`). A handler updates the view bookkeeping at once (spawn, detach, set the hand slot), builds a `CueTarget` (cells with grid positions, a transform, a count, a world position) and plays its `CueSequence` on it through the context. Whatever the views must end up showing happens in the handler or in a cue run (its steps or its end action), so snapping always reaches it.
-- **Shared playback context.** Handlers for one command share a `PlaybackContext`, so later handlers can use earlier results: clears stagger from the placed cells, the score target gets the last clear's center. It also carries presentation-only input data for the command: `DropPoint`, where the pointer dropped the piece (board cell coordinates, `BoardSpace.CellCoordinates`), passed from `PieceDragController` through `IPiecePlacer.Place` and `EventPlayer.Play`; null without a pointer. The placement ripples out from it (`CellOrder.FromPointer`).
+- **Shared playback context.** Handlers for one command share a `PlaybackContext`, so later handlers can use earlier results: clears stagger from the placed cells, the score target gets the last clear's center. It also carries the command's full event list (`Events`), so a handler can adapt to what follows (the placement skips its cues when the same command clears), and presentation-only input data: `DropPoint`, where the pointer dropped the piece (board cell coordinates, `BoardSpace.CellCoordinates`), passed from `PieceDragController` through `IPiecePlacer.Place` and `EventPlayer.Play`; null without a pointer. The placement ripples out from the placed cell nearest to it (`CellOrder.FromPointer`).
 - **Per match.** `PatternsClearedHandler` plays its sequence once per match, all matches at once, each on its own cells and center. A cell shared by two matches is animated by the first.
 - **Overlap.** Each `CueSequence` has `WaitForEnd`: on, the next event waits for it; off, it plays alongside (the score count-up and the combo punch). Any flag combination is safe: before a handler detaches or releases cell views, `PlaybackContext.SnapRunsOn` snaps the earlier runs of the same playback still playing on them, so a view never leaves the board or hand while a run animates it. Playback ends when every run has ended. If several consecutive events ever need to be handled as one, a handler can take them together. That is added when a case needs it.
 - **`CueSequence`** ScriptableObject (`Config/Playback/<Event>Cues`, referenced by `GameView`'s `GameCues`): a list of `[SerializeReference] CueStep`s edited in the inspector, with a type picker. Steps: `AnimateCells` (scale curve and tint gradient, stagger, `CellOrder`), `AnimateScale`, `CountUp`, `Wait`, `Parallel`, `SpawnParticles`. A new step type is one small class. Steps keep no state and read their settings as they play, so asset edits apply from the next play, also in play mode.
 - **Game end.** `GameController` raises `GameEndEvent` when playback reaches `GameResolvedEvent` (or when a snap does), so the last move animates before the game-over screen.
 - **Drift check.** In the editor and development builds, when a playback ends (played out or snapped), `ViewDrift` compares what the views show (`GameView.GetShownState`: board cells, hand, score, combo) with the sim and logs one error listing every difference.
-- **Debug overlay.** `PlaybackDebugOverlay` (editor and development builds; a uGUI canvas prefab, so it takes mouse and touch through the EventSystem like the game UI): replay the last move (button or R) from a `Sim.Clone()` taken before it, with the same drop point; playback speed presets, the selected one highlighted; the last drift check's result. A toggle button or the backquote key collapses it. Speed and collapsed state carry over to the next game. `GameView` holds the prefab and creates it (`CreateDebugOverlay`); `GameController` initializes it, because it owns replay.
+- **Debug overlay.** `PlaybackDebugOverlay` (editor and development builds; a uGUI canvas prefab, so it takes mouse and touch through the EventSystem like the game UI): replay the last move (button or R) from a `Sim.Clone()` taken before it, with the same drop point; playback speed presets, the selected one highlighted; the last drift check's result; restart the game (`GameController.RestartRequestEvent`, which `GameState` handles like the game-over Restart). A small toggle button or the backquote key collapses it. Speed and collapsed state carry over to the next game; speed resets to 1x each play session. `GameView` holds the prefab and creates it (`CreateDebugOverlay`); `GameController` initializes it, because it owns replay.
 - `PatternsClearedEvent` gives cleared cells **per match**, so each match can have its own centroid and effects.
 
 ### Fast-forward
