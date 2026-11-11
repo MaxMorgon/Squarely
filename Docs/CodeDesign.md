@@ -94,14 +94,9 @@ Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
-<<<<<<< HEAD
-Hud/               ScoreView (score and combo, on GameHud)
-Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
-=======
 Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
 Hud/               ScoreView (score and combo, on GameHud)
 Texts/             TextsConfig and its per-screen groups (MenuTexts, GameHudTexts, GameOverTexts)
->>>>>>> origin/feature/event-naming
 ```
 
 Until playback exists, `GameController` has `GameView` rebuild the board, hand and score from the final sim state after each command.
