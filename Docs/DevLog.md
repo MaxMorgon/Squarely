@@ -2,6 +2,13 @@
 
 A chronological record of what was built and the decisions behind it. **Decision by** says who drove each call: *you* = the developer, *AI* = proposed by Claude and accepted, *both* = AI proposal shaped by your input.
 
+## Session 6 — 2026-11-11
+
+### 20. Review by decisions, drift audits
+- **Agents review the code, you review decisions and play the change.** Line-by-line review added little, so each PR now has a **Decisions** section (open points of the brief, deviations from it, new APIs, rule changes) and a **How to test** checklist. The `reviewer` agent and an implementer in review mode go over each PR before you see it. The four open PRs (#15–#18) were combined into one (#19) and reviewed this way. **Decision by:** you (AI proposed the Decisions/How to test format).
+- **Drift audits.** A per-PR review only sees its diff, so the `reviewer` got an audit mode that checks the whole of `main` for drift (docs vs code, the same job done two ways, duplication, responsibility creep). It files an `audit` issue every 5 merged PRs. The first audit (#20) found six items and no rule violations. **Decision by:** both (you asked whether an agent would work; AI proposed audit mode instead of a new agent).
+- **The sim copies its config at game start** (audit #20, finding 3). Edits to the config asset apply from the next game, not live. This reverses the decision in 17: only scoring was live, and that was by accident. A copy keeps the sim fully described by its own state. **Decision by:** you, on AI recommendation.
+
 ---
 
 ## Session 1 — 2026-11-03
@@ -151,7 +158,7 @@ Each comment below improved the design:
 - **PR workflow.** After "review submitted", the AI replies to every comment with its plan or pushback. After "go", it fixes, then merges unless told otherwise. **Decision by:** you.
 - **One `Grid<T>` in Sim** replaces the view-only `SlotGrid`. `Board` stores its cells in it, and `LayerView` stores its views in it. It lives in Sim, not a new shared assembly, because Sim is already the Unity-free assembly everything references. **Decision by:** you (AI chose Sim over a common project).
 - **Renames toward standard terms.** `CellVisual` → `CellView`, `CellVisualCatalog` → `CellViewPool` (it pools, not offers options), `SpriteStateTint` → `CellStateSpriteTint`, `BoardLayout` → `BoardSpace` ("layout" suggests the board's shape), `Theme` → `CellTheme` (themes are modular, one per area). **Decision by:** you (AI proposed `BoardSpace`, `CellViewPool` and theme per area).
-- **Sim config is an asset** (`SimConfigAsset`), and the sim uses the asset's live config, so tuning in play mode applies right away. That trades away reproducing a run from seed + inputs while tweaking. **Decision by:** you, aware of the determinism cost.
+- **Sim config is an asset** (`SimConfigAsset`), and the sim uses the asset's live config, so tuning in play mode applies right away. That trades away reproducing a run from seed + inputs while tweaking. **Decision by:** you, aware of the determinism cost. *Reversed in 20.*
 - **Edit-time gizmo previews** for anything sized only by config (board, hand slots), as a standard for WYSIWYG scenes. Plain gizmos rather than a paid drawing asset for now. **Decision by:** you.
 - **Drag feel is prepared, not built.** Placement now reads a logical drag target, not the dragged view, so lag and tilt can be added in one method later. **Decision by:** you (AI found that the old code would skew placement once the view lagged).
 - **Third-party assets.** Odin Inspector and ALINE were considered and dropped for now (`[ContextMenu]` and gizmos are enough). Paid assets in the repo would also need handling before a public showcase.
