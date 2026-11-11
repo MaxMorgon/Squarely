@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Squarely.App
 {
     /// <summary>
-    /// Shows the main menu. Play starts the default game.
+    /// Shows the main menu and the high score. Play starts the default game.
     /// </summary>
     public sealed class MenuState : IAppState
     {
@@ -23,6 +23,7 @@ namespace Squarely.App
         {
             _screen = Object.Instantiate(_context.ScreenPrefabs.Menu, _context.ScreenRoot);
             _screen.Initialize(_context.Texts.Menu);
+            _screen.SetHighScore(_context.HighScore.Best);
             _screen.PlayRequestEvent += OnPlayRequested;
         }
 

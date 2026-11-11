@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Squarely.App
 {
     /// <summary>
-    /// Runs one game with the given setup. When it ends it shows the game-over screen:
+    /// Runs one game with the given setup. When it ends it records the high score and shows the game-over screen:
     /// Restart starts a fresh game with the same setup, Menu goes back to the menu.
     /// </summary>
     public sealed class GameState : IAppState
@@ -56,6 +56,13 @@ namespace Squarely.App
             _gameOver.RestartRequestEvent += OnRestartRequested;
             _gameOver.MenuRequestEvent += OnMenuRequested;
             _gameOver.SetResult(resolution, finalScore);
+            RecordHighScore(finalScore);
+        }
+
+        private void RecordHighScore(int finalScore)
+        {
+            bool isNew = _context.HighScore.Record(finalScore);
+            _gameOver.SetHighScore(_context.HighScore.Best.Value, isNew);
         }
 
         private void OnRestartRequested()
