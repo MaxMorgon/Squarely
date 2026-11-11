@@ -53,13 +53,20 @@ namespace Squarely.Presentation.Tests
         }
 
         [Test]
-        public void FromPointer_DelaysFollowContinuousDistanceToDropPoint()
+        public void FromPointer_DelaysFollowOrderOfDistanceToDropPoint()
         {
             // Distances from (0.5, -1): sqrt(1.25), sqrt(1.25), sqrt(3.25), sqrt(7.25).
             float[] delays = CellOrdering.Delays(CellOrder.FromPointer, Row, null, new Vector2(0.5f, -1f), Stagger);
 
-            float nearest = Mathf.Sqrt(1.25f);
-            AssertDelays(delays, 0f, 0f, (Mathf.Sqrt(3.25f) - nearest) * Stagger, (Mathf.Sqrt(7.25f) - nearest) * Stagger);
+            AssertDelays(delays, 0f, 0f, 0.1f, 0.2f);
+        }
+
+        [Test]
+        public void FromPointer_FarDropPoint_FirstCellStillStartsAtZero()
+        {
+            float[] delays = CellOrdering.Delays(CellOrder.FromPointer, Row, null, new Vector2(-10f, 0f), Stagger);
+
+            AssertDelays(delays, 0f, 0.1f, 0.2f, 0.3f);
         }
 
         [Test]

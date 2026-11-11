@@ -8,9 +8,13 @@ namespace Squarely.Presentation
     /// <summary>Start delays for a staggered animation over a group of cells.</summary>
     public static class CellOrdering
     {
+        /// <summary>Distances closer than this, in cell units, count as equal: those cells start together.</summary>
+        private const float SameKeyTolerance = 0.001f;
+
         /// <summary>
-        /// The start delay of each cell, in seconds, in the order of <paramref name="cells"/>. The first cell reached starts at 0.
-        /// For distance orders each cell unit further adds <paramref name="stagger"/>, so cells at the same distance start together.
+        /// The start delay of each cell, in seconds, in the order of <paramref name="cells"/>. The first cell reached starts at 0,
+        /// and each later step in the order starts <paramref name="stagger"/> after the one before, however far the cells are apart.
+        /// Cells at the same distance share a step and start together.
         /// </summary>
         /// <param name="placedCells">The cells of the placed piece, for <see cref="CellOrder.FromPlacement"/> and <see cref="CellOrder.FromPointer"/>.</param>
         /// <param name="dropPoint">Where the pointer dropped the piece, in board cell coordinates (<see cref="BoardSpace.CellCoordinates"/>), or null.</param>
@@ -32,12 +36,38 @@ namespace Squarely.Presentation
             for (int i = 0; i < cells.Count; i++)
                 delays[i] = Key(order, i, cells, placedCells, origin);
 
-            float min = Mathf.Min(delays);
+            return ToSteps(delays, stagger);
+        }
 
-            for (int i = 0; i < delays.Length; i++)
-                delays[i] = (delays[i] - min) * stagger;
+        /// <summary>Replaces each key with its step in the order (equal keys share a step) times <paramref name="stagger"/>.</summary>
+        private static float[] ToSteps(float[] keys, float stagger)
+        {
+            var sorted = (float[])keys.Clone();
+            Array.Sort(sorted);
+
+            var delays = new float[keys.Length];
+
+            for (int i = 0; i < keys.Length; i++)
+                delays[i] = StepOf(keys[i], sorted) * stagger;
 
             return delays;
+        }
+
+        /// <summary>The number of distinct keys in <paramref name="sorted"/> that come before <paramref name="key"/>.</summary>
+        private static int StepOf(float key, float[] sorted)
+        {
+            int step = 0;
+
+            for (int i = 1; i < sorted.Length; i++)
+            {
+                if (sorted[i] - key > SameKeyTolerance)
+                    break;
+
+                if (sorted[i] - sorted[i - 1] > SameKeyTolerance)
+                    step++;
+            }
+
+            return step;
         }
 
         /// <summary>The point distance orders measure from.</summary>
