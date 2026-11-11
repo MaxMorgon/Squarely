@@ -16,7 +16,7 @@ Design and rules: [Docs/Design.md](Docs/Design.md) — read it before working on
 | `Unity/Assets/Tests/EditMode/` | `Squarely.Presentation.Tests` asmdef: unit tests for presentation logic (layout, pooling, slots). Not for testing how views are wired together. |
 | `Unity/Assets/Scripts/App/` | `Squarely.App` asmdef: app state machine and states (menu, game, game over). Design: [Docs/CodeDesign.md](Docs/CodeDesign.md#app-flow-unity). References `Squarely.Presentation`; Presentation never references App. |
 | `Unity/Assets/Tests/App/` | `Squarely.App.Tests` asmdef: unit tests for the app flow. |
-| `Unity/Assets/Scenes/Main.unity` | The only scene: camera, EventSystem, entry point. Screens are prefabs (`Prefabs/Game/`, `Prefabs/Menu/`, `Prefabs/UI/`). Placeholder art in `Art/Placeholder/`, prefabs in `Prefabs/`, the `DefaultCellTheme` in `Themes/`, the `DefaultSimConfig` asset in `Config/`. |
+| `Unity/Assets/Scenes/Main.unity` | The only scene: camera, EventSystem, entry point. Screens are prefabs (`Prefabs/Game/`, `Prefabs/Menu/`, `Prefabs/UI/`). Placeholder art in `Art/Placeholder/`, prefabs in `Prefabs/`, the `DefaultCellTheme` in `Themes/`, the `DefaultSimConfig` and `DefaultTexts` assets in `Config/`. |
 | `Unity/Assets/Editor/` | `Squarely.Editor` asmdef (Editor-only): editor tools and custom Unity CLI commands (`Cli/`). |
 
 ## Architecture rules
@@ -63,6 +63,7 @@ Standard C# conventions (Microsoft naming: `PascalCase` types/methods/properties
 - **Regions over comment banners** for grouping members (`#region Public API`), unless a comment is genuinely clearer.
 - **Member order:** constants and fields, then properties, then constructors, then methods.
 - **`Set…` for data, `Show`/`Hide` for visibility.** A method that takes data and displays it is `Set…` (`SetHand`, `SetShape`), never `Show…`. `Show`/`Hide` only change visibility, and are added when something needs them.
+- **C# events are `<Noun><Verb>Event`, present tense** (`PlayRequestEvent`, `GameEndEvent`, `StateChangeEvent`), and their handlers `On<Noun><Verb>ed` (`OnPlayRequested`, `OnGameEnded`). This is for C# `event` members only. Sim event types (`ISimEvent`: `ComboChangedEvent`, `GameResolvedEvent`, ...) record what already happened in a command and stay past tense.
 
 ```csharp
 public int Clamp(int value)

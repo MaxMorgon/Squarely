@@ -523,4 +523,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 625b3509be472a446b53c07f87ee53b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.MenuScreen
+  _titleLabel: {fileID: 985235123112200752}
   _playButton: {fileID: 1581527467356328384}
+  _playLabel: {fileID: 849260283325000248}

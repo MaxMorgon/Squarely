@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be6d22aba06ac634c8410cdd71cb6e1d, type: 3}
+  m_Name: DefaultTexts
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.TextsConfig
+  _menu:
+    Title: Squarely
+    Play: Play
+  _gameHud:
+    ComboFormat: "Combo \xD7{0}"
+  _gameOver:
+    WinTitle: You win!
+    LoseTitle: Game over
+    ScoreFormat: 'Score: {0}'
+    Restart: Restart
+    Menu: Menu

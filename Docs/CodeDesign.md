@@ -85,7 +85,8 @@ Assembly `Squarely.Presentation`. Status: **views and drag input implemented (st
 ### Folder layout (`Unity/Assets/Scripts/Presentation/`)
 
 ```
-GameController.cs  Owns the sim, sets up the views, passes commands to the sim
+GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, raises GameEndEvent
+GameView.cs        MonoBehaviour on the Game prefab: its scene objects and settings, builds and sets the views, gizmos
 GameSetup.cs       What a game starts with: config and seed
 Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
 Theme/             CellTheme, CellThemeEntry
@@ -93,25 +94,32 @@ Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController
+<<<<<<< HEAD
 Hud/               ScoreView (score and combo, on GameHud)
 Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
+=======
+Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
+Hud/               ScoreView (score and combo, on GameHud)
+Texts/             TextsConfig and its per-screen groups (MenuTexts, GameHudTexts, GameOverTexts)
+>>>>>>> origin/feature/event-naming
 ```
 
-Until playback exists, `GameController` rebuilds the board and hand from the final sim state after each command.
+Until playback exists, `GameController` has `GameView` rebuild the board, hand and score from the final sim state after each command.
 
 ### Scene and prefabs
 
 - **One scene** (`Main.unity`) holds only what every screen shares: the camera, the EventSystem and the entry point. Screens such as the game and the menu are prefabs, created and destroyed by code.
-- **`Prefabs/Game/Game.prefab`** is the whole game: `GameController` with the board, hand, input and `GameHud` under it.
+- **`Prefabs/Game/Game.prefab`** is the whole game: `GameView` with the board, hand, input and `GameHud` under it. The game's logic side, `GameController`, is plain C# created by its owner (`GameState`), so it carries no prefab references.
 - **`Prefabs/UI/UiCanvas.prefab`** is the base for every UI screen: an overlay canvas scaled for portrait 1080×1920. Screens are prefab variants of it (`GameHud` is the first).
 
 ### Principles
 
-- **Owners initialize what they own.** The flow reads in code, not in the scene. An owner creates its children and passes them what they need through an explicit `Initialize(...)` (e.g. `GameController.Initialize(GameSetup, Camera)`). `Awake`/`Start` are only for a component setting up itself, never for starting flow or finding other objects.
+- **Owners initialize what they own.** The flow reads in code, not in the scene. An owner creates its children and passes them what they need through an explicit `Initialize(...)` (e.g. `GameView.Initialize(SimConfig, Camera, GameController)`). `Awake`/`Start` are only for a component setting up itself, never for starting flow or finding other objects.
 
 - **Views update from events only.** After `Execute`, the sim is already in its final state while the view is still animating. Views never read sim state during playback. When playback ends, a debug-only check compares the views with `IReadOnlyBoard` to catch drift.
 - **Rule questions go to the sim.** "Can this be placed?", "what will clear?" and "can this hand piece go anywhere?" are answered by `Sim.Preview`, never by Unity code.
 - **Code says what, assets say how.** Code provides targets and states (cells, centroids, "will clear"). Prefabs, themes and cue sequences decide how they look and sound.
+- **Texts live in one asset.** `TextsConfig` (`Config/DefaultTexts.asset`) holds every text the player reads, in one `[Serializable]` group per screen; each group is meant to become one Localization string table. `AppRoot` references it once, `AppContext` hands it to the states, and each view gets its own group through its `Initialize`. Views pick which text to show (win or lose title) and fill in format strings (`{0}`); the asset says what the text is. No prefab references the asset.
 
 ### Sim.Preview
 
@@ -131,7 +139,7 @@ Until playback exists, `GameController` rebuilds the board and hand from the fin
 - **Themes are modular.** Each area gets its own theme asset (`CellTheme` now, e.g. `MenuTheme` later). Views never reference cell view prefabs directly. A `CellTheme` asset resolves a cell type id to a view prefab. Changing theme means swapping one asset. When layers arrive, the theme also defines each layer's sorting order (applied through a Sorting Group on each `LayerView`), and prefabs only order things inside their own layer.
 - **Cell view states.** Each cell view exposes a state: Idle, or Ghost (the translucent landing preview shown on the board while dragging). Code sets the state, and the prefab decides how to show it (Animator, tween, shader parameter). More states are added when a feature needs them.
 - **Board background.** Static empty-slot tiles only. Hover and preview highlights are a separate view.
-- **Edit-time previews.** Anything whose size or position comes only from config or serialized values draws a gizmo preview of it, so the scene is WYSIWYG without entering play mode. Such views expose `DrawGizmos(...)` taking the config values they need, and `GameController` calls them from `OnDrawGizmos` with its setup's config, or at edit time with its gizmo preview config. Today: board outline and grid (`BoardBackground`), hand slot pick-up areas (`HandView`).
+- **Edit-time previews.** Anything whose size or position comes only from config or serialized values draws a gizmo preview of it, so the scene is WYSIWYG without entering play mode. Such views expose `DrawGizmos(...)` taking the config values they need, and `GameView` calls them from `OnDrawGizmos` with its game mode, or at edit time with its gizmo preview config. Today: board outline and grid (`BoardBackground`), hand slot pick-up areas (`HandView`).
 - **Drag feel is view-only.** `PieceDragController` computes the landing cell from a logical drag target (pointer plus lift), never from the dragged view's transform. The dragged view follows the target in one place (`MoveDraggedView`), so lag, tilt or other feel can go there without changing placement.
 
 ### Event playback
@@ -178,8 +186,8 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 ### Entry point and flow
 
 - **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed. Its `Start` builds the default `GameSetup` and an `AppContext`, creates the `AppStateMachine` and enters the menu.
-- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup. It has no behaviour.
+- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup, texts. It has no behaviour.
 - **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, setup)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
-- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequested`. **`GameState`** creates the Game prefab and calls `GameController.Initialize(setup, camera)`. Each destroys what it created in `Exit`.
-- **Game over.** `GameController` raises `GameEnded` (resolution, final score) when the game resolves, also if it resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.
+- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequestEvent`. **`GameState`** creates the Game prefab (`GameView`), builds a `GameController` from it, the setup and the camera, and calls `StartGame()`. Each destroys what it created in `Exit`.
+- **Game over.** `GameController` raises `GameEndEvent` (resolution, final score) when the game resolves, also if it resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.
 - A playtest screen will start games the same way, with a `GameState` built from its own setup.

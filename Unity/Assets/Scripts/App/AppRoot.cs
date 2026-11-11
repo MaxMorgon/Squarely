@@ -17,6 +17,9 @@ namespace Squarely.App
         [Tooltip("The game mode started from the menu. Edits apply live, also in play mode. Board and hand size changes apply from the next game.")]
         [SerializeField] private SimConfigAsset _defaultMode;
 
+        [Tooltip("Every text the screens show.")]
+        [SerializeField] private TextsConfig _texts;
+
         [Tooltip("0 picks a new seed for every game.")]
         [SerializeField] private int _seed;
 
@@ -28,7 +31,7 @@ namespace Squarely.App
         {
             ulong? seed = _seed != 0 ? (ulong)_seed : (ulong?)null;
             var defaultGameSetup = new GameSetup(_defaultMode.Config, seed);
-            var context = new AppContext(_screenPrefabs, transform, _camera, defaultGameSetup);
+            var context = new AppContext(_screenPrefabs, transform, _camera, defaultGameSetup, _texts);
 
             _stateMachine = new AppStateMachine();
             _stateMachine.ChangeState(new MenuState(context, _stateMachine));
