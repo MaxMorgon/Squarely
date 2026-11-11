@@ -63,7 +63,16 @@ namespace Squarely.Simulation
         /// <summary>Redeals one random slot from the helpful pieces if none of the picks is helpful. Draws no random numbers otherwise.</summary>
         private void EnsureHelpfulPiece(Sim sim, DeterministicRandom random, List<int> picks)
         {
-            bool[] helpful = FindHelpfulPieces(sim);
+            Board scratch = sim.EditableBoard.Clone();
+
+            // A pick that completes a pattern is always helpful, so the pool scan can be skipped.
+            foreach (int index in picks)
+            {
+                if (CanComplete(scratch, _shapes[index], sim.Patterns))
+                    return;
+            }
+
+            bool[] helpful = FindHelpfulPieces(scratch, sim.Patterns);
 
             if (helpful == null)
                 return;
@@ -81,9 +90,8 @@ namespace Squarely.Simulation
         /// <summary>
         /// Per pool piece: whether it can complete a pattern; if no piece can, whether it fits. Null if no piece fits.
         /// </summary>
-        private bool[] FindHelpfulPieces(Sim sim)
+        private bool[] FindHelpfulPieces(Board scratch, IReadOnlyList<BoardPattern> patterns)
         {
-            Board scratch = sim.EditableBoard.Clone();
             var clears = new bool[_shapes.Count];
             var fits = new bool[_shapes.Count];
             bool anyClears = false;
@@ -97,7 +105,7 @@ namespace Squarely.Simulation
                     continue;
 
                 anyFits = true;
-                clears[i] = CanComplete(scratch, _shapes[i], sim.Patterns);
+                clears[i] = CanComplete(scratch, _shapes[i], patterns);
                 anyClears |= clears[i];
             }
 
@@ -123,10 +131,10 @@ namespace Squarely.Simulation
                         continue;
 
                     board.Place(shape, origin);
-                    bool completes = PatternMatcher.FindMatches(board, patterns).Count > 0;
+                    bool completes = PatternMatcher.AnyMatch(board, patterns);
 
-                    foreach (GridPos offset in shape.Offsets)
-                        board.SetCell(origin + offset, Cell.Empty);
+                    for (int i = 0; i < shape.Offsets.Count; i++)
+                        board.SetCell(origin + shape.Offsets[i], Cell.Empty);
 
                     if (completes)
                         return true;

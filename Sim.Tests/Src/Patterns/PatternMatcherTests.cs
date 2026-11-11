@@ -122,6 +122,42 @@ namespace Squarely.Simulation.Tests
 
         #endregion
 
+        #region AnyMatch
+
+        [Test]
+        public void AnyMatch_NoFullLines_False()
+        {
+            var board = new Board(3, 3);
+            TestHelpers.Fill(board, "##./##./...");
+
+            Assert.That(PatternMatcher.AnyMatch(board, LinePatterns(3, 3)), Is.False);
+        }
+
+        [Test]
+        public void AnyMatch_FullColumn_True()
+        {
+            var board = new Board(3, 3);
+            TestHelpers.Fill(board, "..#/..#/..#");
+
+            Assert.That(PatternMatcher.AnyMatch(board, LinePatterns(3, 3)), Is.True);
+        }
+
+        [Test]
+        public void AnyMatch_AnchoredPattern_OnlyAtAnchor()
+        {
+            var board = new Board(5, 5);
+            board.SetCell(new GridPos(3, 2), Cell.Block);
+            board.SetCell(new GridPos(4, 2), Cell.Block);
+
+            BoardPattern atAnchor = BoardPattern.FromText("pair", "##", 5, new GridPos(3, 2));
+            BoardPattern elsewhere = BoardPattern.FromText("pair", "##", 5, new GridPos(0, 0));
+
+            Assert.That(PatternMatcher.AnyMatch(board, new[] { atAnchor }), Is.True);
+            Assert.That(PatternMatcher.AnyMatch(board, new[] { elsewhere }), Is.False);
+        }
+
+        #endregion
+
         private static List<BoardPattern> LinePatterns(int width, int height)
         {
             return new ClearingConfig().BuildPatterns(width, height);
