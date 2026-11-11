@@ -363,7 +363,6 @@ MonoBehaviour:
   _camera: {fileID: 851879383}
   _defaultMode: {fileID: 11400000, guid: bbabd39d8dadbd14e894501e1bdc6a16, type: 2}
   _texts: {fileID: 11400000, guid: 540f510a9c0c91c41ad825e8c6eb039f, type: 2}
-  _seed: 0
 --- !u!4 &1923862125
 Transform:
   m_ObjectHideFlags: 0

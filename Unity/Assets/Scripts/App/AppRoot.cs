@@ -20,17 +20,13 @@ namespace Squarely.App
         [Tooltip("Every text the screens show.")]
         [SerializeField] private TextsConfig _texts;
 
-        [Tooltip("0 picks a new seed for every game.")]
-        [SerializeField] private int _seed;
-
         private AppStateMachine _stateMachine;
 
         #region Unity
 
         private void Start()
         {
-            ulong? seed = _seed != 0 ? (ulong)_seed : (ulong?)null;
-            var defaultGameSetup = new GameSetup(_defaultMode.Config, seed);
+            var defaultGameSetup = new GameSetup(_defaultMode.Config, null);
             var store = new PlayerPrefsStore();
             var highScore = new HighScore(store);
             var testSeed = new TestSeed(store, new System.Random());
