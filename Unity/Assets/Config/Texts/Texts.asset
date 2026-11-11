@@ -20,7 +20,7 @@ MonoBehaviour:
     HighScoreFormat: 'Best: {0}'
   _gameHud:
     ComboFormat: "Combo \xD7{0}"
-    NewRecord: New record!
+    NewRecord: New high score!
     Settings: Settings
   _gameOver:
     WinTitle: You win!
