@@ -94,7 +94,7 @@ Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController, IPiecePlacer (what drag input needs from the game)
-Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events), ScalePunch (placeholder UI punch)
+Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
 Hud/               ScoreView (score and combo, on GameHud)
 Texts/             TextsConfig and its per-screen groups (MenuTexts, GameHudTexts, GameOverTexts)
 Playback/          EventPlayer, PlaybackContext, PlaybackViews, CueSequence, CueRun, CueTarget, GameCues
@@ -207,4 +207,4 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 - **`IKeyValueStore`** (`App/Storage/`) is everything the app saves on the device: int and string values by key, and `Save`. `PlayerPrefsStore` backs it with PlayerPrefs; tests use a fake. Anything else the app persists (e.g. the last test seed) goes through it with its own key.
 - **`HighScore`** (`App/HighScore/`) is the best score of any finished game, one for all game modes, saved under one key. `Record(score)` returns whether it is new (the first finished game, or above the best), and saves it at once. `AppRoot` builds it on a `PlayerPrefsStore`; `AppContext` hands it to the states.
 - **`MenuState`** shows `Best` on the menu (nothing before the first finished game). **`GameState`** records the final score when `GameEndEvent` fires, once per game, then sets the game-over screen: the "new high score" state, or the high score this game did not beat.
-- **Celebration hook.** `GameOverScreen` plays its `_newHighScoreCelebration` UnityEvent for a new high score. The art pass hangs animations, particles and sounds on it in the prefab; for now it plays a `ScalePunch` on the label.
+- **Celebration hook.** `GameOverScreen` plays its `_newHighScoreCelebration` UnityEvent for a new high score. The art pass hangs animations, particles and sounds on it in the prefab; for now it triggers the label's Animator (`Celebrate` trigger), which plays a placeholder scale punch clip from `Art/Placeholder/Animations/`. Until UI gets its own cue player, UI feedback is animation assets on hooks like this, not code (code-driven animation is playback cues only).
