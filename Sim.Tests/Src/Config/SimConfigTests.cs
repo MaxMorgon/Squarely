@@ -41,6 +41,7 @@ namespace Squarely.Simulation.Tests
             yield return Case("ZeroHandSize", config => config.HandSize = 0);
             yield return Case("NullPieces", config => config.Pieces = null);
             yield return Case("NoPieces", config => config.Pieces.Clear());
+            yield return Case("NullDealing", config => config.Dealing = null);
             yield return Case("NullClearing", config => config.Clearing = null);
             yield return Case("NullScoring", config => config.Scoring = null);
             yield return Case("NullResolutionRules", config => config.ResolutionRuleIds = null);

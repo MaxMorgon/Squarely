@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d92916fdf75c0b4aad0f31ecddb4577, type: 3}
-  m_Name: DefaultSimConfig
+  m_Name: ClassicGameMode
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.SimConfigAsset
   _config:
     BoardWidth: 8
@@ -169,6 +169,8 @@ MonoBehaviour:
       Pattern: .#/##/#.
       Weight: 1
       CellTypeId: block
+    Dealing:
+      GuaranteeHelpfulPiece: 1
     Clearing:
       ClearRows: 1
       ClearColumns: 1

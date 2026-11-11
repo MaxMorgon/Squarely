@@ -19,7 +19,7 @@ namespace Squarely.Presentation
         [SerializeField] private int _draggedSortingOrder = 100;
 
         private Camera _camera;
-        private GameController _game;
+        private IPiecePlacer _game;
         private HandView _hand;
         private Transform _boardRoot;
         private BoardSpace _boardSpace;
@@ -37,7 +37,7 @@ namespace Squarely.Presentation
 
         private bool IsDragging => _dragPiece != null;
 
-        public void Initialize(Camera camera, GameController game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool)
+        public void Initialize(Camera camera, IPiecePlacer game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool)
         {
             _camera = camera;
             _game = game;
@@ -75,7 +75,7 @@ namespace Squarely.Presentation
             UpdateDrag(world);
 
             if (pointer.press.wasReleasedThisFrame)
-                EndDrag();
+                EndDrag(world);
         }
 
         #endregion
@@ -140,11 +140,13 @@ namespace Squarely.Presentation
             _dragged.transform.position = _dragTarget;
         }
 
-        private void EndDrag()
+        /// <param name="world">The pointer's world position where it released the piece.</param>
+        private void EndDrag(Vector3 world)
         {
             int pieceInstanceId = _dragPiece.InstanceId;
             bool place = _canPlace;
             GridPos origin = _checkedOrigin;
+            Vector2 dropPoint = _boardSpace.CellCoordinates(_boardRoot.InverseTransformPoint(world));
 
             _dragged.Clear();
             _dragged.gameObject.SetActive(false);
@@ -156,7 +158,7 @@ namespace Squarely.Presentation
             _dragPiece = null;
 
             if (place)
-                _game.Place(pieceInstanceId, origin);
+                _game.Place(pieceInstanceId, origin, dropPoint);
         }
 
         #endregion

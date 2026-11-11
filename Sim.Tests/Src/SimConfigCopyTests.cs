@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace Squarely.Simulation.Tests
@@ -30,6 +31,32 @@ namespace Squarely.Simulation.Tests
 
             foreach (PieceDealtEvent dealtEvent in dealt)
                 Assert.That(dealtEvent.Piece.Shape.Id, Is.EqualTo("dot"));
+        }
+
+        [Test]
+        public void EditDealing_AfterConstruction_DoesNotChangeDeals()
+        {
+            bool guaranteeChangesSomeGame = false;
+
+            for (ulong seed = 1; seed <= 20; seed++)
+            {
+                SimConfig config = DefaultSimConfig.Create();
+                config.Dealing.GuaranteeHelpfulPiece = false;
+                var edited = new Sim(config, seed);
+                config.Dealing.GuaranteeHelpfulPiece = true;
+
+                SimConfig offConfig = DefaultSimConfig.Create();
+                offConfig.Dealing.GuaranteeHelpfulPiece = false;
+                List<string> expected = Play(new Sim(offConfig, seed));
+
+                Assert.That(Play(edited), Is.EqualTo(expected), $"seed {seed}");
+
+                if (!Play(new Sim(DefaultSimConfig.Create(), seed)).SequenceEqual(expected))
+                    guaranteeChangesSomeGame = true;
+            }
+
+            // Otherwise the edit could not have shown up in the deals at all.
+            Assert.That(guaranteeChangesSomeGame, Is.True);
         }
 
         [Test]
@@ -97,6 +124,17 @@ namespace Squarely.Simulation.Tests
             CommandResult result = sim.Preview(new PlacePieceCommand(TestHelpers.SlotInstanceId(sim, 0), new GridPos(0, 0)));
 
             Assert.That(TestHelpers.Single<ScoreChangedEvent>(result.Events).Delta, Is.EqualTo(3 + 10));
+        }
+
+        /// <summary>Plays up to 30 first valid moves and returns the trace of every result.</summary>
+        private static List<string> Play(Sim sim)
+        {
+            var trace = new List<string>();
+
+            for (int move = 0; move < 30 && !sim.IsResolved; move++)
+                trace.AddRange(TestHelpers.Describe(sim.Execute(TestHelpers.FirstValidMove(sim))));
+
+            return trace;
         }
     }
 }

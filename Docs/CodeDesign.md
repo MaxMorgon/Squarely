@@ -23,7 +23,7 @@ Patterns/       BoardPattern, PatternCell, PatternMatch, ClearedMatch, PatternMa
 Commands/       ISimCommand, PlacePieceCommand, CommandResult
 Rules/          IPieceDealer, IScoringRule, ScoreResult, defaults, RuleFactory, RuleIds
 Resolution/     IResolutionRule, GameResolution, GameOutcome, NoMovesLeftRule
-Config/         SimConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
+Config/         SimConfig, DealingConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
 Events/         ISimEvent + one file per event
 Random/         DeterministicRandom
 ```
@@ -61,7 +61,7 @@ Random/         DeterministicRandom
 2. Take the piece from the hand and place it → `PiecePlacedEvent` (piece, slot, origin).
 3. Find all pattern matches and clear their cells → `PatternsClearedEvent`: one `ClearedMatch` per match (the match plus the cells it emptied, so a cell shared by a row and a column is in both), and all cleared cells, each once.
 4. The scoring rule computes points from the matched patterns and updates the combo → `ScoreChangedEvent`, `ComboChangedEvent`.
-5. If the hand is now empty, deal a full new hand → one `PieceDealtEvent` per new piece.
+5. If the hand is now empty, the dealer deals a full new hand at once (`IPieceDealer.DealHand`, so it can judge the hand as a whole against the board) → one `PieceDealtEvent` per new piece. The default `WeightedRandomDealer` deals by weight, with an optional helpful piece guarantee (`DealingConfig`, rule in [Design.md](Design.md#dealing)).
 6. Resolution rules are checked in config order, and the first one that resolves wins → `GameResolvedEvent` (outcome Won/Lost, reason id, final score).
 
 Unity plays the returned events in order to animate, so the view never has to diff state.
@@ -80,41 +80,47 @@ Unity plays the returned events in order to animate, so the view never has to di
 
 ## Presentation (Unity)
 
-Assembly `Squarely.Presentation`. Status: **views and drag input implemented (step 2). Playback and feedback not yet built.** Unity shows sim state and sends commands. It never decides game rules.
+Assembly `Squarely.Presentation`. Status: **views, drag input and event playback implemented (steps 2 and 3). Feedback not yet built.** Unity shows sim state and sends commands. It never decides game rules.
 
 ### Folder layout (`Unity/Assets/Scripts/Presentation/`)
 
 ```
-GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, raises GameEndEvent
-GameView.cs        MonoBehaviour on the Game prefab: its scene objects and settings, builds and sets the views, gizmos
+GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, plays their events, raises GameEndEvent
+GameView.cs        MonoBehaviour on the Game prefab: its scene objects and settings, builds and sets the views, owns the EventPlayer, gizmos
 GameSetup.cs       What a game starts with: config and seed
 Config/            SimConfigAsset (SimConfig as an editable asset; edits apply from the next game)
 Theme/             CellTheme, CellThemeEntry
 Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
-Input/             PieceDragController
+Input/             PieceDragController, IPiecePlacer (what drag input needs from the game)
 Screens/           MenuScreen, GameOverScreen (UI screens: report the player's choices as C# events)
 Hud/               ScoreView (score and combo, on GameHud)
 Texts/             TextsConfig and its per-screen groups (MenuTexts, GameHudTexts, GameOverTexts)
+Playback/          EventPlayer, PlaybackContext, PlaybackViews, CueSequence, CueRun, CueTarget, GameCues
+  Handlers/        ISimEventHandler, SimEventHandler<T>, one handler per event type
+  Steps/           CueStep and the step types, CellOrder/CellOrdering (stagger order), CueStepPickerAttribute
+  Drift/           ShownState, ViewDrift (the debug check of views against the sim)
+Debug/             PlaybackDebugOverlay (uGUI panel, prefab in `Prefabs/Debug/`; editor and development builds only; not game UI)
 ```
 
-Until playback exists, `GameController` has `GameView` rebuild the board, hand and score from the final sim state after each command.
+The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
 
 ### Scene and prefabs
 
 - **One scene** (`Main.unity`) holds only what every screen shares: the camera, the EventSystem and the entry point. Screens such as the game and the menu are prefabs, created and destroyed by code.
 - **`Prefabs/Game/Game.prefab`** is the whole game: `GameView` with the board, hand, input and `GameHud` under it. The game's logic side, `GameController`, is plain C# created by its owner (`GameState`), so it carries no prefab references.
-- **`Prefabs/UI/UiCanvas.prefab`** is the base for every UI screen: an overlay canvas scaled for portrait 1080×1920. Screens are prefab variants of it (`GameHud` is the first).
+- **`Prefabs/UI/UiCanvas.prefab`** is the base for every UI screen: an overlay canvas scaled for portrait 1080×1920. Screens are prefab variants of it (`GameHud`, `GameOverScreen`, `MenuScreen`). Debug UI (`Prefabs/Debug/PlaybackDebugOverlay`) is a variant too, sorted above the screens.
 
 ### Principles
 
-- **Owners initialize what they own.** The flow reads in code, not in the scene. An owner creates its children and passes them what they need through an explicit `Initialize(...)` (e.g. `GameView.Initialize(SimConfig, Camera, GameController)`). `Awake`/`Start` are only for a component setting up itself, never for starting flow or finding other objects.
+- **Owners initialize what they own.** The flow reads in code, not in the scene. An owner creates its children and passes them what they need through an explicit `Initialize(...)` (e.g. `GameView.Initialize(SimConfig, Camera, GameHudTexts, IPiecePlacer)`). `Awake`/`Start` are only for a component setting up itself, never for starting flow or finding other objects.
 
 - **Views update from events only.** After `Execute`, the sim is already in its final state while the view is still animating. Views never read sim state during playback. When playback ends, a debug-only check compares the views with `IReadOnlyBoard` to catch drift.
 - **Rule questions go to the sim.** "Can this be placed?", "what will clear?" and "can this hand piece go anywhere?" are answered by `Sim.Preview`, never by Unity code.
+- **Tunable assets live under `Config/<Area>/`** (`Unity/Assets/Config/Gameplay/`, `Texts/`, `Theme/`, ...), named for what they are (`ClassicGameMode`, `CellTheme`), not for their type.
 - **Code says what, assets say how.** Code provides targets and states (cells, centroids, "will clear"). Prefabs, themes and cue sequences decide how they look and sound.
-- **Texts live in one asset.** `TextsConfig` (`Config/DefaultTexts.asset`) holds every text the player reads, in one `[Serializable]` group per screen; each group is meant to become one Localization string table. `AppRoot` references it once, `AppContext` hands it to the states, and each view gets its own group through its `Initialize`. Views pick which text to show (win or lose title) and fill in format strings (`{0}`); the asset says what the text is. No prefab references the asset.
+- **Texts live in one asset.** `TextsConfig` (`Config/Texts/Texts.asset`) holds every text the player reads, in one `[Serializable]` group per screen; each group is meant to become one Localization string table. `AppRoot` references it once, `AppContext` hands it to the states, and each view gets its own group through its `Initialize`. Views pick which text to show (win or lose title) and fill in format strings (`{0}`); the asset says what the text is. No prefab references the asset.
 
 ### Sim.Preview
 
@@ -140,27 +146,35 @@ Until playback exists, `GameController` has `GameView` rebuild the board, hand a
 
 ### Event playback
 
-- **`EventPlayer`** plays a command's events in order, one async step at a time (Unity `Awaitable`).
-- **One handler per event type** (`PatternsClearedHandler`, `ScoreChangedHandler`, ...). A handler builds the context (cells, world positions, centroid per match, order along a line) and passes it to a cue sequence.
-- **Shared playback context.** Handlers for one command share a context, so later handlers can use earlier results (e.g. the score popup flies from the clear's centroid).
-- **Overlap.** By default each handler waits for the previous one to finish. A handler may start without waiting (e.g. the score count-up runs alongside the combo). If several consecutive events ever need to be handled as one, a handler can take them together. That is added when a case needs it.
-- **`CueSequence`** ScriptableObject: a list of `[SerializeReference] CueStep`s edited in the inspector, e.g. `AnimateCells(state, stagger, order)`, `SpawnParticles(prefab, at: Centroid)`, `PlaySound`, `Wait`, `Parallel`. A new step type is one small class.
-- `PatternsClearedEvent` must give cleared cells **per match**, so each match can have its own centroid and effects.
+Implemented. `GameController.Place` executes a command and hands its events to the `EventPlayer`; views change only through handlers. Only the opening deal (which has no events) and the debug replay set views straight from a sim state (`GameView.SetState`).
+
+- **`EventPlayer`** (built by `GameView`) plays a command's events in order, one async step at a time (Unity `Awaitable`). Events without a handler are skipped.
+- **One handler per event type** (`PiecePlacedHandler`, `PatternsClearedHandler`, `ScoreChangedHandler`, `ComboChangedHandler`, `PieceDealtHandler`). A handler updates the view bookkeeping at once (spawn, detach, set the hand slot), builds a `CueTarget` (cells with grid positions, a transform, a count, a world position) and plays its `CueSequence` on it through the context. Whatever the views must end up showing happens in the handler or in a cue run (its steps or its end action), so snapping always reaches it.
+- **Shared playback context.** Handlers for one command share a `PlaybackContext`, so later handlers can use earlier results: clears stagger from the placed cells, the score target gets the last clear's center. It also carries the command's full event list (`Events`), so a handler can adapt to what follows (the placement skips its cues when the same command clears), and presentation-only input data: `DropPoint`, where the pointer dropped the piece (board cell coordinates, `BoardSpace.CellCoordinates`), passed from `PieceDragController` through `IPiecePlacer.Place` and `EventPlayer.Play`; null without a pointer. The placement ripples out from the placed cell nearest to it (`CellOrder.FromPointer`).
+- **Per match.** `PatternsClearedHandler` plays its sequence once per match, all matches at once, each on its own cells and center. A cell shared by two matches is animated by the first.
+- **Overlap.** Each `CueSequence` has `WaitForEnd`: on, the next event waits for it; off, it plays alongside (the score count-up and the combo punch). Any flag combination is safe: before a handler detaches or releases cell views, `PlaybackContext.SnapRunsOn` snaps the earlier runs of the same playback still playing on them, so a view never leaves the board or hand while a run animates it. Playback ends when every run has ended. If several consecutive events ever need to be handled as one, a handler can take them together. That is added when a case needs it.
+- **`CueSequence`** ScriptableObject (`Config/Playback/<Event>Cues`, referenced by `GameView`'s `GameCues`): a list of `[SerializeReference] CueStep`s edited in the inspector, with a type picker. Steps: `AnimateCells` (scale curve and tint gradient, stagger, `CellOrder`), `AnimateScale`, `CountUp`, `Wait`, `Parallel`, `SpawnParticles`. A new step type is one small class. Steps keep no state and read their settings as they play, so asset edits apply from the next play, also in play mode.
+- **Game end.** `GameController` raises `GameEndEvent` when playback reaches `GameResolvedEvent` (or when a snap does), so the last move animates before the game-over screen.
+- **Drift check.** In the editor and development builds, when a playback ends (played out or snapped), `ViewDrift` compares what the views show (`GameView.GetShownState`: board cells, hand, score, combo) with the sim and logs one error listing every difference.
+- **Debug overlay.** `PlaybackDebugOverlay` (editor and development builds; a uGUI canvas prefab, so it takes mouse and touch through the EventSystem like the game UI): replay the last move (button or R) from a `Sim.Clone()` taken before it, with the same drop point; playback speed presets, the selected one highlighted; the last drift check's result; restart the game (`GameController.RestartRequestEvent`, which `GameState` handles like the game-over Restart). A small toggle button or the backquote key collapses it. Speed and collapsed state carry over to the next game; speed resets to 1x each play session. `GameView` holds the prefab and creates it (`CreateDebugOverlay`); `GameController` initializes it, because it owns replay.
+- `PatternsClearedEvent` gives cleared cells **per match**, so each match can have its own centroid and effects.
 
 ### Fast-forward
 
 The player can act during playback. A new command **snaps** everything still pending, then starts its own playback right away.
 
+Implemented: `GameController.Place` snaps before it executes, and `EventPlayer.Play` snaps whatever is pending. Every step loop waits with `PlaybackContext.NextFrameAsync(target)` and returns without touching views once its run or the playback is snapped (or once the views are destroyed).
+
 - Every `CueStep` has `Play` and `Snap`. `Snap` applies the step's end state and is called on running steps **and on steps that haven't started yet**. For example, a delayed score step snaps the label to its final value.
 - Transient things have an empty or trivial `Snap`: particles and sounds already playing simply finish, and a detached view that hasn't animated yet goes back to the pool.
-- **Open: effect handles.** Effects that one step starts and a later step stops (or that outlive their sequence) need a handle. Ownership, lifetime, what `Snap` does to them and how steps refer to them still need a proper design pass before step 3 builds them.
+- **Open: effect handles.** Effects that one step starts and a later step stops (or that outlive their sequence) need a handle. Ownership, lifetime, what `Snap` does to them and how steps refer to them still need a proper design pass before any step uses them.
 - So there is one rule with no per-step modes: the board views are correct instantly, and effects already playing finish on their own.
 
 ### Build order (one PR each)
 
 1. **Sim:** `Sim.Preview(ISimCommand)` and cleared cells per match in `PatternsClearedEvent`, with tests. **Done.**
 2. **Views and input:** `CellTheme` and `CellViewPool`, a single `LayerView` with pooled views detached from slots, board background, shared visuals for hand and ghost, and drag-and-drop placement (views rebuild from sim state until playback exists). **Done.**
-3. **Playback:** `EventPlayer`, handlers, shared context, `CueSequence` and the first `CueStep`s, fast-forward by snapping.
+3. **Playback:** `EventPlayer`, handlers, shared context, `CueSequence` and the first `CueStep`s, fast-forward by snapping. **Done**, without effect handles (still open, see above).
 4. **Feedback:** hover and preview states driven by `Sim.Preview`.
 
 Later: **board layers** as one feature, Sim and view together: cell type definitions with a layer and behaviour flags, one `LayerView` per layer, and per-layer sorting in the theme.
@@ -184,6 +198,6 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 - **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed. Its `Start` builds the default `GameSetup` and an `AppContext`, creates the `AppStateMachine` and enters the menu.
 - **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup, texts. It has no behaviour.
 - **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, setup)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
-- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequestEvent`. **`GameState`** creates the Game prefab (`GameView`), builds a `GameController` from it, the setup and the camera, and calls `StartGame()`. Each destroys what it created in `Exit`.
-- **Game over.** `GameController` raises `GameEndEvent` (resolution, final score) when the game resolves, also if it resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.
+- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequestEvent`. **`GameState`** creates the Game prefab (`GameView`) and a `GameController(view, setup)`, initializes the view itself (game mode, camera, HUD texts, and the controller as its `IPiecePlacer`), then calls `StartGame()`. Each destroys what it created in `Exit`.
+- **Game over.** `GameController` raises `GameEndEvent` (resolution, final score) once, when playback reaches the resolution, or right away if the game resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.
 - A playtest screen will start games the same way, with a `GameState` built from its own setup.

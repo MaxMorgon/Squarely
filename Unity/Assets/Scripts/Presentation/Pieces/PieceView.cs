@@ -11,7 +11,8 @@ namespace Squarely.Presentation
     {
         private readonly List<CellView> _views = new List<CellView>();
 
-        public PieceShape Shape { get; private set; }
+        /// <summary>The views of the shape's cells, in the order of the shape's offsets.</summary>
+        public IReadOnlyList<CellView> Cells => _views;
 
         /// <summary>Local position of the center of the shape's origin cell (offset 0,0).</summary>
         public Vector2 OriginLocal { get; private set; }
@@ -19,8 +20,6 @@ namespace Squarely.Presentation
         public void SetShape(PieceShape shape, CellViewPool viewPool, float cellSize, CellViewState state)
         {
             Clear();
-
-            Shape = shape;
             OriginLocal = new Vector2(-(shape.Width - 1) * 0.5f * cellSize, -(shape.Height - 1) * 0.5f * cellSize);
 
             foreach (GridPos offset in shape.Offsets)
@@ -39,7 +38,6 @@ namespace Squarely.Presentation
                 view.Release();
 
             _views.Clear();
-            Shape = null;
         }
     }
 }

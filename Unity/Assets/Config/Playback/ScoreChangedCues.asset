@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3d855f7927807049a33ecdade9b0198, type: 3}
+  m_Name: ScoreChangedCues
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CueSequence
+  _waitForEnd: 0
+  _steps:
+  - rid: 5611427121247551492
+  references:
+    version: 2
+    RefIds:
+    - rid: 5611427121247551492
+      type: {class: Parallel, ns: Squarely.Presentation, asm: Squarely.Presentation}
+      data:
+        _steps:
+        - rid: 5611427121247551493
+        - rid: 5611427121247551494
+    - rid: 5611427121247551493
+      type: {class: CountUp, ns: Squarely.Presentation, asm: Squarely.Presentation}
+      data:
+        _duration: 0.4
+        _progress:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+    - rid: 5611427121247551494
+      type: {class: AnimateScale, ns: Squarely.Presentation, asm: Squarely.Presentation}
+      data:
+        _duration: 0.25
+        _scale:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0.71428573
+            outSlope: 0.71428573
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 0.35
+            value: 1.25
+            inSlope: 0.16483517
+            outSlope: 0.16483517
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: -0.3846154
+            outSlope: -0.3846154
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 0.33333334
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4

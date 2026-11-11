@@ -237,9 +237,13 @@ namespace Squarely.Simulation
         /// <summary>Deals a piece into every slot of the empty hand.</summary>
         private void DealNewHand(List<ISimEvent> events)
         {
-            for (int slot = 0; slot < _hand.Size; slot++)
+            IReadOnlyList<PieceShape> shapes = _dealer.DealHand(this, _random);
+
+            if (shapes.Count != _hand.Size)
+                throw new InvalidOperationException($"Dealer dealt {shapes.Count} pieces for a hand of {_hand.Size}.");
+
+            foreach (PieceShape shape in shapes)
             {
-                PieceShape shape = _dealer.Deal(this, _random);
                 var piece = new PieceInstance(PiecesDealt + 1, shape);
                 PiecesDealt++;
 
