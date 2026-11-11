@@ -13,6 +13,11 @@ namespace Squarely.Presentation
         [Tooltip("{0} is the final score.")]
         public string ScoreFormat = "Score: {0}";
 
+        [Tooltip("{0} is the high score this game did not beat.")]
+        public string HighScoreFormat = "Best: {0}";
+
+        public string NewHighScore = "New high score!";
+
         public string Restart = "Restart";
         public string Menu = "Menu";
     }
