@@ -15,7 +15,7 @@ A block-placement puzzle game (genre of 1010!, Block Blast), built as a learning
 
 ### Dealing
 - Pieces are dealt at random, weighted by each piece's weight in config.
-- **Helpful piece guarantee** (config switch, on in the classic mode): every new hand holds at least one *helpful* piece for the board at that moment. A helpful piece can complete a pattern somewhere. If no piece in the pool can, it means the piece fits somewhere. If the weighted hand has none, one random slot is redealt from the helpful pieces only, still by weight. If no piece in the pool fits at all, the hand is dealt as normal and the game is lost as usual.
+- **Helpful piece guarantee** (config switch, on in the classic mode): every new hand holds at least one *helpful* piece for the board at that moment. A helpful piece can complete a pattern somewhere. If no piece in the pool can complete a pattern, a helpful piece is a piece that fits somewhere. If the weighted hand has none, one random slot is redealt from the helpful pieces only, still by weight. If no piece in the pool fits at all, the hand is dealt as normal and the game is lost as usual.
 - Each piece is judged alone on the current board, not together with the rest of the hand.
 
 ### Placement
