@@ -24,7 +24,7 @@ namespace Squarely.Presentation
             _poolRoot = poolRoot;
         }
 
-        /// <summary>An active view for the cell type, in the Idle state, parented to <paramref name="parent"/>.</summary>
+        /// <summary>An active view for the cell type, in the Idle state with no tint and unit scale, parented to <paramref name="parent"/>.</summary>
         public CellView Get(string typeId, Transform parent)
         {
             CellView prefab = _resolvePrefab(typeId);
@@ -34,7 +34,10 @@ namespace Squarely.Presentation
 
             CellView view = GetPool(prefab).Get();
             view.transform.SetParent(parent, false);
+            view.transform.localScale = Vector3.one;
+            view.SetTypeId(typeId);
             view.SetState(CellViewState.Idle);
+            view.SetTint(Color.white);
             return view;
         }
 

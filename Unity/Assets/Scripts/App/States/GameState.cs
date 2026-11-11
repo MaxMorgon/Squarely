@@ -28,7 +28,8 @@ namespace Squarely.App
         public void Enter()
         {
             _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
-            _game = new GameController(_view, _setup, _context.Camera, _context.Texts.GameHud);
+            _game = new GameController(_view, _setup);
+            _view.Initialize(_setup.Config, _context.Camera, _context.Texts.GameHud, _game);
             _game.GameEndEvent += OnGameEnded;
             _game.StartGame();
         }

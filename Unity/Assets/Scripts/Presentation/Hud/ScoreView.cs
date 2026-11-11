@@ -16,14 +16,30 @@ namespace Squarely.Presentation
 
         private GameHudTexts _texts;
 
+        /// <summary>The score the label shows.</summary>
+        public int Score { get; private set; }
+
+        /// <summary>The combo last set, also when it is below the shown minimum.</summary>
+        public int Combo { get; private set; }
+
+        public Transform ScoreLabel => _scoreLabel.transform;
+
+        public Transform ComboLabel => _comboLabel.transform;
+
         public void Initialize(GameHudTexts texts)
         {
             _texts = texts;
         }
 
-        public void SetScore(int score, int combo)
+        public void SetScore(int score)
         {
+            Score = score;
             _scoreLabel.text = score.ToString();
+        }
+
+        public void SetCombo(int combo)
+        {
+            Combo = combo;
 
             bool showCombo = combo >= _minShownCombo;
             _comboLabel.gameObject.SetActive(showCombo);

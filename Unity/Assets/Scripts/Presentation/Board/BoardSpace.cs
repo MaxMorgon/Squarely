@@ -21,11 +21,6 @@ namespace Squarely.Presentation
             CellSize = cellSize;
         }
 
-        public bool IsWithinBounds(GridPos pos)
-        {
-            return pos.X >= 0 && pos.X < Width && pos.Y >= 0 && pos.Y < Height;
-        }
-
         /// <summary>Local position of a cell's center. Works for cells outside the board too.</summary>
         public Vector2 CellCenter(GridPos pos)
         {

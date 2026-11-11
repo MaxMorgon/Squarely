@@ -20,6 +20,18 @@ namespace Squarely.Presentation
             _views = new Grid<CellView>(boardSpace.Width, boardSpace.Height);
         }
 
+        /// <summary>The view in a slot, or null if the slot has none.</summary>
+        public CellView GetView(GridPos pos)
+        {
+            return _views[pos];
+        }
+
+        /// <summary>World position of a cell's center. Works for cells outside the board too.</summary>
+        public Vector3 CellWorldPosition(GridPos pos)
+        {
+            return transform.TransformPoint(_boardSpace.CellCenter(pos));
+        }
+
         /// <summary>Shows a view of the cell type in an empty slot.</summary>
         public CellView Spawn(GridPos pos, string typeId)
         {

@@ -4,12 +4,16 @@ using UnityEngine;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// The game's scene objects: board, hand, input and their settings. Builds the views for a game mode
-    /// and shows the board and hand it is given. Does nothing until its owner calls <see cref="Initialize"/>.
+    /// The game's scene objects: board, hand, input, HUD and their settings. Builds the views for a game mode,
+    /// sets them from a sim state, and plays commands' events on them through its <see cref="Player"/>.
+    /// Does nothing until its owner calls <see cref="Initialize"/>.
     /// </summary>
     public sealed class GameView : MonoBehaviour
     {
         [SerializeField] private CellTheme _cellTheme;
+
+        [Tooltip("How each sim event is animated.")]
+        [SerializeField] private GameCues _cues;
 
         [Tooltip("Board cell size in world units.")]
         [SerializeField] private float _cellSize = 1f;
@@ -27,6 +31,11 @@ namespace Squarely.Presentation
         [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
 
         private SimConfig _config;
+        private BoardSpace _boardSpace;
+        private int _handSize;
+
+        /// <summary>Plays sim events on the views. Exists after <see cref="Initialize"/>.</summary>
+        public EventPlayer Player { get; private set; }
 
         #region Unity
 
@@ -46,10 +55,14 @@ namespace Squarely.Presentation
 
         #endregion
 
-        /// <summary>Builds the board, hand and HUD views for the game mode and connects drag input to the game. Call once.</summary>
+        /// <summary>
+        /// Builds the board, hand and HUD views for the game mode, connects drag input to the placer
+        /// and creates the event player with a handler per animated event. Call once.
+        /// </summary>
         /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
         /// <param name="hudTexts">The texts the HUD shows.</param>
-        public void Initialize(SimConfig config, Camera camera, GameController game, GameHudTexts hudTexts)
+        /// <param name="placer">Receives the player's placements.</param>
+        public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer)
         {
             _config = config;
 
@@ -58,20 +71,54 @@ namespace Squarely.Presentation
 
             var viewPool = new CellViewPool(_cellTheme.ResolveCellView, poolRoot);
             var boardSpace = new BoardSpace(config.BoardWidth, config.BoardHeight, _cellSize);
+            _boardSpace = boardSpace;
+            _handSize = config.HandSize;
 
             _background.Build(boardSpace, _cellTheme.EmptyTile);
             _layerView.Initialize(boardSpace, viewPool);
             _handView.Initialize(config.HandSize, viewPool, _cellSize);
-            _dragController.Initialize(camera, game, _handView, _boardRoot, boardSpace, viewPool);
+            _dragController.Initialize(camera, placer, _handView, _boardRoot, boardSpace, viewPool);
             _scoreView.Initialize(hudTexts);
+
+            var playbackViews = new PlaybackViews(_layerView, _handView, _scoreView, transform);
+            Player = new EventPlayer(playbackViews, destroyCancellationToken);
+            Player.AddHandler(new PiecePlacedHandler(_cues.PiecePlaced));
+            Player.AddHandler(new PatternsClearedHandler(_cues.PatternsCleared));
+            Player.AddHandler(new ScoreChangedHandler(_cues.ScoreChanged));
+            Player.AddHandler(new ComboChangedHandler(_cues.ComboChanged));
+            Player.AddHandler(new PieceDealtHandler(_cues.PieceDealt));
         }
 
-        /// <summary>Shows the board, the hand, the score and the combo.</summary>
+        /// <summary>Sets the board, the hand, the score and the combo straight from a sim state, without playback.</summary>
         public void SetState(IReadOnlyBoard board, IReadOnlyHand hand, int score, int combo)
         {
             _layerView.Rebuild(board);
             _handView.SetHand(hand);
-            _scoreView.SetScore(score, combo);
+            _scoreView.SetScore(score);
+            _scoreView.SetCombo(combo);
+        }
+
+        /// <summary>What the board, hand and score views show right now.</summary>
+        public ShownState GetShownState()
+        {
+            var cells = new Grid<string>(_boardSpace.Width, _boardSpace.Height);
+
+            for (int y = 0; y < cells.Height; y++)
+            {
+                for (int x = 0; x < cells.Width; x++)
+                {
+                    var pos = new GridPos(x, y);
+                    CellView view = _layerView.GetView(pos);
+                    cells[pos] = view != null ? view.TypeId : null;
+                }
+            }
+
+            var hand = new PieceInstance[_handSize];
+
+            for (int slot = 0; slot < hand.Length; slot++)
+                hand[slot] = _handView.GetPiece(slot);
+
+            return new ShownState(cells, hand, _scoreView.Score, _scoreView.Combo);
         }
 
         private SimConfig GizmoConfig()

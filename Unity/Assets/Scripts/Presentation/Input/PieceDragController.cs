@@ -19,7 +19,7 @@ namespace Squarely.Presentation
         [SerializeField] private int _draggedSortingOrder = 100;
 
         private Camera _camera;
-        private GameController _game;
+        private IPiecePlacer _game;
         private HandView _hand;
         private Transform _boardRoot;
         private BoardSpace _boardSpace;
@@ -37,7 +37,7 @@ namespace Squarely.Presentation
 
         private bool IsDragging => _dragPiece != null;
 
-        public void Initialize(Camera camera, GameController game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool)
+        public void Initialize(Camera camera, IPiecePlacer game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool)
         {
             _camera = camera;
             _game = game;

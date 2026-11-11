@@ -2,7 +2,8 @@
     "name": "Squarely.Editor",
     "rootNamespace": "Squarely.Editor",
     "references": [
-        "Unity.Pipeline.Attributes"
+        "Unity.Pipeline.Attributes",
+        "Squarely.Presentation"
     ],
     "includePlatforms": [
         "Editor"
