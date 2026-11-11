@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Squarely.Simulation
 {
     /// <summary>
-    /// The built-in config: 8x8 board, hand of 3, standard piece set. Placeholder values until real tuning.
+    /// The built-in config: the <see cref="SimConfig"/> field defaults plus the standard piece set, with the helpful piece guarantee on. Placeholder values until real tuning.
     /// Pieces cannot rotate, so each orientation is its own entry.
     /// </summary>
     public static class DefaultSimConfig
@@ -12,13 +12,8 @@ namespace Squarely.Simulation
         {
             return new SimConfig
             {
-                BoardWidth = 8,
-                BoardHeight = 8,
-                HandSize = 3,
                 Pieces = CreatePieces(),
                 Dealing = new DealingConfig { GuaranteeHelpfulPiece = true },
-                Clearing = new ClearingConfig(),
-                Scoring = new ScoringConfig(),
             };
         }
 

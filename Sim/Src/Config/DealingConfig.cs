@@ -14,5 +14,11 @@ namespace Squarely.Simulation
         /// If no piece in the pool fits, the hand is dealt purely by weight.
         /// </summary>
         public bool GuaranteeHelpfulPiece = false;
+
+        /// <summary>An independent copy: edits to either one don't affect the other.</summary>
+        internal DealingConfig Clone()
+        {
+            return (DealingConfig)MemberwiseClone();
+        }
     }
 }

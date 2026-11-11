@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 
@@ -15,6 +16,85 @@ namespace Squarely.Simulation.Tests
         private const string OnlyDotFits = "#.#./.#.#/#.#./.#.#";
 
         private const string Full = "####/####/####/####";
+
+        private const string Empty = "..../..../..../....";
+
+        #region Weights and construction
+
+        [Test]
+        public void DealHand_SkipsZeroWeightPieces()
+        {
+            var dealer = new WeightedRandomDealer(new[]
+            {
+                new PieceDefinition("never", "#", 0),
+                new PieceDefinition("always", "##", 1),
+            }, new DealingConfig());
+            Sim sim = CreateBoard(Empty);
+            var random = new DeterministicRandom(1);
+
+            for (int i = 0; i < 100; i++)
+                Assert.That(Ids(dealer.DealHand(sim, random)), Is.All.EqualTo("always"));
+        }
+
+        [Test]
+        public void DealHand_FollowsWeights()
+        {
+            var dealer = new WeightedRandomDealer(new[]
+            {
+                new PieceDefinition("light", "#", 1),
+                new PieceDefinition("heavy", "##", 3),
+            }, new DealingConfig());
+            Sim sim = CreateBoard(Empty);
+            var random = new DeterministicRandom(1);
+            var counts = new Dictionary<string, int> { { "light", 0 }, { "heavy", 0 } };
+
+            for (int i = 0; i < 1000; i++)
+            {
+                foreach (PieceShape shape in dealer.DealHand(sim, random))
+                    counts[shape.Id]++;
+            }
+
+            // Expected 750 / 2250; the seed is fixed, so the margin only has to fit this one sequence.
+            Assert.That(counts["light"], Is.InRange(650, 850));
+            Assert.That(counts["heavy"], Is.InRange(2150, 2350));
+        }
+
+        [Test]
+        public void DealHand_ShapeHasDefinitionsPatternAndCellType()
+        {
+            var definition = new PieceDefinition("stone_l", "#./##") { CellTypeId = "stone" };
+            var dealer = new WeightedRandomDealer(new[] { definition }, new DealingConfig());
+
+            PieceShape shape = dealer.DealHand(CreateBoard(Empty), new DeterministicRandom(1))[0];
+
+            Assert.That(shape.Id, Is.EqualTo("stone_l"));
+            Assert.That(shape.CellCount, Is.EqualTo(3));
+            Assert.That(shape.CellTypeId, Is.EqualTo("stone"));
+        }
+
+        [Test]
+        public void Constructor_AllZeroWeights_Throws()
+        {
+            var pieces = new[] { new PieceDefinition("a", "#", 0), new PieceDefinition("b", "##", 0) };
+
+            Assert.Throws<ArgumentException>(() => new WeightedRandomDealer(pieces, new DealingConfig()));
+        }
+
+        [Test]
+        public void Constructor_NullPieces_Throws()
+        {
+            Assert.Throws<ArgumentNullException>(() => new WeightedRandomDealer(null, new DealingConfig()));
+        }
+
+        [Test]
+        public void Constructor_NullDealing_Throws()
+        {
+            var pieces = new[] { new PieceDefinition("dot", "#") };
+
+            Assert.Throws<ArgumentNullException>(() => new WeightedRandomDealer(pieces, null));
+        }
+
+        #endregion
 
         #region Guarantee on
 

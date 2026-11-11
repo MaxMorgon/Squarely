@@ -11,7 +11,7 @@ namespace Squarely.Presentation
     {
         [SerializeField] private SimConfig _config = DefaultSimConfig.Create();
 
-        /// <summary>The asset's own config, not a copy: edits, also in play mode, reach the sims that use it.</summary>
+        /// <summary>The asset's own config, not a copy. A sim copies it when created, so edits (also in play mode) apply from the next game.</summary>
         public SimConfig Config => _config;
     }
 }

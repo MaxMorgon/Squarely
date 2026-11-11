@@ -19,6 +19,17 @@ namespace Squarely.Simulation
 
         public List<BoardPatternDefinition> Patterns = new List<BoardPatternDefinition>();
 
+        /// <summary>A deep copy: edits to either one don't affect the other.</summary>
+        internal ClearingConfig Clone()
+        {
+            var copy = (ClearingConfig)MemberwiseClone();
+
+            if (Patterns != null)
+                copy.Patterns = Patterns.ConvertAll(definition => definition?.Clone());
+
+            return copy;
+        }
+
         /// <summary>
         /// Builds the runtime pattern list: rows (bottom to top), columns (left to right), then custom patterns.
         /// </summary>

@@ -14,7 +14,7 @@ namespace Squarely.App
         [Tooltip("The camera that renders the game.")]
         [SerializeField] private Camera _camera;
 
-        [Tooltip("The game mode started from the menu. Edits apply live, also in play mode. Board and hand size changes apply from the next game.")]
+        [Tooltip("The game mode started from the menu. Edits, also in play mode, apply from the next game.")]
         [SerializeField] private SimConfigAsset _defaultMode;
 
         [Tooltip("Every text the screens show.")]

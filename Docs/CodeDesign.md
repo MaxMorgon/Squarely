@@ -6,7 +6,7 @@ Covers the core sim (namespace `Squarely.Simulation`, tests `Squarely.Simulation
 
 - **Commands in, events out.** The outside world (Unity, tests, replays) only changes the sim through command objects passed to `Sim.Execute(command)`. Each returns a `CommandResult` holding the list of events that happened.
 - **Read-only from outside.** `Sim` exposes `IReadOnlyBoard` and `IReadOnlyHand`. All mutators are `internal`, and the RNG is hidden (only its `RandomState` is readable), so outside code can't break determinism or replays. Tests reach the internals through `InternalsVisibleTo`.
-- **Config is data.** No gameplay numbers in code. `SimConfig` and its children are `[Serializable]` classes with public fields, so Unity can edit them and they can be loaded from remote config.
+- **Config is data.** No gameplay numbers in code. `SimConfig` and its children are `[Serializable]` classes with public fields, so Unity can edit them and they can be loaded from remote config. A `Sim` takes a deep copy of its config when it is created: edits to the config apply from the next game, and seed plus commands always reproduce a run.
 - **Rules are chosen by config, built by a factory.** The config names its dealer, scoring rule and resolution rules by string id. `RuleFactory` maps ids to implementations. A new rule means registering a new id, not changing the core loop.
 - **Rules are stateless.** Dealers, scoring and resolution rules hold no mutable state. All state lives in `Sim` (e.g. `PiecesDealt`), so one rule instance can be shared by a sim and its preview clones, and a sim's state is fully described by its own fields.
 - **Config vs. seed.** Config is the game mode (authored, shared). The seed is one run of that mode.
@@ -34,7 +34,7 @@ Random/         DeterministicRandom
 |---|---|
 | `GridPos` | `readonly struct` (X, Y). Origin bottom-left. |
 | `Grid<T>` | Fixed-size rectangular storage, one value per `GridPos`. Shared by `Board` and the board views. |
-| `Cell` | `readonly struct` with a string `TypeId`, where `null` means empty, so a default cell is empty. String ids let new cell types arrive through data. Board **layers** (e.g. fire) will be separate per-cell grids, independent of the type. |
+| `Cell` | `readonly struct` with a string `TypeId`, where `null` means empty, so a default cell is empty. String ids let new cell types arrive through data. Board **layers** (planned) will each be a grid of cells, and the config binds each cell type to a layer (see [Layers, cell types and theming](#layers-cell-types-and-theming)). |
 | `PieceShape` | Immutable definition: `Id`, `Offsets` (normalized so the min X/Y is 0), `Width`, `Height`, `CellTypeId`. Built from a text pattern such as `"##/#."`. |
 | `PieceInstance` | One dealt piece: a unique `InstanceId` (sequential, so deterministic) plus its `PieceShape`. Commands refer to pieces by instance id, so two identical shapes in the hand can be told apart. |
 | `Board` | Grid of `Cell`. Public reads (`CanPlace`, `CanPlaceAnywhere`, ...). Internal `SetCell`, `Place`, `ClearCells`. |
@@ -69,7 +69,7 @@ Unity plays the returned events in order to animate, so the view never has to di
 ## Extensibility (next)
 
 - **Mechanics** (blockers, special cells, power-ups) become `IMechanic` hooks at fixed points in the turn flow, created through the `RuleFactory` like the other rules.
-- **Board layers** hold per-cell state that is independent of the cell's type. Pattern conditions will be able to check them.
+- **Board layers** stack grids of cells: each cell type is bound to a layer, so e.g. fire can sit over a block in the same slot. Pattern conditions will be able to check them.
 - **Modes** are just a config: board, pieces, patterns and rule ids.
 
 ## Testing
@@ -88,7 +88,7 @@ Assembly `Squarely.Presentation`. Status: **views, drag input and event playback
 GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, plays their events, raises GameEndEvent
 GameView.cs        MonoBehaviour on the Game prefab: its scene objects and settings, builds and sets the views, owns the EventPlayer, gizmos
 GameSetup.cs       What a game starts with: config and seed
-Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
+Config/            SimConfigAsset (SimConfig as an editable asset; edits apply from the next game)
 Theme/             CellTheme, CellThemeEntry
 Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
