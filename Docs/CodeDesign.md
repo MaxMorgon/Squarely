@@ -181,7 +181,7 @@ Later: **board layers** as one feature, Sim and view together: cell type definit
 
 ## App flow (Unity)
 
-Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up and moves between them: menu, game, game over. It references `Squarely.Presentation`; Presentation never references App, and reports what happens through C# events that the states subscribe to.
+Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up and moves between them: menu, game, game over. Also owns what the app saves on the device (see [High score and device storage](#high-score-and-device-storage)). It references `Squarely.Presentation`; Presentation never references App, and reports what happens through C# events that the states subscribe to.
 
 ### Principles
 
@@ -196,8 +196,15 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 ### Entry point and flow
 
 - **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed. Its `Start` builds the default `GameSetup` and an `AppContext`, creates the `AppStateMachine` and enters the menu.
-- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup, texts. It has no behaviour.
+- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup, texts, high score. It has no behaviour.
 - **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, setup)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
 - **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequestEvent`. **`GameState`** creates the Game prefab (`GameView`) and a `GameController(view, setup)`, initializes the view itself (game mode, camera, HUD texts, and the controller as its `IPiecePlacer`), then calls `StartGame()`. Each destroys what it created in `Exit`.
 - **Game over.** `GameController` raises `GameEndEvent` (resolution, final score) once, when playback reaches the resolution, or right away if the game resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.
 - A playtest screen will start games the same way, with a `GameState` built from its own setup.
+
+### High score and device storage
+
+- **`IKeyValueStore`** (`App/Storage/`) is everything the app saves on the device: int and string values by key, and `Save`. `PlayerPrefsStore` backs it with PlayerPrefs; tests use a fake. Anything else the app persists (e.g. the last test seed) goes through it with its own key.
+- **`HighScore`** (`App/HighScore/`) is the best score of any finished game, one for all game modes, saved under one key. `Record(score)` returns whether it is new (the first finished game, or above the best), and saves it at once. `AppRoot` builds it on a `PlayerPrefsStore`; `AppContext` hands it to the states.
+- **`MenuState`** shows `Best` on the menu (nothing before the first finished game). **`GameState`** records the final score when `GameEndEvent` fires, once per game, then sets the game-over screen: the "new high score" state, or the high score this game did not beat.
+- **Celebration hook.** `GameOverScreen` plays its `_newHighScoreCelebration` UnityEvent for a new high score. The art pass hangs animations, particles and sounds on it in the prefab; for now it triggers the label's Animator (`Celebrate` trigger), which plays a placeholder scale punch clip from `Art/Placeholder/Animations/`. Until UI gets its own cue player, UI feedback is animation assets on hooks like this, not code (code-driven animation is playback cues only).

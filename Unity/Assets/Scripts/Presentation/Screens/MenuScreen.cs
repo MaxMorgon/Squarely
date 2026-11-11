@@ -13,6 +13,9 @@ namespace Squarely.Presentation
         [SerializeField] private TMP_Text _titleLabel;
         [SerializeField] private Button _playButton;
         [SerializeField] private TMP_Text _playLabel;
+        [SerializeField] private TMP_Text _highScoreLabel;
+
+        private MenuTexts _texts;
 
         /// <summary>The player asked to start a game.</summary>
         public event Action PlayRequestEvent;
@@ -28,8 +31,18 @@ namespace Squarely.Presentation
 
         public void Initialize(MenuTexts texts)
         {
+            _texts = texts;
             _titleLabel.text = texts.Title;
             _playLabel.text = texts.Play;
+        }
+
+        /// <summary>Sets the high score shown. Null, before the first finished game, shows none.</summary>
+        public void SetHighScore(int? highScore)
+        {
+            _highScoreLabel.gameObject.SetActive(highScore.HasValue);
+
+            if (highScore.HasValue)
+                _highScoreLabel.text = string.Format(_texts.HighScoreFormat, highScore.Value);
         }
     }
 }
