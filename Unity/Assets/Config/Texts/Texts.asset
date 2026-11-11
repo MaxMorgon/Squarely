@@ -15,11 +15,22 @@ MonoBehaviour:
   _menu:
     Title: Squarely
     Play: Play
+    Test: Test
+    HighScoreFormat: 'Best: {0}'
   _gameHud:
     ComboFormat: "Combo \xD7{0}"
   _gameOver:
     WinTitle: You win!
     LoseTitle: Game over
     ScoreFormat: 'Score: {0}'
+    HighScoreFormat: 'Best: {0}'
+    NewHighScore: New high score!
     Restart: Restart
     Menu: Menu
+  _test:
+    Title: Test
+    Seed: Seed
+    SeedPlaceholder: Enter a seed
+    Randomize: Randomize
+    Play: Play
+    Back: Back

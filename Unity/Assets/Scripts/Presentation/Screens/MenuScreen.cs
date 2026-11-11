@@ -13,23 +13,50 @@ namespace Squarely.Presentation
         [SerializeField] private TMP_Text _titleLabel;
         [SerializeField] private Button _playButton;
         [SerializeField] private TMP_Text _playLabel;
+        [SerializeField] private TMP_Text _highScoreLabel;
+
+        [Tooltip("Opens the test screen. Shown unless the menu's owner hides it.")]
+        [SerializeField] private Button _testButton;
+        [SerializeField] private TMP_Text _testLabel;
+
+        private MenuTexts _texts;
 
         /// <summary>The player asked to start a game.</summary>
         public event Action PlayRequestEvent;
+
+        /// <summary>The player asked for the test screen.</summary>
+        public event Action TestRequestEvent;
 
         #region Unity
 
         private void Awake()
         {
             _playButton.onClick.AddListener(() => PlayRequestEvent?.Invoke());
+            _testButton.onClick.AddListener(() => TestRequestEvent?.Invoke());
         }
 
         #endregion
 
         public void Initialize(MenuTexts texts)
         {
+            _texts = texts;
             _titleLabel.text = texts.Title;
             _playLabel.text = texts.Play;
+            _testLabel.text = texts.Test;
+        }
+
+        /// <summary>Sets the high score shown. Null, before the first finished game, shows none.</summary>
+        public void SetHighScore(int? highScore)
+        {
+            _highScoreLabel.gameObject.SetActive(highScore.HasValue);
+
+            if (highScore.HasValue)
+                _highScoreLabel.text = string.Format(_texts.HighScoreFormat, highScore.Value);
+        }
+
+        public void HideTestButton()
+        {
+            _testButton.gameObject.SetActive(false);
         }
     }
 }

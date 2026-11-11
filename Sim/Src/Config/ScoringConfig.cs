@@ -20,5 +20,11 @@ namespace Squarely.Simulation
         /// Combo 1 = 100%, combo 2 = 100% + this, and so on.
         /// </summary>
         public int ComboBonusPercent = 50;
+
+        /// <summary>An independent copy: edits to either one don't affect the other.</summary>
+        internal ScoringConfig Clone()
+        {
+            return (ScoringConfig)MemberwiseClone();
+        }
     }
 }

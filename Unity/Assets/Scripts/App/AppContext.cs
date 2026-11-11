@@ -24,13 +24,22 @@ namespace Squarely.App
         /// <summary>Every text the screens show.</summary>
         public TextsConfig Texts { get; }
 
-        public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, GameSetup defaultGameSetup, TextsConfig texts)
+        /// <summary>The best score on this device.</summary>
+        public HighScore HighScore { get; }
+
+        /// <summary>The seed the test screen plays.</summary>
+        public TestSeed TestSeed { get; }
+
+        public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, GameSetup defaultGameSetup, TextsConfig texts,
+            HighScore highScore, TestSeed testSeed)
         {
             ScreenPrefabs = screenPrefabs;
             ScreenRoot = screenRoot;
             Camera = camera;
             DefaultGameSetup = defaultGameSetup;
             Texts = texts;
+            HighScore = highScore;
+            TestSeed = testSeed;
         }
     }
 }

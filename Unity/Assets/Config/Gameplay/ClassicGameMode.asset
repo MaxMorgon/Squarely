@@ -169,6 +169,8 @@ MonoBehaviour:
       Pattern: .#/##/#.
       Weight: 1
       CellTypeId: block
+    Dealing:
+      GuaranteeHelpfulPiece: 1
     Clearing:
       ClearRows: 1
       ClearColumns: 1

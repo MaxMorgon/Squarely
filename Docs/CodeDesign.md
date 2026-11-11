@@ -6,7 +6,7 @@ Covers the core sim (namespace `Squarely.Simulation`, tests `Squarely.Simulation
 
 - **Commands in, events out.** The outside world (Unity, tests, replays) only changes the sim through command objects passed to `Sim.Execute(command)`. Each returns a `CommandResult` holding the list of events that happened.
 - **Read-only from outside.** `Sim` exposes `IReadOnlyBoard` and `IReadOnlyHand`. All mutators are `internal`, and the RNG is hidden (only its `RandomState` is readable), so outside code can't break determinism or replays. Tests reach the internals through `InternalsVisibleTo` (Presentation does the same for its tests).
-- **Config is data.** No gameplay numbers in code. `SimConfig` and its children are `[Serializable]` classes with public fields, so Unity can edit them and they can be loaded from remote config.
+- **Config is data.** No gameplay numbers in code. `SimConfig` and its children are `[Serializable]` classes with public fields, so Unity can edit them and they can be loaded from remote config. A `Sim` takes a deep copy of its config when it is created: edits to the config apply from the next game, and seed plus commands always reproduce a run.
 - **Rules are chosen by config, built by a factory.** The config names its dealer, scoring rule and resolution rules by string id. `RuleFactory` maps ids to implementations. A new rule means registering a new id, not changing the core loop.
 - **Rules are stateless.** Dealers, scoring and resolution rules hold no mutable state. All state lives in `Sim` (e.g. `PiecesDealt`), so one rule instance can be shared by a sim and its preview clones, and a sim's state is fully described by its own fields.
 - **Config vs. seed.** Config is the game mode (authored, shared). The seed is one run of that mode.
@@ -23,7 +23,7 @@ Patterns/       BoardPattern, PatternCell, PatternMatch, ClearedMatch, PatternMa
 Commands/       ISimCommand, PlacePieceCommand, CommandResult
 Rules/          IPieceDealer, IScoringRule, ScoreResult, defaults, RuleFactory, RuleIds
 Resolution/     IResolutionRule, GameResolution, GameOutcome, NoMovesLeftRule
-Config/         SimConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
+Config/         SimConfig, DealingConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
 Events/         ISimEvent + one file per event
 Random/         DeterministicRandom
 ```
@@ -34,7 +34,7 @@ Random/         DeterministicRandom
 |---|---|
 | `GridPos` | `readonly struct` (X, Y). Origin bottom-left. |
 | `Grid<T>` | Fixed-size rectangular storage, one value per `GridPos`. Shared by `Board` and the board views. |
-| `Cell` | `readonly struct` with a string `TypeId`, where `null` means empty, so a default cell is empty. String ids let new cell types arrive through data. Board **layers** (e.g. fire) will be separate per-cell grids, independent of the type. |
+| `Cell` | `readonly struct` with a string `TypeId`, where `null` means empty, so a default cell is empty. String ids let new cell types arrive through data. Board **layers** (planned) will each be a grid of cells, and the config binds each cell type to a layer (see [Layers, cell types and theming](#layers-cell-types-and-theming)). |
 | `PieceShape` | Immutable definition: `Id`, `Offsets` (normalized so the min X/Y is 0), `Width`, `Height`, `CellTypeId`. Built from a text pattern such as `"##/#."`. |
 | `PieceInstance` | One dealt piece: a unique `InstanceId` (sequential, so deterministic) plus its `PieceShape`. Commands refer to pieces by instance id, so two identical shapes in the hand can be told apart. |
 | `Board` | Grid of `Cell`. Public reads (`CanPlace`, `CanPlaceAnywhere`, ...). Internal `SetCell`, `Place`, `ClearCells`. |
@@ -61,7 +61,7 @@ Random/         DeterministicRandom
 2. Take the piece from the hand and place it → `PiecePlacedEvent` (piece, slot, origin).
 3. Find all pattern matches and clear their cells → `PatternsClearedEvent`: one `ClearedMatch` per match (the match plus the cells it emptied, so a cell shared by a row and a column is in both), and all cleared cells, each once.
 4. The scoring rule computes points from the matched patterns and updates the combo → `ScoreChangedEvent`, `ComboChangedEvent`.
-5. If the hand is now empty, deal a full new hand → one `PieceDealtEvent` per new piece.
+5. If the hand is now empty, the dealer deals a full new hand at once (`IPieceDealer.DealHand`, so it can judge the hand as a whole against the board) → one `PieceDealtEvent` per new piece. The default `WeightedRandomDealer` deals by weight, with an optional helpful piece guarantee (`DealingConfig`, rule in [Design.md](Design.md#dealing)).
 6. Resolution rules are checked in config order, and the first one that resolves wins → `GameResolvedEvent` (outcome Won/Lost, reason id, final score).
 
 Unity plays the returned events in order to animate, so the view never has to diff state.
@@ -69,7 +69,7 @@ Unity plays the returned events in order to animate, so the view never has to di
 ## Extensibility (next)
 
 - **Mechanics** (blockers, special cells, power-ups) become `IMechanic` hooks at fixed points in the turn flow, created through the `RuleFactory` like the other rules.
-- **Board layers** hold per-cell state that is independent of the cell's type. Pattern conditions will be able to check them.
+- **Board layers** stack grids of cells: each cell type is bound to a layer, so e.g. fire can sit over a block in the same slot. Pattern conditions will be able to check them.
 - **Modes** are just a config: board, pieces, patterns and rule ids.
 
 ## Testing
@@ -89,7 +89,7 @@ GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it,
 GameView.cs        MonoBehaviour on the Game prefab: its scene objects and settings, builds and sets the views, owns the EventPlayer, gizmos
 GameSetup.cs       What a game starts with: config and seed
 AssemblyInfo.cs    InternalsVisibleTo for tests
-Config/            SimConfigAsset (SimConfig as an editable asset; edits apply live)
+Config/            SimConfigAsset (SimConfig as an editable asset; edits apply from the next game)
 Theme/             CellTheme, CellThemeEntry
 Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
@@ -183,7 +183,7 @@ Later: **board layers** as one feature, Sim and view together: cell type definit
 
 ## App flow (Unity)
 
-Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up and moves between them: menu, game, game over. It references `Squarely.Presentation`; Presentation never references App, and reports what happens through C# events that the states subscribe to.
+Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up and moves between them: menu, test, game, game over. Also owns what the app saves on the device (see [High score and device storage](#high-score-and-device-storage)). It references `Squarely.Presentation`; Presentation never references App, and reports what happens through C# events that the states subscribe to.
 
 ### Principles
 
@@ -197,9 +197,17 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up 
 
 ### Entry point and flow
 
-- **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the seed. Its `Start` builds the default `GameSetup` and an `AppContext`, creates the `AppStateMachine` and enters the menu.
-- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup, texts. It has no behaviour.
+- **`AppRoot`** is the only component in the scene that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), the camera, the default game mode and the texts. Its `Start` builds the default `GameSetup` (a new seed per game; the test screen plays a fixed one) and an `AppContext`, creates the `AppStateMachine` and enters the menu.
+- **`AppContext`** holds the refs every state works with: screen prefabs, screen root, camera, default game setup, texts, high score, test seed. It has no behaviour.
 - **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, setup)`), and moves on by creating the next state and calling `ChangeState`. Reading the states shows the whole flow.
 - **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequestEvent`. **`GameState`** creates the Game prefab (`GameView`) and a `GameController(view, setup)`, initializes the view itself (game mode, camera, HUD texts, and the controller as its `IPiecePlacer`), then calls `StartGame()`. Each destroys what it created in `Exit`.
 - **Game over.** `GameController` raises `GameEndEvent` (resolution, final score) once, when playback reaches the resolution, or right away if the game resolves on its first deal. `GameState` then creates `GameOverScreen` over the game: Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply), Menu enters the menu.
-- A playtest screen will start games the same way, with a `GameState` built from its own setup.
+- **Test screen** (editor and development builds only). `MenuState` enters **`TestState`** on the menu's `TestRequestEvent`, and in other builds hides the Test button instead. `TestState` creates `TestScreen` (`Prefabs/Menu/`): a seed field, Randomize, Play and Back. Play enters a `GameState` with the default game mode and exactly the field's seed, so Restart (game over or the debug overlay) replays the same seed. Play is disabled while the field holds no valid seed (the field only accepts digits; empty or above `ulong.MaxValue` is invalid). Back enters the menu; game over's Menu goes to the menu as well.
+- **`TestSeed`** (`App/TestSeed/`) keeps the test seed in the `IKeyValueStore`, as decimal text under its own key. `LoadOrCreate` returns the saved seed, or picks and saves a new one; `CreateNew` (Randomize) picks and saves a new one; `TestState` saves the field's seed on Play. An edit left without Play is dropped. New seeds are below 10^9, so they stay easy to type; any `ulong` can be entered.
+
+### High score and device storage
+
+- **`IKeyValueStore`** (`App/Storage/`) is everything the app saves on the device: int and string values by key, and `Save`. `PlayerPrefsStore` backs it with PlayerPrefs; tests use a fake. Anything else the app persists (e.g. the last test seed) goes through it with its own key.
+- **`HighScore`** (`App/HighScore/`) is the best score of any finished game, one for all game modes, saved under one key. `Record(score)` returns whether it is new (the first finished game, or above the best), and saves it at once. `AppRoot` builds it on a `PlayerPrefsStore`; `AppContext` hands it to the states.
+- **`MenuState`** shows `Best` on the menu (nothing before the first finished game). **`GameState`** records the final score when `GameEndEvent` fires, once per game, then sets the game-over screen: the "new high score" state, or the high score this game did not beat.
+- **Celebration hook.** `GameOverScreen` plays its `_newHighScoreCelebration` UnityEvent for a new high score. The art pass hangs animations, particles and sounds on it in the prefab; for now it triggers the label's Animator (`Celebrate` trigger), which plays a placeholder scale punch clip from `Art/Placeholder/Animations/`. Until UI gets its own cue player, UI feedback is animation assets on hooks like this, not code (code-driven animation is playback cues only).

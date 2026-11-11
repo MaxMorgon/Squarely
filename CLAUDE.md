@@ -14,8 +14,8 @@ Design and rules: [Docs/Design.md](Docs/Design.md) — read it before working on
 | `Squarely.sln` | Solution for Sim + Sim.Tests (Unity has its own generated projects). |
 | `Unity/Assets/Scripts/Presentation/` | `Squarely.Presentation` asmdef: views, input, event playback. Design: [Docs/CodeDesign.md](Docs/CodeDesign.md#presentation-unity). References `Squarely.Simulation` and `Unity.InputSystem`. |
 | `Unity/Assets/Tests/EditMode/` | `Squarely.Presentation.Tests` asmdef: unit tests for presentation logic (layout, pooling, slots, playback bookkeeping, drift check). Not for testing how views are wired together. |
-| `Unity/Assets/Scripts/App/` | `Squarely.App` asmdef: app state machine and states (menu, game, game over). Design: [Docs/CodeDesign.md](Docs/CodeDesign.md#app-flow-unity). References `Squarely.Presentation`; Presentation never references App. |
-| `Unity/Assets/Tests/App/` | `Squarely.App.Tests` asmdef: unit tests for the app flow. |
+| `Unity/Assets/Scripts/App/` | `Squarely.App` asmdef: app state machine and states (menu, test, game, game over), device storage (`IKeyValueStore`) and the high score. Design: [Docs/CodeDesign.md](Docs/CodeDesign.md#app-flow-unity). References `Squarely.Presentation`; Presentation never references App. |
+| `Unity/Assets/Tests/App/` | `Squarely.App.Tests` asmdef: unit tests for the app flow, storage and high score. |
 | `Unity/Assets/Scenes/Main.unity` | The only scene: camera, EventSystem, entry point. Screens are prefabs (`Prefabs/Game/`, `Prefabs/Menu/`, `Prefabs/UI/`), debug UI in `Prefabs/Debug/`. Placeholder art in `Art/Placeholder/`, prefabs in `Prefabs/`. |
 | `Unity/Assets/Config/` | Every asset the user tunes, one subfolder per area: `Gameplay/` (`ClassicGameMode`), `Texts/` (`Texts`), `Theme/` (`CellTheme`), `Playback/` (one `CueSequence` per sim event, e.g. `PatternsClearedCues`, plus `BoardWaveCues`). |
 | `Unity/Assets/Editor/` | `Squarely.Editor` asmdef (Editor-only): editor tools and custom Unity CLI commands (`Cli/`). |
@@ -105,6 +105,7 @@ Implementation agents (`.claude/agents/implementer.md`) work in permanent worktr
 
 ## Working with the user
 
+- **Write in ASD-STE100 (Simplified Technical English).** This applies to all text: chat, PR descriptions and comments, issues, docs and doc comments. Use short sentences (20 words max for instructions, 25 for descriptions), active voice, simple words, and one instruction per sentence. Keep it brief: give only the points the user needs.
 - Work in small steps; show plans/drafts for review before large changes.
 - Commit or push only when asked. An implementer brief counts as asking for that task's branch and PR.
 - `git reset --hard` and force pushes only on the user's explicit command (settings make them prompt).

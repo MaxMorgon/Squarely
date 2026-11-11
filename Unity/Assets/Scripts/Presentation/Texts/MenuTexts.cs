@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Squarely.Presentation
 {
@@ -8,5 +9,9 @@ namespace Squarely.Presentation
     {
         public string Title = "Squarely";
         public string Play = "Play";
+        public string Test = "Test";
+
+        [Tooltip("{0} is the high score.")]
+        public string HighScoreFormat = "Best: {0}";
     }
 }
