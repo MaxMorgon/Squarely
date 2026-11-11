@@ -101,7 +101,7 @@ Playback/          EventPlayer, PlaybackContext, PlaybackViews, CueSequence, Cue
   Handlers/        ISimEventHandler, SimEventHandler<T>, one handler per event type
   Steps/           CueStep and the step types, CellOrder/CellOrdering (stagger order), CueStepPickerAttribute
   Drift/           ShownState, ViewDrift (the debug check of views against the sim)
-Debug/             PlaybackDebugOverlay (editor and development builds only; not game UI)
+Debug/             PlaybackDebugOverlay (uGUI panel, prefab in `Prefabs/Debug/`; editor and development builds only; not game UI)
 ```
 
 The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
@@ -110,7 +110,7 @@ The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
 
 - **One scene** (`Main.unity`) holds only what every screen shares: the camera, the EventSystem and the entry point. Screens such as the game and the menu are prefabs, created and destroyed by code.
 - **`Prefabs/Game/Game.prefab`** is the whole game: `GameView` with the board, hand, input and `GameHud` under it. The game's logic side, `GameController`, is plain C# created by its owner (`GameState`), so it carries no prefab references.
-- **`Prefabs/UI/UiCanvas.prefab`** is the base for every UI screen: an overlay canvas scaled for portrait 1080×1920. Screens are prefab variants of it (`GameHud`, `GameOverScreen`, `MenuScreen`).
+- **`Prefabs/UI/UiCanvas.prefab`** is the base for every UI screen: an overlay canvas scaled for portrait 1080×1920. Screens are prefab variants of it (`GameHud`, `GameOverScreen`, `MenuScreen`). Debug UI (`Prefabs/Debug/PlaybackDebugOverlay`) is a variant too, sorted above the screens.
 
 ### Principles
 
@@ -150,13 +150,13 @@ Implemented. `GameController.Place` executes a command and hands its events to t
 
 - **`EventPlayer`** (built by `GameView`) plays a command's events in order, one async step at a time (Unity `Awaitable`). Events without a handler are skipped.
 - **One handler per event type** (`PiecePlacedHandler`, `PatternsClearedHandler`, `ScoreChangedHandler`, `ComboChangedHandler`, `PieceDealtHandler`). A handler updates the view bookkeeping at once (spawn, detach, set the hand slot), builds a `CueTarget` (cells with grid positions, a transform, a count, a world position) and plays its `CueSequence` on it through the context. Whatever the views must end up showing happens in the handler or in a cue run (its steps or its end action), so snapping always reaches it.
-- **Shared playback context.** Handlers for one command share a `PlaybackContext`, so later handlers can use earlier results: clears stagger from the placed cells, the score target gets the last clear's center.
+- **Shared playback context.** Handlers for one command share a `PlaybackContext`, so later handlers can use earlier results: clears stagger from the placed cells, the score target gets the last clear's center. It also carries presentation-only input data for the command: `DropPoint`, where the pointer dropped the piece (board cell coordinates, `BoardSpace.CellCoordinates`), passed from `PieceDragController` through `IPiecePlacer.Place` and `EventPlayer.Play`; null without a pointer. The placement ripples out from it (`CellOrder.FromPointer`).
 - **Per match.** `PatternsClearedHandler` plays its sequence once per match, all matches at once, each on its own cells and center. A cell shared by two matches is animated by the first.
 - **Overlap.** Each `CueSequence` has `WaitForEnd`: on, the next event waits for it; off, it plays alongside (the score count-up and the combo punch). Any flag combination is safe: before a handler detaches or releases cell views, `PlaybackContext.SnapRunsOn` snaps the earlier runs of the same playback still playing on them, so a view never leaves the board or hand while a run animates it. Playback ends when every run has ended. If several consecutive events ever need to be handled as one, a handler can take them together. That is added when a case needs it.
 - **`CueSequence`** ScriptableObject (`Config/Playback/<Event>Cues`, referenced by `GameView`'s `GameCues`): a list of `[SerializeReference] CueStep`s edited in the inspector, with a type picker. Steps: `AnimateCells` (scale curve and tint gradient, stagger, `CellOrder`), `AnimateScale`, `CountUp`, `Wait`, `Parallel`, `SpawnParticles`. A new step type is one small class. Steps keep no state and read their settings as they play, so asset edits apply from the next play, also in play mode.
 - **Game end.** `GameController` raises `GameEndEvent` when playback reaches `GameResolvedEvent` (or when a snap does), so the last move animates before the game-over screen.
 - **Drift check.** In the editor and development builds, when a playback ends (played out or snapped), `ViewDrift` compares what the views show (`GameView.GetShownState`: board cells, hand, score, combo) with the sim and logs one error listing every difference.
-- **Debug overlay.** `PlaybackDebugOverlay` (editor and development builds): replay the last move (R) from a `Sim.Clone()` taken before it, playback speed presets, and the last drift check's result.
+- **Debug overlay.** `PlaybackDebugOverlay` (editor and development builds; a uGUI canvas prefab, so it takes mouse and touch through the EventSystem like the game UI): replay the last move (button or R) from a `Sim.Clone()` taken before it, with the same drop point; playback speed presets, the selected one highlighted; the last drift check's result. A toggle button or the backquote key collapses it. Speed and collapsed state carry over to the next game. `GameView` holds the prefab and creates it (`CreateDebugOverlay`); `GameController` initializes it, because it owns replay.
 - `PatternsClearedEvent` gives cleared cells **per match**, so each match can have its own centroid and effects.
 
 ### Fast-forward
