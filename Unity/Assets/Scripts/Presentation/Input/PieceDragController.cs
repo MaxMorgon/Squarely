@@ -37,6 +37,9 @@ namespace Squarely.Presentation
 
         private bool IsDragging => _dragPiece != null;
 
+        /// <summary>While true, no drag starts and a running drag is cancelled.</summary>
+        public bool IsBlocked { get; set; }
+
         public void Initialize(Camera camera, IPiecePlacer game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool)
         {
             _camera = camera;
@@ -61,6 +64,14 @@ namespace Squarely.Presentation
 
             if (pointer == null || _game == null)
                 return;
+
+            if (IsBlocked)
+            {
+                if (IsDragging)
+                    CancelDrag();
+
+                return;
+            }
 
             Vector3 world = ScreenToWorld(pointer.position.ReadValue());
 
@@ -138,6 +149,18 @@ namespace Squarely.Presentation
         private void MoveDraggedView()
         {
             _dragged.transform.position = _dragTarget;
+        }
+
+        private void CancelDrag()
+        {
+            _dragged.Clear();
+            _dragged.gameObject.SetActive(false);
+            _ghost.Clear();
+            _ghost.gameObject.SetActive(false);
+            _hand.SetSlotVisible(_dragSlot, true);
+
+            _dragSlot = -1;
+            _dragPiece = null;
         }
 
         /// <param name="world">The pointer's world position where it released the piece.</param>

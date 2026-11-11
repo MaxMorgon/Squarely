@@ -10,7 +10,8 @@ namespace Squarely.App
     /// the best score. When the game ends it records the high score and shows the game-over screen:
     /// Restart starts a fresh game with the same setup, Menu goes back to the menu.
     /// The HUD's settings panel can resume, restart or quit at any time; restart and quit ask first once a piece
-    /// is placed, and abandon the game without recording the high score.
+    /// is placed (the panel closes for the question), and abandon the game without recording the high score.
+    /// The game is paused while the panel or the question is open.
     /// In editor and development builds, the debug overlay's restart restarts at once.
     /// </summary>
     public sealed class GameState : IAppState
@@ -128,6 +129,7 @@ namespace Squarely.App
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
             _settings.RestartRequestEvent += OnSettingsRestartRequested;
             _settings.QuitRequestEvent += OnSettingsQuitRequested;
+            UpdatePause();
         }
 
         private void OnSettingsCloseRequested()
@@ -158,11 +160,15 @@ namespace Squarely.App
             if (_confirm != null)
                 return;
 
+            // The question replaces the panel; No goes back to the game, not to the panel.
+            CloseSettingsPanel();
+
             _confirmedAction = action;
             _confirm = Object.Instantiate(_context.ScreenPrefabs.Confirm, _context.ScreenRoot);
             _confirm.Initialize(_context.Texts.Confirm);
             _confirm.ConfirmRequestEvent += OnConfirmRequested;
             _confirm.CancelRequestEvent += OnCancelRequested;
+            UpdatePause();
         }
 
         private void OnConfirmRequested()
@@ -175,6 +181,7 @@ namespace Squarely.App
         private void OnCancelRequested()
         {
             CloseConfirm();
+            UpdatePause();
         }
 
         private void CloseConfirm()
@@ -189,11 +196,21 @@ namespace Squarely.App
             _confirmedAction = null;
         }
 
-        /// <summary>Closes the settings panel and its confirm dialog, if open.</summary>
+        /// <summary>Closes the settings panel and its confirm dialog, if open, and resumes the game.</summary>
         private void CloseSettings()
         {
             CloseConfirm();
+            CloseSettingsPanel();
+            UpdatePause();
+        }
 
+        private void UpdatePause()
+        {
+            _view.SetPaused(_settings != null || _confirm != null);
+        }
+
+        private void CloseSettingsPanel()
+        {
             if (_settings == null)
                 return;
 

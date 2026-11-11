@@ -95,6 +95,16 @@ namespace Squarely.Presentation
             Player.AddHandler(new PieceDealtHandler(_cues.PieceDealt));
         }
 
+        /// <summary>
+        /// Pauses or resumes the game: while paused, event playback holds and the hand cannot be dragged.
+        /// The HUD and screens above the game keep running.
+        /// </summary>
+        public void SetPaused(bool isPaused)
+        {
+            Player.IsPaused = isPaused;
+            _dragController.IsBlocked = isPaused;
+        }
+
         /// <summary>Sets the board, the hand, the score and the combo straight from a sim state, without playback.</summary>
         public void SetState(IReadOnlyBoard board, IReadOnlyHand hand, int score, int combo)
         {

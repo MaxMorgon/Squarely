@@ -21,6 +21,9 @@ namespace Squarely.Presentation
         /// <summary>Playback speed multiplier, 1 = as authored. Applies to running playback too.</summary>
         public float Speed { get; set; } = 1f;
 
+        /// <summary>While true, playback time stands still: running steps hold and nothing new advances. Unpausing resumes where it left off.</summary>
+        public bool IsPaused { get; set; }
+
         public bool IsPlaying => _current != null && !_current.IsEnded;
 
         /// <summary>A command's playback ended, played out or snapped. Not raised when it was stopped.</summary>
@@ -46,7 +49,7 @@ namespace Squarely.Presentation
         {
             Snap();
 
-            var context = new PlaybackContext(_views, events, dropPoint, () => Speed, _stopToken);
+            var context = new PlaybackContext(_views, events, dropPoint, () => IsPaused ? 0f : Speed, _stopToken);
             _current = new Playback(this, events, context);
             _current.Start();
         }

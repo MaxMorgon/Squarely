@@ -32,12 +32,12 @@ namespace Squarely.App.Tests
         }
 
         [Test]
-        public void Check_BestZero_FirstPointsAreARecord()
+        public void Check_BestZero_NeverCelebrates()
         {
             var check = new NewRecordCheck(0);
 
             Assert.That(check.Check(0), Is.False);
-            Assert.That(check.Check(10), Is.True);
+            Assert.That(check.Check(10), Is.False);
         }
 
         [Test]
