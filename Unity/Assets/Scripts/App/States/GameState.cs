@@ -6,7 +6,8 @@ namespace Squarely.App
 {
     /// <summary>
     /// Runs one game with the given setup. When it ends it shows the game-over screen:
-    /// Restart starts a fresh game with the same setup, Menu goes back to the menu.
+    /// Restart starts a fresh game with the same setup, Menu goes back to the menu. In editor and development builds,
+    /// the debug overlay's restart does the same at any time.
     /// </summary>
     public sealed class GameState : IAppState
     {
@@ -31,6 +32,9 @@ namespace Squarely.App
             _game = new GameController(_view, _setup);
             _view.Initialize(_setup.Config, _context.Camera, _context.Texts.GameHud, _game);
             _game.GameEndEvent += OnGameEnded;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            _game.RestartRequestEvent += OnRestartRequested;
+#endif
             _game.StartGame();
         }
 
@@ -44,6 +48,9 @@ namespace Squarely.App
             }
 
             _game.GameEndEvent -= OnGameEnded;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            _game.RestartRequestEvent -= OnRestartRequested;
+#endif
             Object.Destroy(_view.gameObject);
         }
 

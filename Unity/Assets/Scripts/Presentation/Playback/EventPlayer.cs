@@ -46,7 +46,7 @@ namespace Squarely.Presentation
         {
             Snap();
 
-            var context = new PlaybackContext(_views, dropPoint, () => Speed, _stopToken);
+            var context = new PlaybackContext(_views, events, dropPoint, () => Speed, _stopToken);
             _current = new Playback(this, events, context);
             _current.Start();
         }
