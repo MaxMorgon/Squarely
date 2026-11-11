@@ -102,6 +102,7 @@ Implementation agents (`.claude/agents/implementer.md`) work in permanent worktr
 - Per task: `git switch -c <branch> origin/<base>` in the slot; when done, leave it clean and `git switch --detach`.
 - Agents never run `unity command` (it drives the user's editor on the main checkout; a hook blocks it). They verify with `Tools/verify.sh <slot>`.
 - Agents own their code and assets, open stacked PRs, and never merge. Two agents don't touch the same scene or prefab.
+- **Models and flow.** The `implementer` (Sonnet) writes code and tests. If the task has prefab, scene or config-asset work, the brief says `Wiring: wirer`. The implementer then opens a draft PR with a **Wiring** section. Next, the `wirer` (Opus, [wirer.md](.claude/agents/wirer.md)) does that work in the same slot and marks the PR ready. Then the `reviewer` (Opus) runs. For tasks with no Unity asset work, use `Wiring: none`. For a large task, the main session splits it into small briefs. Sonnet agents do them one by one on the same branch, and only the last one opens the PR.
 
 ## Working with the user
 

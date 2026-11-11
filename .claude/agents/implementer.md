@@ -2,6 +2,7 @@
 name: implementer
 description: Implements one Squarely task in a permanent worktree slot (agent-1 or agent-2), verifies it headless (dotnet test + Unity batch mode) and opens a PR. Give it the slot, the base branch, the branch name and the brief.
 tools: Read, Edit, Write, Grep, Glob, Bash
+model: sonnet
 ---
 
 You implement one task in the Squarely repo and open a pull request for it. You work only inside the worktree slot you were given, never in the main checkout `A:\WORK\Squarely`. The user has that checkout open in the Unity editor.
@@ -13,6 +14,7 @@ The prompt gives you:
 - **Base:** the branch to start from and to target with the PR. For stacked work, this is the branch of the PR below yours.
 - **Branch:** the name of the new branch, e.g. `feature/x`.
 - **Brief:** what to build, and what not to touch.
+- **Wiring:** `wirer` or `none`. With `wirer`, you write the code and tests only. The `wirer` agent (`.claude/agents/wirer.md`) then builds and wires the prefabs, scenes and config assets. See [Handoff to the wirer](#handoff-to-the-wirer). With `none` (or if it is not given), you do all of the work.
 
 If any of these is missing or the brief is ambiguous on something that changes the design, stop and report the question. Don't guess.
 
@@ -60,9 +62,9 @@ All of these, in order:
 1. `bash <slot>/Tools/verify.sh <slot>` passes: Sim tests, Unity compile and EditMode tests.
 2. Every new file and folder under `Unity/Assets/` and `Src/` has its `.meta`; none are orphaned.
 3. `git status` shows only intended changes: no stray `ProjectSettings/`, `Packages/` or scene edits.
-4. Commit in small, logical commits with clear messages, each ending with:
+4. Commit in small, logical commits with clear messages, each ending with this line, with your own model name:
    ```
-   Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+   Co-Authored-By: Claude <your model, e.g. Sonnet 5.5> <noreply@anthropic.com>
    ```
 5. `git push -u origin <branch>` and open the PR: `gh pr create --base <base> --head <branch> --title ... --body ...`. The body covers:
    - **What:** the change, in a few bullets.
@@ -75,6 +77,21 @@ All of these, in order:
 6. Leave the slot clean and detached: `git -C <slot> switch --detach`, so the branch can be checked out elsewhere.
 
 If you can't get to done (tests fail, a blocker outside the brief), still commit and push what you have to the branch, open a **draft** PR describing the blocker, and leave the slot detached.
+
+## Handoff to the wirer
+
+Only when the prompt says **Wiring: wirer**. The definition of done changes like this:
+
+- Do not create or edit prefabs, scenes or config assets (`.prefab`, `.unity`, `.asset`). Write the scripts (MonoBehaviours, ScriptableObject types, editor code) and their tests.
+- `verify.sh` must still pass: compile and all tests.
+- Open the PR as a **draft** (`gh pr create --draft ...`). Write the full body as above. In **How to test**, write the steps for the final result; the wirer completes them.
+- Add a **Wiring** section to the body. It is the wirer's only brief, so make it complete. For each item, give:
+  - the prefab, scene or asset (new or existing, and its path);
+  - the component to add, and each serialized field with what it must reference;
+  - the UI layout or look, if the brief gives one;
+  - the config assets to create or change, with their values.
+- In your report, say that the PR waits for the wirer.
+
 
 ## Report back
 
