@@ -5,7 +5,7 @@ namespace Squarely.Simulation
     /// <summary>
     /// The content of one board cell, identified by a string type id. A null type id means empty,
     /// so a default Cell is an empty cell.
-    /// Per-cell effects that are independent of the type (e.g. fire) will live in separate board layers.
+    /// Board layers (planned) will each be a grid of cells; the config binds each cell type to a layer.
     /// </summary>
     public readonly struct Cell : IEquatable<Cell>
     {
