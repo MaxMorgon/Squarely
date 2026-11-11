@@ -1,12 +1,10 @@
 SQUARELY TODO
 
-MVP
-- Score + combo display
-- Game over / restart UI
-
-Presentation
+Staging
 - Playback: EventPlayer, handlers, CueSequence, fast-forward
 - Debug drift check: views vs board
+
+Presentation
 - Hover/preview feedback via Sim.preview
 - Real art
 - Resolution reactive visuals

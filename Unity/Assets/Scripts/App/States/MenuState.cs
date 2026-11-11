@@ -22,12 +22,13 @@ namespace Squarely.App
         public void Enter()
         {
             _screen = Object.Instantiate(_context.ScreenPrefabs.Menu, _context.ScreenRoot);
-            _screen.PlayRequested += OnPlayRequested;
+            _screen.Initialize(_context.Texts.Menu);
+            _screen.PlayRequestEvent += OnPlayRequested;
         }
 
         public void Exit()
         {
-            _screen.PlayRequested -= OnPlayRequested;
+            _screen.PlayRequestEvent -= OnPlayRequested;
             Object.Destroy(_screen.gameObject);
         }
 

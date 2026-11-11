@@ -66,9 +66,9 @@ All of these, in order:
    ```
 5. `git push -u origin <branch>` and open the PR: `gh pr create --base <base> --head <branch> --title ... --body ...`. The body covers:
    - **What:** the change, in a few bullets.
-   - **Decisions:** choices the brief left open, and why.
+   - **Decisions:** the user reviews this section instead of the code, so it must hold everything they would want a say in: choices the brief left open, any deviation from the brief, new or changed public types and APIs (one line each: what it is and who uses it), new rules or changes to `CLAUDE.md` / `CodeDesign.md`, and anything you were unsure about. Each with a one-line why. If a choice would be awkward to undo later, say so.
    - **Verified:** exactly what ran and passed (the verify.sh output totals).
-   - **Needs the editor:** what the user must check in play mode or the scene, since you can't.
+   - **How to test:** a numbered checklist for the user in the editor: the steps to do in play mode or the scene, and what they should see. Cover the new behaviour and what it could have broken nearby. Write it so it can be followed without reading the code.
    - **Out of scope / noticed:** anything you saw but didn't change.
    - End the body with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
    Never merge.
@@ -78,7 +78,7 @@ If you can't get to done (tests fail, a blocker outside the brief), still commit
 
 ## Report back
 
-Return in a few lines: PR URL, branch, what was verified, what needs the user's eyes in the editor, and any open questions. No restating of the diff.
+Return in a few lines: PR URL, branch, what was verified, the decisions the user should look at, and any open questions. No restating of the diff.
 
 ## Review mode
 
@@ -124,4 +124,4 @@ When the prompt says **go**: apply the open threads the user agreed to (read the
 
 ### Report back
 
-Per PR: threads fixed and resolved (one line each), threads left open with a link and the one-line reason, what needs the user's eyes in the editor.
+Per PR: threads fixed and resolved (one line each), threads left open with a link and the one-line reason. If a fix changes behaviour, update the PR's **How to test** and **Decisions** sections (`gh pr edit <n> --body ...`) and say so.

@@ -5,84 +5,51 @@ using UnityEngine;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// Owns the sim for one game, sets up the views and passes player commands to the sim.
-    /// Does nothing until its owner calls <see cref="Initialize"/>.
+    /// Runs one game: owns its sim, passes player commands to it and keeps the game's view up to date.
     /// </summary>
-    public sealed class GameController : MonoBehaviour
+    public sealed class GameController
     {
-        [SerializeField] private CellTheme _cellTheme;
+        private readonly GameView _view;
+        private readonly GameSetup _setup;
+        private readonly Camera _camera;
+        private readonly GameHudTexts _hudTexts;
 
-        [Tooltip("Board cell size in world units.")]
-        [SerializeField] private float _cellSize = 1f;
-
-        [Tooltip("Parent of the board views. The board is centered on it.")]
-        [SerializeField] private Transform _boardRoot;
-
-        [SerializeField] private BoardBackground _background;
-        [SerializeField] private LayerView _layerView;
-        [SerializeField] private HandView _handView;
-        [SerializeField] private PieceDragController _dragController;
-        [SerializeField] private ScoreView _scoreView;
-
-        [Tooltip("Edit time only: the game mode whose board and hand size the gizmos preview.")]
-        [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
-
-        private GameSetup _setup;
         private Sim _sim;
 
         public bool IsResolved => _sim.IsResolved;
 
         /// <summary>The game resolved, after a move or right on the first deal. Gives the resolution and the final score.</summary>
-        public event Action<GameResolution, int> GameEnded;
+        public event Action<GameResolution, int> GameEndEvent;
 
-        private SimConfig Config => _setup.Config;
-
-        #region Unity
-
-        private void OnDrawGizmos()
+        /// <param name="view">The game's scene objects, not yet initialized.</param>
+        /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
+        /// <param name="hudTexts">The texts the game's HUD shows.</param>
+        public GameController(GameView view, GameSetup setup, Camera camera, GameHudTexts hudTexts)
         {
-            SimConfig config = GizmoConfig();
+            if (view == null)
+                throw new ArgumentNullException(nameof(view));
 
-            if (config == null || config.BoardWidth <= 0 || config.BoardHeight <= 0)
-                return;
-
-            if (_background != null)
-                _background.DrawGizmos(new BoardSpace(config.BoardWidth, config.BoardHeight, _cellSize));
-
-            if (_handView != null)
-                _handView.DrawGizmos(config.HandSize, _cellSize);
+            _view = view;
+            _setup = setup ?? throw new ArgumentNullException(nameof(setup));
+            _camera = camera;
+            _hudTexts = hudTexts;
         }
-
-        #endregion
 
         #region Commands
 
-        /// <summary>Sets up the views for the setup's game mode and starts the game. Call once.</summary>
-        /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
-        public void Initialize(GameSetup setup, Camera camera)
+        /// <summary>Sets up the view for the setup's game mode and starts the game. Call once, after subscribing to <see cref="GameEndEvent"/>.</summary>
+        public void StartGame()
         {
-            _setup = setup ?? throw new ArgumentNullException(nameof(setup));
-
-            var poolRoot = new GameObject("Cell View Pool").transform;
-            poolRoot.SetParent(transform, false);
-
-            var viewPool = new CellViewPool(_cellTheme.ResolveCellView, poolRoot);
-            var boardSpace = new BoardSpace(Config.BoardWidth, Config.BoardHeight, _cellSize);
-            int handSize = Config.HandSize;
-
-            _background.Build(boardSpace, _cellTheme.EmptyTile);
-            _layerView.Initialize(boardSpace, viewPool);
-            _handView.Initialize(handSize, viewPool, _cellSize);
-            _dragController.Initialize(camera, this,_handView, _boardRoot, boardSpace, viewPool);
+            _view.Initialize(_setup.Config, _camera, this, _hudTexts);
 
             ulong seed = _setup.Seed ?? (ulong)DateTime.Now.Ticks;
-            _sim = new Sim(Config, seed);
+            _sim = new Sim(_setup.Config, seed);
             Debug.Log($"New game, seed {seed}.");
 
-            RefreshViews();
+            RefreshView();
 
             if (_sim.IsResolved)
-                GameEnded?.Invoke(_sim.Resolution, _sim.Score);
+                GameEndEvent?.Invoke(_sim.Resolution, _sim.Score);
         }
 
         /// <summary>Whether placing the piece at the origin is a legal move.</summary>
@@ -101,31 +68,18 @@ namespace Squarely.Presentation
                 return;
             }
 
-            // Until event playback exists, the views jump straight to the sim's final state.
-            RefreshViews();
+            // Until event playback exists, the view jumps straight to the sim's final state.
+            RefreshView();
 
             if (_sim.IsResolved)
-                GameEnded?.Invoke(_sim.Resolution, _sim.Score);
+                GameEndEvent?.Invoke(_sim.Resolution, _sim.Score);
         }
 
         #endregion
 
-        private void RefreshViews()
+        private void RefreshView()
         {
-            _layerView.Rebuild(_sim.Board);
-            _handView.SetHand(_sim.Hand);
-            _scoreView.SetScore(_sim.Score, _sim.Combo);
-        }
-
-        private SimConfig GizmoConfig()
-        {
-            if (_setup != null)
-                return _setup.Config;
-
-            if (_gizmoPreviewConfig != null)
-                return _gizmoPreviewConfig.Config;
-
-            return null;
+            _view.SetState(_sim.Board, _sim.Hand, _sim.Score, _sim.Combo);
         }
     }
 }

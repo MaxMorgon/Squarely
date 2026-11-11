@@ -13,12 +13,12 @@ namespace Squarely.Presentation
 
         public CellViewState State { get; private set; }
 
-        public event Action<CellViewState> StateChanged;
+        public event Action<CellViewState> StateChangeEvent;
 
         public void SetState(CellViewState state)
         {
             State = state;
-            StateChanged?.Invoke(state);
+            StateChangeEvent?.Invoke(state);
         }
 
         /// <summary>Returns this view to the pool it came from.</summary>

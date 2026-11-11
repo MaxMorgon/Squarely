@@ -1,5 +1,6 @@
 using Squarely.Simulation;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
@@ -7,6 +8,7 @@ namespace Squarely.Presentation
 {
     /// <summary>
     /// Drag-and-drop placement: picks a piece up from the hand, shows a ghost where it would land, and places it on release.
+    /// A press that starts over UI does not start a drag.
     /// </summary>
     public sealed class PieceDragController : MonoBehaviour
     {
@@ -52,7 +54,8 @@ namespace Squarely.Presentation
 
         #region Unity
 
-        private void Update()
+        // LateUpdate, so the EventSystem has already processed this frame's press and knows whether it is over UI.
+        private void LateUpdate()
         {
             Pointer pointer = Pointer.current;
 
@@ -63,7 +66,7 @@ namespace Squarely.Presentation
 
             if (!IsDragging)
             {
-                if (pointer.press.wasPressedThisFrame)
+                if (pointer.press.wasPressedThisFrame && !IsOverUi(pointer))
                     TryBeginDrag(world);
 
                 return;
@@ -157,6 +160,21 @@ namespace Squarely.Presentation
         }
 
         #endregion
+
+        private static bool IsOverUi(Pointer pointer)
+        {
+            EventSystem eventSystem = EventSystem.current;
+
+            if (eventSystem == null)
+                return false;
+
+            // The UI module tracks each touch separately, by touch id; other pointers by device id.
+            int pointerId = pointer is Touchscreen touchscreen
+                ? touchscreen.primaryTouch.touchId.ReadValue()
+                : pointer.deviceId;
+
+            return eventSystem.IsPointerOverGameObject(pointerId);
+        }
 
         private Vector3 ScreenToWorld(Vector2 screenPosition)
         {

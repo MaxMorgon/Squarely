@@ -14,6 +14,7 @@ namespace Squarely.App
         private readonly AppStateMachine _stateMachine;
         private readonly GameSetup _setup;
 
+        private GameView _view;
         private GameController _game;
         private GameOverScreen _gameOver;
 
@@ -26,22 +27,23 @@ namespace Squarely.App
 
         public void Enter()
         {
-            _game = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
-            _game.GameEnded += OnGameEnded;
-            _game.Initialize(_setup, _context.Camera);
+            _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
+            _game = new GameController(_view, _setup, _context.Camera, _context.Texts.GameHud);
+            _game.GameEndEvent += OnGameEnded;
+            _game.StartGame();
         }
 
         public void Exit()
         {
             if (_gameOver != null)
             {
-                _gameOver.RestartRequested -= OnRestartRequested;
-                _gameOver.MenuRequested -= OnMenuRequested;
+                _gameOver.RestartRequestEvent -= OnRestartRequested;
+                _gameOver.MenuRequestEvent -= OnMenuRequested;
                 Object.Destroy(_gameOver.gameObject);
             }
 
-            _game.GameEnded -= OnGameEnded;
-            Object.Destroy(_game.gameObject);
+            _game.GameEndEvent -= OnGameEnded;
+            Object.Destroy(_view.gameObject);
         }
 
         #region Game over
@@ -49,8 +51,9 @@ namespace Squarely.App
         private void OnGameEnded(GameResolution resolution, int finalScore)
         {
             _gameOver = Object.Instantiate(_context.ScreenPrefabs.GameOver, _context.ScreenRoot);
-            _gameOver.RestartRequested += OnRestartRequested;
-            _gameOver.MenuRequested += OnMenuRequested;
+            _gameOver.Initialize(_context.Texts.GameOver);
+            _gameOver.RestartRequestEvent += OnRestartRequested;
+            _gameOver.MenuRequestEvent += OnMenuRequested;
             _gameOver.SetResult(resolution, finalScore);
         }
 

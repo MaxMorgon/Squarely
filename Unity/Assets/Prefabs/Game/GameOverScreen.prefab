@@ -1009,4 +1009,6 @@ MonoBehaviour:
   _titleLabel: {fileID: 8996323798497384654}
   _scoreLabel: {fileID: 6761131762989862815}
   _restartButton: {fileID: 782811698307351791}
+  _restartLabel: {fileID: 4388907505779175558}
   _menuButton: {fileID: 1659939952960394328}
+  _menuLabel: {fileID: 5158902299298086864}

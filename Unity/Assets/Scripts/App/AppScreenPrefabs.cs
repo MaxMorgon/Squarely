@@ -11,12 +11,12 @@ namespace Squarely.App
     public sealed class AppScreenPrefabs
     {
         [SerializeField] private MenuScreen _menu;
-        [SerializeField] private GameController _game;
+        [SerializeField] private GameView _game;
         [SerializeField] private GameOverScreen _gameOver;
 
         public MenuScreen Menu => _menu;
 
-        public GameController Game => _game;
+        public GameView Game => _game;
 
         public GameOverScreen GameOver => _gameOver;
     }

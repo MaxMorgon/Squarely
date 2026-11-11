@@ -16,7 +16,7 @@ Design and rules: [Docs/Design.md](Docs/Design.md) — read it before working on
 | `Unity/Assets/Tests/EditMode/` | `Squarely.Presentation.Tests` asmdef: unit tests for presentation logic (layout, pooling, slots). Not for testing how views are wired together. |
 | `Unity/Assets/Scripts/App/` | `Squarely.App` asmdef: app state machine and states (menu, game, game over). Design: [Docs/CodeDesign.md](Docs/CodeDesign.md#app-flow-unity). References `Squarely.Presentation`; Presentation never references App. |
 | `Unity/Assets/Tests/App/` | `Squarely.App.Tests` asmdef: unit tests for the app flow. |
-| `Unity/Assets/Scenes/Main.unity` | The only scene: camera, EventSystem, entry point. Screens are prefabs (`Prefabs/Game/`, `Prefabs/Menu/`, `Prefabs/UI/`). Placeholder art in `Art/Placeholder/`, prefabs in `Prefabs/`, the `DefaultCellTheme` in `Themes/`, the `DefaultSimConfig` asset in `Config/`. |
+| `Unity/Assets/Scenes/Main.unity` | The only scene: camera, EventSystem, entry point. Screens are prefabs (`Prefabs/Game/`, `Prefabs/Menu/`, `Prefabs/UI/`). Placeholder art in `Art/Placeholder/`, prefabs in `Prefabs/`, the `DefaultCellTheme` in `Themes/`, the `DefaultSimConfig` and `DefaultTexts` assets in `Config/`. |
 | `Unity/Assets/Editor/` | `Squarely.Editor` asmdef (Editor-only): editor tools and custom Unity CLI commands (`Cli/`). |
 
 ## Architecture rules
@@ -63,6 +63,7 @@ Standard C# conventions (Microsoft naming: `PascalCase` types/methods/properties
 - **Regions over comment banners** for grouping members (`#region Public API`), unless a comment is genuinely clearer.
 - **Member order:** constants and fields, then properties, then constructors, then methods.
 - **`Set…` for data, `Show`/`Hide` for visibility.** A method that takes data and displays it is `Set…` (`SetHand`, `SetShape`), never `Show…`. `Show`/`Hide` only change visibility, and are added when something needs them.
+- **C# events are `<Noun><Verb>Event`, present tense** (`PlayRequestEvent`, `GameEndEvent`, `StateChangeEvent`), and their handlers `On<Noun><Verb>ed` (`OnPlayRequested`, `OnGameEnded`). This is for C# `event` members only. Sim event types (`ISimEvent`: `ComboChangedEvent`, `GameResolvedEvent`, ...) record what already happened in a command and stay past tense.
 
 ```csharp
 public int Clamp(int value)
@@ -105,5 +106,7 @@ Implementation agents (`.claude/agents/implementer.md`) work in permanent worktr
 - Work in small steps; show plans/drafts for review before large changes.
 - Commit or push only when asked. An implementer brief counts as asking for that task's branch and PR.
 - `git reset --hard` and force pushes only on the user's explicit command (settings make them prompt).
+- **Who reviews what.** Agents review the code; the user reviews decisions and plays the change. When an implementer opens a PR, the main session runs the `reviewer` agent on it, then an implementer in review mode on its comments, before handing the PR to the user. The user reads the PR's **Decisions** and **How to test** sections and any `CLAUDE.md` / `CodeDesign.md` changes, plays it in the editor, and opens the code only when something there looks off.
+- **Drift audit.** After merging a PR, the main session checks how many PRs have been merged since the last audit issue (`gh issue list --label audit --state all --limit 1`). At 5 or more, or before a milestone, it runs the `reviewer` agent in audit mode ([reviewer.md](.claude/agents/reviewer.md#audit-mode)) and gives the user the findings. The user picks which ones become tasks, and the main session closes the issue once each finding is either a task or dropped.
 - **PR review loop.** When the user says "review submitted": the main session runs implementers in review mode ([implementer.md](.claude/agents/implementer.md#review-mode)), one per stack of PRs. Each one checks every comment on its merits, fixes and resolves the ones it agrees with that are simple, and replies only where it pushes back or the result isn't obvious, leaving those threads open. The main session decides anything that spans PRs (shared configs, repo-wide rules) and passes it in the brief. On "go": the open agreed items are applied, then the main session merges, unless a comment or the message says otherwise. Every PR comment Claude writes starts with `**[Claude]**`.
 - **`TODO.txt` is the user's tracker.** Don't read or edit it unless asked; mention finished items in chat instead. Commit the user's current version as-is, in its own commit, at least once per PR.
