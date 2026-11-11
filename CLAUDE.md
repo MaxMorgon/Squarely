@@ -17,7 +17,7 @@ Design and rules: [Docs/Design.md](Docs/Design.md) — read it before working on
 | `Unity/Assets/Scripts/App/` | `Squarely.App` asmdef: app state machine and states (menu, game, game over). Design: [Docs/CodeDesign.md](Docs/CodeDesign.md#app-flow-unity). References `Squarely.Presentation`; Presentation never references App. |
 | `Unity/Assets/Tests/App/` | `Squarely.App.Tests` asmdef: unit tests for the app flow. |
 | `Unity/Assets/Scenes/Main.unity` | The only scene: camera, EventSystem, entry point. Screens are prefabs (`Prefabs/Game/`, `Prefabs/Menu/`, `Prefabs/UI/`), debug UI in `Prefabs/Debug/`. Placeholder art in `Art/Placeholder/`, prefabs in `Prefabs/`. |
-| `Unity/Assets/Config/` | Every asset the user tunes, one subfolder per area: `Gameplay/` (`ClassicGameMode`), `Texts/` (`Texts`), `Theme/` (`CellTheme`), `Playback/` (one `CueSequence` per sim event, e.g. `PatternsClearedCues`). |
+| `Unity/Assets/Config/` | Every asset the user tunes, one subfolder per area: `Gameplay/` (`ClassicGameMode`), `Texts/` (`Texts`), `Theme/` (`CellTheme`), `Playback/` (one `CueSequence` per sim event, e.g. `PatternsClearedCues`, plus `BoardWaveCues`). |
 | `Unity/Assets/Editor/` | `Squarely.Editor` asmdef (Editor-only): editor tools and custom Unity CLI commands (`Cli/`). |
 
 ## Architecture rules
