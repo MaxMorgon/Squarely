@@ -45,6 +45,72 @@ namespace Squarely.Simulation.Tests
 
         #endregion
 
+        #region Opening events
+
+        [Test]
+        public void OpeningEvents_DealTheOpeningHand_SlotBySlot()
+        {
+            var sim = new Sim(DefaultSimConfig.Create(), 1);
+
+            Assert.That(sim.OpeningEvents.Count, Is.EqualTo(sim.Hand.Size));
+
+            for (int slot = 0; slot < sim.Hand.Size; slot++)
+            {
+                var dealt = (PieceDealtEvent)sim.OpeningEvents[slot];
+                Assert.That(dealt.Slot, Is.EqualTo(slot));
+                Assert.That(dealt.Piece, Is.SameAs(sim.Hand.GetSlot(slot)));
+            }
+        }
+
+        [Test]
+        public void OpeningEvents_SameSeed_AreIdentical()
+        {
+            var a = new Sim(DefaultSimConfig.Create(), 7);
+            var b = new Sim(DefaultSimConfig.Create(), 7);
+
+            Assert.That(DealtShapeIds(a.OpeningEvents), Is.EqualTo(DealtShapeIds(b.OpeningEvents)));
+        }
+
+        [Test]
+        public void OpeningEvents_FirstDealResolves_EndWithTheResolution()
+        {
+            // 2x2 board, hand of 1: a 3-cell line fits nowhere, so the game is lost on its first deal.
+            var dealer = new ScriptedDealer("###");
+            Sim sim = TestHelpers.CreateSim(TestHelpers.SmallConfig(2, 2, 1), dealer);
+
+            Assert.That(sim.IsResolved, Is.True);
+            Assert.That(sim.OpeningEvents.Count, Is.EqualTo(2));
+            Assert.That(sim.OpeningEvents[0], Is.InstanceOf<PieceDealtEvent>());
+
+            var resolved = (GameResolvedEvent)sim.OpeningEvents[1];
+            Assert.That(resolved.Resolution, Is.SameAs(sim.Resolution));
+            Assert.That(resolved.FinalScore, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void OpeningEvents_NotResolved_HaveNoResolution()
+        {
+            var sim = new Sim(DefaultSimConfig.Create(), 1);
+
+            foreach (ISimEvent simEvent in sim.OpeningEvents)
+                Assert.That(simEvent, Is.Not.InstanceOf<GameResolvedEvent>());
+        }
+
+        private static List<string> DealtShapeIds(IReadOnlyList<ISimEvent> events)
+        {
+            var ids = new List<string>();
+
+            foreach (ISimEvent simEvent in events)
+            {
+                if (simEvent is PieceDealtEvent dealt)
+                    ids.Add($"{dealt.Slot}:{dealt.Piece.InstanceId}:{dealt.Piece.Shape.Id}");
+            }
+
+            return ids;
+        }
+
+        #endregion
+
         #region Placement
 
         [Test]
