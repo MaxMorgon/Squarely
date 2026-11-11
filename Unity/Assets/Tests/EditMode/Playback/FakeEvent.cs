@@ -10,6 +10,9 @@ namespace Squarely.Presentation.Tests
 
         public bool WaitForEnd { get; }
 
+        /// <summary>Cells the handler takes over (snapping runs on them) and plays on. Empty: it plays on a transform target.</summary>
+        public IReadOnlyList<CellView> Cells { get; set; } = new CellView[0];
+
         public int HandleCount { get; set; }
 
         public int RunEndCount { get; set; }

@@ -12,7 +12,7 @@ namespace Squarely.Presentation
     {
         /// <summary>
         /// Plays the step and completes when it ends. Reads its settings as it plays, so asset edits apply on the next play.
-        /// After each frame it waits, it returns without touching anything if <see cref="PlaybackContext.IsStopped"/>.
+        /// It waits for frames with <see cref="PlaybackContext.NextFrameAsync"/> and returns without touching anything once that returns false.
         /// </summary>
         public abstract Awaitable Play(CueTarget target, PlaybackContext context);
 

@@ -11,7 +11,7 @@ namespace Squarely.Presentation
     public sealed class CueSequence : ScriptableObject
     {
         [Tooltip("On: the next event waits until this sequence ends. Off: it plays alongside the next events. " +
-                 "Keep it on for sequences that animate board cells, so two sequences never animate the same cell.")]
+                 "A later event that takes over the same cells snaps it to its end first.")]
         [SerializeField] private bool _waitForEnd = true;
 
         [SerializeReference, CueStepPicker] private List<CueStep> _steps = new List<CueStep>();

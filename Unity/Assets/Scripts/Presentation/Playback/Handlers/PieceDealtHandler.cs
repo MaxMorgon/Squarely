@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Squarely.Simulation;
 
 namespace Squarely.Presentation
@@ -15,10 +16,14 @@ namespace Squarely.Presentation
         protected override void Handle(PieceDealtEvent simEvent, PlaybackContext context)
         {
             HandView hand = context.Views.Hand;
+            context.SnapRunsOn(hand.GetSlotView(simEvent.Slot).Cells);
             hand.SetPiece(simEvent.Slot, simEvent.Piece);
 
             PieceView slotView = hand.GetSlotView(simEvent.Slot);
-            CueTarget target = CueTarget.ForCells(slotView.Cells, simEvent.Piece.Shape.Offsets, slotView.transform.position);
+
+            // A copy: the slot view reuses its list for the next piece.
+            var cells = new List<CellView>(slotView.Cells);
+            CueTarget target = CueTarget.ForCells(cells, simEvent.Piece.Shape.Offsets, slotView.transform.position);
             context.Play(_cues, target);
         }
     }

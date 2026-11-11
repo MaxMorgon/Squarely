@@ -37,7 +37,7 @@ namespace Squarely.Presentation
 
             while (elapsed < end)
             {
-                if (!await context.NextFrameAsync())
+                if (!await context.NextFrameAsync(target))
                     return;
 
                 elapsed += context.DeltaTime;

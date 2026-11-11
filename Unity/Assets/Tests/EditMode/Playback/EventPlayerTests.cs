@@ -1,12 +1,16 @@
+using System.Collections.Generic;
 using System.Threading;
 using NUnit.Framework;
 using Squarely.Simulation;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Squarely.Presentation.Tests
 {
     public class EventPlayerTests
     {
         private EventPlayer _player;
+        private readonly List<CellView> _cells = new List<CellView>();
         private int _endCount;
 
         [SetUp]
@@ -16,6 +20,15 @@ namespace Squarely.Presentation.Tests
             _player.AddHandler(new FakeEventHandler());
             _player.PlaybackEndEvent += () => _endCount++;
             _endCount = 0;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            foreach (CellView cell in _cells)
+                Object.DestroyImmediate(cell.gameObject);
+
+            _cells.Clear();
         }
 
         [Test]
@@ -142,6 +155,45 @@ namespace Squarely.Presentation.Tests
 
             Assert.That(step.PlayCount, Is.EqualTo(1));
             Assert.That(_endCount, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Play_LaterEventTakesOverCells_SnapsEarlierRunOnThem()
+        {
+            CellView shared = NewCell();
+            var running = new FakeStep(false);
+            var unstarted = new FakeStep(true);
+            var first = new FakeEvent(false, running, unstarted) { Cells = new[] { NewCell(), shared } };
+            var later = new FakeEvent(true, new FakeStep(false)) { Cells = new[] { shared } };
+
+            _player.Play(new ISimEvent[] { first, later });
+
+            Assert.That(running.SnapCount, Is.EqualTo(1));
+            Assert.That(unstarted.PlayCount, Is.EqualTo(0));
+            Assert.That(unstarted.SnapCount, Is.EqualTo(1));
+            Assert.That(first.RunEndCount, Is.EqualTo(1));
+            Assert.That(later.RunEndCount, Is.EqualTo(0));
+            Assert.That(_player.IsPlaying, Is.True);
+        }
+
+        [Test]
+        public void Play_LaterEventOnOtherCells_EarlierRunKeepsPlaying()
+        {
+            var running = new FakeStep(false);
+            var first = new FakeEvent(false, running) { Cells = new[] { NewCell() } };
+            var later = new FakeEvent(true, new FakeStep(false)) { Cells = new[] { NewCell() } };
+
+            _player.Play(new ISimEvent[] { first, later });
+
+            Assert.That(running.SnapCount, Is.EqualTo(0));
+            Assert.That(first.RunEndCount, Is.EqualTo(0));
+        }
+
+        private CellView NewCell()
+        {
+            CellView cell = new GameObject("Cell").AddComponent<CellView>();
+            _cells.Add(cell);
+            return cell;
         }
     }
 }

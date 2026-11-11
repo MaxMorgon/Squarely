@@ -55,8 +55,13 @@ namespace Squarely.Presentation
 
         /// <summary>Plays steps on a target. If <paramref name="waitForEnd"/> is set, the next event waits for them to finish.</summary>
         /// <param name="onEnd">Called once when the run ends, played out or snapped, e.g. to release detached views.</param>
+        /// <exception cref="InvalidOperationException">The target is already played by another run.</exception>
         public CueRun Play(IReadOnlyList<CueStep> steps, bool waitForEnd, CueTarget target, Action onEnd = null)
         {
+            if (target.IsPlayed)
+                throw new InvalidOperationException("A cue target is played by one run only.");
+
+            target.IsPlayed = true;
             var run = new CueRun(steps, target, this, onEnd);
             _runs.Add(run);
 
@@ -74,15 +79,49 @@ namespace Squarely.Presentation
             return run;
         }
 
+        /// <summary>
+        /// Snaps every run of this playback that is still playing on any of these cells. Handlers call it before they
+        /// detach or release cell views, so no run animates a view after it has left the board or hand.
+        /// </summary>
+        public void SnapRunsOn(IReadOnlyList<CellView> cells)
+        {
+            if (cells.Count == 0)
+                return;
+
+            // Snapping a run can release views, but never starts a run.
+            foreach (CueRun run in _runs.ToArray())
+            {
+                if (!run.IsEnded && SharesAny(run.Target.Cells, cells))
+                    run.Snap();
+            }
+        }
+
+        private static bool SharesAny(IReadOnlyList<CellView> first, IReadOnlyList<CellView> second)
+        {
+            foreach (CellView cell in first)
+            {
+                foreach (CellView other in second)
+                {
+                    if (cell == other)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         #endregion
 
         #region Waiting
 
-        /// <summary>Waits one frame. Returns false if the playback stopped meanwhile: the caller then returns without touching views.</summary>
-        public async Awaitable<bool> NextFrameAsync()
+        /// <summary>
+        /// Waits one frame. Returns false if the playback stopped or the run on <paramref name="target"/> was snapped meanwhile:
+        /// the caller then returns without touching views.
+        /// </summary>
+        public async Awaitable<bool> NextFrameAsync(CueTarget target)
         {
             await Awaitable.NextFrameAsync();
-            return !IsStopped;
+            return !IsStopped && !target.IsSnapped;
         }
 
         internal async Awaitable WaitForBlockingRunsAsync()

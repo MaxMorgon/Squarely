@@ -11,6 +11,7 @@ namespace Squarely.Presentation
         /// <summary>
         /// Updates the views for the event and starts its cues in the context. Everything the views must end up showing
         /// is either done here, before returning, or by a cue run (its steps or its end action), so snapping reaches it.
+        /// Before detaching or releasing cell views, call <see cref="PlaybackContext.SnapRunsOn"/> on them.
         /// </summary>
         void Handle(ISimEvent simEvent, PlaybackContext context);
     }

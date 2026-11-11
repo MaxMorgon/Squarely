@@ -37,6 +37,9 @@ namespace Squarely.Presentation
                     positions.Add(pos);
                 }
 
+                // A sequence that does not wait may still be animating these views, e.g. the placement.
+                context.SnapRunsOn(cells);
+
                 Vector3 center = views.CenterOf(match.Cells);
                 context.LastEffectPosition = center;
                 context.Play(_cues, CueTarget.ForCells(cells, positions, center), () => Release(cells));

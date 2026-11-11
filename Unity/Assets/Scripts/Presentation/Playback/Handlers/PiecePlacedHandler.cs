@@ -19,6 +19,7 @@ namespace Squarely.Presentation
             PlaybackViews views = context.Views;
             PieceShape shape = simEvent.Piece.Shape;
 
+            context.SnapRunsOn(views.Hand.GetSlotView(simEvent.Slot).Cells);
             views.Hand.SetPiece(simEvent.Slot, null);
 
             var cells = new List<CellView>(shape.CellCount);

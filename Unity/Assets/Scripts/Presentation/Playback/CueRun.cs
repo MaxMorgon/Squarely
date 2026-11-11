@@ -22,6 +22,8 @@ namespace Squarely.Presentation
 
         public bool IsEnded { get; private set; }
 
+        internal CueTarget Target => _target;
+
         internal CueRun(IReadOnlyList<CueStep> steps, CueTarget target, PlaybackContext context, Action onEnd)
         {
             _steps = steps.ToArray();
@@ -40,6 +42,8 @@ namespace Squarely.Presentation
         {
             if (IsEnded)
                 return;
+
+            _target.IsSnapped = true;
 
             for (int i = _next; i < _steps.Length; i++)
             {
@@ -65,7 +69,7 @@ namespace Squarely.Presentation
         {
             while (_next < _steps.Length)
             {
-                if (_context.IsStopped)
+                if (_context.IsStopped || IsEnded)
                     return;
 
                 CueStep step = _steps[_next];
@@ -74,7 +78,7 @@ namespace Squarely.Presentation
                     await step.Play(_target, _context);
 
                 // Snapped while the step played: Snap already applied the end state and ended the run.
-                if (_context.IsStopped)
+                if (_context.IsStopped || IsEnded)
                     return;
 
                 _next++;

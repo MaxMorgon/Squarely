@@ -31,6 +31,12 @@ namespace Squarely.Presentation
 
         public bool HasCount => _setCount != null;
 
+        /// <summary>A run plays on this target. Each target is played by one run only.</summary>
+        internal bool IsPlayed { get; set; }
+
+        /// <summary>The run on this target was snapped: its steps must stop touching the target.</summary>
+        internal bool IsSnapped { get; set; }
+
         private CueTarget(IReadOnlyList<CellView> cells, IReadOnlyList<GridPos> cellPositions, Transform transform, Vector3 position,
             int countFrom, int countTo, Action<int> setCount)
         {
