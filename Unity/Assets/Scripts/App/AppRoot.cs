@@ -31,8 +31,10 @@ namespace Squarely.App
         {
             ulong? seed = _seed != 0 ? (ulong)_seed : (ulong?)null;
             var defaultGameSetup = new GameSetup(_defaultMode.Config, seed);
-            var highScore = new HighScore(new PlayerPrefsStore());
-            var context = new AppContext(_screenPrefabs, transform, _camera, defaultGameSetup, _texts, highScore);
+            var store = new PlayerPrefsStore();
+            var highScore = new HighScore(store);
+            var testSeeds = new TestSeedStore(store, new System.Random());
+            var context = new AppContext(_screenPrefabs, transform, _camera, defaultGameSetup, _texts, highScore, testSeeds);
 
             _stateMachine = new AppStateMachine();
             _stateMachine.ChangeState(new MenuState(context, _stateMachine));
