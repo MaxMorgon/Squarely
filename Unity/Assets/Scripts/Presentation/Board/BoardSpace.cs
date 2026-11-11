@@ -21,11 +21,6 @@ namespace Squarely.Presentation
             CellSize = cellSize;
         }
 
-        public bool IsWithinBounds(GridPos pos)
-        {
-            return pos.X >= 0 && pos.X < Width && pos.Y >= 0 && pos.Y < Height;
-        }
-
         /// <summary>Local position of a cell's center. Works for cells outside the board too.</summary>
         public Vector2 CellCenter(GridPos pos)
         {
@@ -34,12 +29,22 @@ namespace Squarely.Presentation
             return new Vector2(x, y);
         }
 
+        /// <summary>
+        /// A local position in cell units: a cell's center is at its (X, Y), positions between centers are fractional.
+        /// Works for positions outside the board too.
+        /// </summary>
+        public Vector2 CellCoordinates(Vector2 localPosition)
+        {
+            float x = localPosition.x / CellSize + (Width - 1) * 0.5f;
+            float y = localPosition.y / CellSize + (Height - 1) * 0.5f;
+            return new Vector2(x, y);
+        }
+
         /// <summary>The cell whose center is nearest to a local position. It may be outside the board.</summary>
         public GridPos NearestCell(Vector2 localPosition)
         {
-            int x = Mathf.FloorToInt(localPosition.x / CellSize + (Width - 1) * 0.5f + 0.5f);
-            int y = Mathf.FloorToInt(localPosition.y / CellSize + (Height - 1) * 0.5f + 0.5f);
-            return new GridPos(x, y);
+            Vector2 coordinates = CellCoordinates(localPosition);
+            return new GridPos(Mathf.FloorToInt(coordinates.x + 0.5f), Mathf.FloorToInt(coordinates.y + 0.5f));
         }
     }
 }

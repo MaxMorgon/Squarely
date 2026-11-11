@@ -24,7 +24,7 @@ namespace Squarely.Presentation
             _poolRoot = poolRoot;
         }
 
-        /// <summary>An active view for the cell type, in the Idle state, parented to <paramref name="parent"/>.</summary>
+        /// <summary>An active view for the cell type, in the Idle state with no tint and unit scale, parented to <paramref name="parent"/>.</summary>
         public CellView Get(string typeId, Transform parent)
         {
             CellView prefab = _resolvePrefab(typeId);
@@ -34,7 +34,10 @@ namespace Squarely.Presentation
 
             CellView view = GetPool(prefab).Get();
             view.transform.SetParent(parent, false);
+            view.transform.localScale = Vector3.one;
+            view.SetTypeId(typeId);
             view.SetState(CellViewState.Idle);
+            view.SetTint(Color.white);
             return view;
         }
 
@@ -48,7 +51,7 @@ namespace Squarely.Presentation
                 createFunc: () => Create(prefab, pool),
                 actionOnGet: view => view.gameObject.SetActive(true),
                 actionOnRelease: OnRelease,
-                actionOnDestroy: view => DestroyObject(view.gameObject));
+                actionOnDestroy: DestroyView);
 
             _pools.Add(prefab, pool);
             return pool;
@@ -67,12 +70,16 @@ namespace Squarely.Presentation
             view.transform.SetParent(_poolRoot, false);
         }
 
-        private static void DestroyObject(GameObject gameObject)
+        private static void DestroyView(CellView view)
         {
+            // Unity clears every pool when play mode exits, after the scene's objects are already destroyed.
+            if (view == null)
+                return;
+
             if (Application.isPlaying)
-                Object.Destroy(gameObject);
+                Object.Destroy(view.gameObject);
             else
-                Object.DestroyImmediate(gameObject);
+                Object.DestroyImmediate(view.gameObject);
         }
     }
 }

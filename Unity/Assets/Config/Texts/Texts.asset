@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: be6d22aba06ac634c8410cdd71cb6e1d, type: 3}
-  m_Name: DefaultTexts
+  m_Name: Texts
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.TextsConfig
   _menu:
     Title: Squarely

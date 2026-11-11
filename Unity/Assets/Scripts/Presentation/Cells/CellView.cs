@@ -4,21 +4,35 @@ using UnityEngine;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// The root of a cell view prefab. Code sets its state; other components on the prefab decide how each state looks.
+    /// The root of a cell view prefab. Code sets its state and tint; other components on the prefab decide how they look.
     /// Instances come from a <see cref="CellViewPool"/> and go back to it with <see cref="Release"/>.
     /// </summary>
     public sealed class CellView : MonoBehaviour
     {
         private Action<CellView> _release;
 
+        /// <summary>The cell type this view shows.</summary>
+        public string TypeId { get; private set; }
+
         public CellViewState State { get; private set; }
 
+        /// <summary>A color multiplied over the view's look, white by default. Cues use it to tint and fade cells.</summary>
+        public Color Tint { get; private set; } = Color.white;
+
         public event Action<CellViewState> StateChangeEvent;
+
+        public event Action<Color> TintChangeEvent;
 
         public void SetState(CellViewState state)
         {
             State = state;
             StateChangeEvent?.Invoke(state);
+        }
+
+        public void SetTint(Color tint)
+        {
+            Tint = tint;
+            TintChangeEvent?.Invoke(tint);
         }
 
         /// <summary>Returns this view to the pool it came from.</summary>
@@ -33,6 +47,11 @@ namespace Squarely.Presentation
         internal void SetReleaseAction(Action<CellView> release)
         {
             _release = release;
+        }
+
+        internal void SetTypeId(string typeId)
+        {
+            TypeId = typeId;
         }
     }
 }

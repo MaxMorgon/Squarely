@@ -1,0 +1,161 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+using System.Collections.Generic;
+using UnityEngine.InputSystem;
+#endif
+
+namespace Squarely.Presentation
+{
+    /// <summary>
+    /// Editor and development builds only: a small panel for tuning playback. Replays the last move (also with R),
+    /// restarts the game, sets the playback speed (back to 1x each play session) and shows the last drift check.
+    /// A small toggle button (or the backquote key) collapses it.
+    /// Not game UI. In other builds the component is never created and does nothing.
+    /// </summary>
+    public sealed class PlaybackDebugOverlay : MonoBehaviour
+    {
+        [Tooltip("The playback speed presets, one button each.")]
+        [SerializeField] private float[] _speeds = { 0.1f, 0.25f, 0.5f, 1f, 2f };
+
+        [SerializeField] private Color _speedColor = new Color(0.25f, 0.25f, 0.25f, 0.9f);
+        [SerializeField] private Color _selectedSpeedColor = new Color(0.95f, 0.65f, 0.1f, 1f);
+
+        [Tooltip("Always visible: collapses and expands the panel.")]
+        [SerializeField] private Button _toggleButton;
+        [SerializeField] private TMP_Text _toggleLabel;
+
+        [Tooltip("Everything that collapses.")]
+        [SerializeField] private GameObject _panel;
+
+        [SerializeField] private Button _replayButton;
+        [SerializeField] private Button _restartButton;
+
+        [Tooltip("Inactive template, copied once per speed preset into its parent.")]
+        [SerializeField] private Button _speedButtonTemplate;
+
+        [SerializeField] private TMP_Text _driftLabel;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        private const string ExpandedToggleText = "×";
+        private const string CollapsedToggleText = "DBG";
+
+        // Static, so the chosen speed and the collapsed state carry over to the next game of the same play session.
+        private static float s_speed = 1f;
+        private static bool s_isExpanded = true;
+
+        private readonly List<Button> _speedButtons = new List<Button>();
+
+        private GameController _game;
+        private EventPlayer _player;
+
+        public void Initialize(GameController game, EventPlayer player)
+        {
+            _game = game;
+            _player = player;
+            _player.Speed = s_speed;
+
+            _toggleButton.onClick.AddListener(ToggleExpanded);
+            _replayButton.onClick.AddListener(_game.ReplayLastMove);
+            _restartButton.onClick.AddListener(_game.RequestRestart);
+            CreateSpeedButtons();
+
+            SetExpanded(s_isExpanded);
+            SetSpeed(s_speed);
+            Refresh();
+        }
+
+        #region Unity
+
+        // Statics survive between play sessions when domain reload is off: each session starts at normal speed.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetSpeed()
+        {
+            s_speed = 1f;
+        }
+
+        private void Update()
+        {
+            if (_game == null)
+                return;
+
+            Keyboard keyboard = Keyboard.current;
+
+            if (keyboard != null && keyboard.rKey.wasPressedThisFrame)
+                _game.ReplayLastMove();
+
+            if (keyboard != null && keyboard.backquoteKey.wasPressedThisFrame)
+                ToggleExpanded();
+
+            Refresh();
+        }
+
+        #endregion
+
+        private void CreateSpeedButtons()
+        {
+            _speedButtonTemplate.gameObject.SetActive(false);
+
+            foreach (float speed in _speeds)
+            {
+                Button button = Instantiate(_speedButtonTemplate, _speedButtonTemplate.transform.parent);
+                button.name = $"Speed {speed:0.##}x";
+                button.GetComponentInChildren<TMP_Text>().text = $"{speed:0.##}x";
+                button.onClick.AddListener(() => SetSpeed(speed));
+                button.gameObject.SetActive(true);
+                _speedButtons.Add(button);
+            }
+        }
+
+        private void ToggleExpanded()
+        {
+            SetExpanded(!s_isExpanded);
+        }
+
+        private void SetExpanded(bool isExpanded)
+        {
+            s_isExpanded = isExpanded;
+            _panel.SetActive(isExpanded);
+            _toggleLabel.text = isExpanded ? ExpandedToggleText : CollapsedToggleText;
+        }
+
+        private void SetSpeed(float speed)
+        {
+            s_speed = speed;
+            _player.Speed = speed;
+
+            for (int i = 0; i < _speedButtons.Count; i++)
+            {
+                bool isSelected = Mathf.Approximately(_speeds[i], speed);
+                _speedButtons[i].targetGraphic.color = isSelected ? _selectedSpeedColor : _speedColor;
+                _speedButtons[i].GetComponentInChildren<TMP_Text>().fontStyle = isSelected ? FontStyles.Bold : FontStyles.Normal;
+            }
+        }
+
+        /// <summary>Sets what changes without the overlay's input: whether replay is possible, and the drift result.</summary>
+        private void Refresh()
+        {
+            _replayButton.interactable = _game.CanReplayLastMove;
+
+            string driftText = DriftText();
+
+            if (_driftLabel.text != driftText)
+                _driftLabel.text = driftText;
+        }
+
+        private string DriftText()
+        {
+            ViewDrift drift = _game.LastDrift;
+
+            if (drift == null)
+                return "Drift check: not run yet";
+
+            if (drift.IsEmpty)
+                return "Drift check: passed";
+
+            return "<color=red>Drift check: FAILED, see console</color>";
+        }
+#endif
+    }
+}

@@ -36,19 +36,31 @@ namespace Squarely.Presentation
             }
         }
 
+        /// <summary>Shows every slot of the hand and makes all slots visible.</summary>
         public void SetHand(IReadOnlyHand hand)
         {
             for (int slot = 0; slot < _slots.Length; slot++)
             {
-                PieceInstance piece = hand.GetSlot(slot);
-                _pieces[slot] = piece;
+                SetPiece(slot, hand.GetSlot(slot));
                 SetSlotVisible(slot, true);
-
-                if (piece == null)
-                    _slots[slot].Clear();
-                else
-                    _slots[slot].SetShape(piece.Shape, _viewPool, _cellSize, CellViewState.Idle);
             }
+        }
+
+        /// <summary>Shows a piece in a slot, or empties the slot if the piece is null. The slot's visibility stays as it is.</summary>
+        public void SetPiece(int slot, PieceInstance piece)
+        {
+            _pieces[slot] = piece;
+
+            if (piece == null)
+                _slots[slot].Clear();
+            else
+                _slots[slot].SetShape(piece.Shape, _viewPool, _cellSize, CellViewState.Idle);
+        }
+
+        /// <summary>The view that shows a slot's piece.</summary>
+        public PieceView GetSlotView(int slot)
+        {
+            return _slots[slot];
         }
 
         /// <summary>The piece shown in a slot, or null if the slot is empty.</summary>
