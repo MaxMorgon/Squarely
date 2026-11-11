@@ -27,12 +27,12 @@ namespace Squarely.App
 
         private void Start()
         {
-            var defaultGameSetup = new GameSetup(_defaultMode.Config, null);
             var store = new PlayerPrefsStore();
             var highScore = new HighScore(store);
-            var testSeed = new TestSeed(store, new System.Random());
+            var seedSource = new SeedSource(new System.Random());
+            var testSeed = new TestSeed(store, seedSource);
             var startInTest = new StartInTest(store);
-            var context = new AppContext(_screenPrefabs, transform, _camera, defaultGameSetup, _texts, highScore, testSeed, startInTest);
+            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, seedSource, testSeed, startInTest);
 
             _stateMachine = new AppStateMachine();
             _stateMachine.ChangeState(CreateFirstState(context));

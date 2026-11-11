@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Squarely.Simulation;
 using UnityEngine;
 
@@ -16,24 +15,10 @@ namespace Squarely.Presentation
         private Sim _sim;
         private bool _gameEndRaised;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        private Sim _simBeforeLastMove;
-        private IReadOnlyList<ISimEvent> _lastMoveEvents;
-        private Vector2? _lastMoveDropPoint;
-#endif
-
         public bool IsResolved => _sim.IsResolved;
 
         /// <summary>Whether the player placed at least one piece in this game.</summary>
         public bool HasPlacedPiece { get; private set; }
-
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        /// <summary>Debug only: the result of the last drift check, or null before the first playback ended.</summary>
-        public ViewDrift LastDrift { get; private set; }
-
-        /// <summary>Debug only: whether there is a move to replay.</summary>
-        public bool CanReplayLastMove => _simBeforeLastMove != null;
-#endif
 
         /// <summary>
         /// The game resolved: raised once, when playback reaches the resolution (of a move, or of the opening deal
@@ -41,10 +26,8 @@ namespace Squarely.Presentation
         /// </summary>
         public event Action<GameResolution, int> GameEndEvent;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        /// <summary>Debug only: the debug overlay asked for a fresh game. The controller's owner restarts it.</summary>
-        public event Action RestartRequestEvent;
-#endif
+        /// <summary>A move was executed, before its events play. Raised only for moves that succeed.</summary>
+        public event Action<ExecutedMove> MoveExecutedEvent;
 
         /// <param name="view">The game's view. Its owner initializes it, with this controller as its placer, before <see cref="StartGame"/>.</param>
         public GameController(GameView view, GameSetup setup)
@@ -64,16 +47,7 @@ namespace Squarely.Presentation
         /// </summary>
         public void StartGame()
         {
-            _view.Player.AddHandler(new GameResolvedHandler(OnGameResolved));
-            _view.Player.PlaybackEndEvent += OnPlaybackEnded;
-
-            ulong seed = _setup.Seed ?? (ulong)DateTime.Now.Ticks;
-            _sim = new Sim(_setup.Config, seed);
-            Debug.Log($"New game, seed {seed}.");
-
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            _view.CreateDebugOverlay().Initialize(this, _view.Player);
-#endif
+            _sim = new Sim(_setup.Config, _setup.Seed);
 
             // The views start empty, as the board and hand are before the deal.
             _view.Player.Play(_sim.OpeningEvents);
@@ -92,9 +66,8 @@ namespace Squarely.Presentation
             // Snap before executing, so the playback that ends here is checked against the state it led to.
             _view.Player.Snap();
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            Sim before = _sim.Clone();
-#endif
+            // The copy is only needed by subscribers of MoveExecutedEvent.
+            Sim before = MoveExecutedEvent != null ? _sim.Clone() : null;
 
             CommandResult result = _sim.Execute(new PlacePieceCommand(pieceInstanceId, origin));
 
@@ -105,20 +78,24 @@ namespace Squarely.Presentation
             }
 
             HasPlacedPiece = true;
-
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            _simBeforeLastMove = before;
-            _lastMoveEvents = result.Events;
-            _lastMoveDropPoint = dropPoint;
-#endif
+            MoveExecutedEvent?.Invoke(new ExecutedMove(before, result.Events, dropPoint));
 
             _view.Player.Play(result.Events, dropPoint);
         }
 
         #endregion
 
-        // A replay of the resolving move reaches the resolution again; the game ends once.
-        private void OnGameResolved(GameResolvedEvent resolved)
+        /// <summary>A copy of the game's sim in its current state. Changing the copy does not change the game.</summary>
+        public Sim CopySim()
+        {
+            return _sim.Clone();
+        }
+
+        /// <summary>
+        /// Reports that playback reached the game's resolution. The view calls it. A replay of the resolving move
+        /// reaches the resolution again; the game ends once.
+        /// </summary>
+        public void OnGameResolved(GameResolvedEvent resolved)
         {
             if (_gameEndRaised)
                 return;
@@ -126,45 +103,5 @@ namespace Squarely.Presentation
             _gameEndRaised = true;
             GameEndEvent?.Invoke(resolved.Resolution, resolved.FinalScore);
         }
-
-        private void OnPlaybackEnded()
-        {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            CheckDrift();
-#endif
-        }
-
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        #region Debug
-
-        /// <summary>Debug only: sets the views back to the state before the last move and plays its events again.</summary>
-        public void ReplayLastMove()
-        {
-            if (!CanReplayLastMove)
-                return;
-
-            _view.Player.Snap();
-            Sim before = _simBeforeLastMove;
-            _view.SetState(before.Board, before.Hand, before.Score, before.Combo);
-            _view.Player.Play(_lastMoveEvents, _lastMoveDropPoint);
-        }
-
-        /// <summary>Debug only: asks the controller's owner for a fresh game, see <see cref="RestartRequestEvent"/>.</summary>
-        public void RequestRestart()
-        {
-            RestartRequestEvent?.Invoke();
-        }
-
-        /// <summary>Compares the views with the sim and logs one error listing every difference.</summary>
-        private void CheckDrift()
-        {
-            LastDrift = ViewDrift.Find(_view.GetShownState(), _sim.Board, _sim.Hand, _sim.Score, _sim.Combo);
-
-            if (!LastDrift.IsEmpty)
-                Debug.LogError(LastDrift.ToString());
-        }
-
-        #endregion
-#endif
     }
 }

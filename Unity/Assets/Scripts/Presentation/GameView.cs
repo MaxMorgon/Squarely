@@ -1,3 +1,4 @@
+using System;
 using Squarely.Simulation;
 using UnityEngine;
 
@@ -63,12 +64,13 @@ namespace Squarely.Presentation
 
         /// <summary>
         /// Builds the board, hand and HUD views for the game mode, connects drag input to the placer
-        /// and creates the event player with a handler per animated event. Call once.
+        /// and creates the event player with a handler per event. Call once.
         /// </summary>
         /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
         /// <param name="hudTexts">The texts the HUD shows.</param>
         /// <param name="placer">Receives the player's placements.</param>
-        public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer)
+        /// <param name="onGameResolved">Called when playback reaches the game's resolution.</param>
+        public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer, Action<GameResolvedEvent> onGameResolved)
         {
             _config = config;
 
@@ -93,6 +95,7 @@ namespace Squarely.Presentation
             Player.AddHandler(new ScoreChangedHandler(_cues.ScoreChanged));
             Player.AddHandler(new ComboChangedHandler(_cues.ComboChanged));
             Player.AddHandler(new PieceDealtHandler(_cues.PieceDealt));
+            Player.AddHandler(new GameResolvedHandler(onGameResolved));
         }
 
         /// <summary>

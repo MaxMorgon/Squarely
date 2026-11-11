@@ -12,7 +12,7 @@ namespace Squarely.App.Tests
         public void SetUp()
         {
             _store = new MemoryKeyValueStore();
-            _testSeed = new TestSeed(_store, new Random(1));
+            _testSeed = new TestSeed(_store, new SeedSource(new Random(1)));
         }
 
         #region TryParse
@@ -65,7 +65,7 @@ namespace Squarely.App.Tests
         {
             ulong seed = _testSeed.LoadOrCreate();
 
-            Assert.That(seed, Is.LessThan((ulong)TestSeed.NewSeedLimit));
+            Assert.That(seed, Is.LessThan((ulong)SeedSource.SeedLimit));
             Assert.That(_store.GetString(TestSeed.StoreKey, null), Is.EqualTo(TestSeed.Format(seed)));
             Assert.That(_store.SaveCount, Is.EqualTo(1));
         }
@@ -74,7 +74,7 @@ namespace Squarely.App.Tests
         public void LoadOrCreate_Twice_ReturnsSameSeed()
         {
             ulong first = _testSeed.LoadOrCreate();
-            ulong second = new TestSeed(_store, new Random(2)).LoadOrCreate();
+            ulong second = new TestSeed(_store, new SeedSource(new Random(2))).LoadOrCreate();
 
             Assert.That(second, Is.EqualTo(first));
         }

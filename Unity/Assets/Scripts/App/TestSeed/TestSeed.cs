@@ -12,17 +12,14 @@ namespace Squarely.App
         /// <summary>The key the seed is saved under.</summary>
         public const string StoreKey = "TestSeed";
 
-        /// <summary>New seeds are below this, so they stay short enough to read out and type.</summary>
-        public const int NewSeedLimit = 1000000000;
-
         private readonly IKeyValueStore _store;
-        private readonly Random _random;
+        private readonly SeedSource _seedSource;
 
-        /// <param name="random">Picks new seeds.</param>
-        public TestSeed(IKeyValueStore store, Random random)
+        /// <param name="seedSource">Picks new seeds.</param>
+        public TestSeed(IKeyValueStore store, SeedSource seedSource)
         {
             _store = store;
-            _random = random;
+            _seedSource = seedSource;
         }
 
         #region Seeds
@@ -38,10 +35,10 @@ namespace Squarely.App
             return CreateNew();
         }
 
-        /// <summary>Picks a new seed below <see cref="NewSeedLimit"/> and saves it.</summary>
+        /// <summary>Picks a new seed from the seed source and saves it.</summary>
         public ulong CreateNew()
         {
-            ulong seed = (ulong)_random.Next(NewSeedLimit);
+            ulong seed = _seedSource.Next();
             Save(seed);
             return seed;
         }
