@@ -13,8 +13,9 @@ namespace Squarely.Presentation
         FromCenter,
 
         /// <summary>
-        /// Outward from where the pointer dropped the piece. Without a drop point (e.g. a scripted placement),
-        /// from the placed piece's center, or from the target's center if nothing was placed.
+        /// Outward from the placed piece's cell nearest to where the pointer dropped it (the target's nearest cell if nothing
+        /// was placed). Without a drop point (e.g. a scripted placement), from the placed piece's center, or from the target's
+        /// center if nothing was placed.
         /// </summary>
         FromPointer,
     }

@@ -75,14 +75,36 @@ namespace Squarely.Presentation
         {
             if (order == CellOrder.FromPointer)
             {
-                if (dropPoint.HasValue)
-                    return dropPoint.Value;
+                bool hasPlaced = placedCells != null && placedCells.Count > 0;
 
-                if (placedCells != null && placedCells.Count > 0)
+                if (dropPoint.HasValue)
+                    return ToVector(NearestTo(dropPoint.Value, hasPlaced ? placedCells : cells));
+
+                if (hasPlaced)
                     return Center(placedCells);
             }
 
             return Center(cells);
+        }
+
+        /// <summary>The first of <paramref name="cells"/> nearest to <paramref name="point"/>.</summary>
+        private static GridPos NearestTo(Vector2 point, IReadOnlyList<GridPos> cells)
+        {
+            GridPos nearest = cells[0];
+            float nearestDistance = float.MaxValue;
+
+            foreach (GridPos cell in cells)
+            {
+                float distance = Vector2.Distance(ToVector(cell), point);
+
+                if (distance < nearestDistance - SameKeyTolerance)
+                {
+                    nearest = cell;
+                    nearestDistance = distance;
+                }
+            }
+
+            return nearest;
         }
 
         private static float Key(CellOrder order, int index, IReadOnlyList<GridPos> cells, IReadOnlyList<GridPos> placedCells, Vector2 origin)
