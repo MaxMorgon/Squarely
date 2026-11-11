@@ -19,6 +19,9 @@ namespace Squarely.Presentation
 
         public PlaybackViews Views { get; }
 
+        /// <summary>All events of the command being played, including those already handled and those still to come.</summary>
+        public IReadOnlyList<ISimEvent> Events { get; }
+
         /// <summary>The board cells of the piece placed by this command, empty until the placement is handled.</summary>
         public IReadOnlyList<GridPos> PlacedCells { get; internal set; } = Array.Empty<GridPos>();
 
@@ -40,9 +43,11 @@ namespace Squarely.Presentation
         /// <summary>This frame's playback time step, in seconds, scaled by the playback speed.</summary>
         public float DeltaTime => Time.deltaTime * _speed();
 
-        internal PlaybackContext(PlaybackViews views, Vector2? dropPoint, Func<float> speed, CancellationToken stopToken)
+        internal PlaybackContext(PlaybackViews views, IReadOnlyList<ISimEvent> events, Vector2? dropPoint, Func<float> speed,
+            CancellationToken stopToken)
         {
             Views = views;
+            Events = events;
             DropPoint = dropPoint;
             _speed = speed;
             _stopToken = stopToken;
