@@ -7,7 +7,7 @@ namespace Squarely.App
     /// The seed the test screen plays, saved in a store so it stays the same between app runs.
     /// Seeds are shown and saved as decimal text, since they don't fit in the store's int.
     /// </summary>
-    public sealed class TestSeedStore
+    public sealed class TestSeed
     {
         /// <summary>The key the seed is saved under.</summary>
         public const string StoreKey = "TestSeed";
@@ -19,7 +19,7 @@ namespace Squarely.App
         private readonly Random _random;
 
         /// <param name="random">Picks new seeds.</param>
-        public TestSeedStore(IKeyValueStore store, Random random)
+        public TestSeed(IKeyValueStore store, Random random)
         {
             _store = store;
             _random = random;

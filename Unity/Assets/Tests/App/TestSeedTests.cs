@@ -3,16 +3,16 @@ using NUnit.Framework;
 
 namespace Squarely.App.Tests
 {
-    public sealed class TestSeedStoreTests
+    public sealed class TestSeedTests
     {
         private FakeKeyValueStore _store;
-        private TestSeedStore _seeds;
+        private TestSeed _testSeed;
 
         [SetUp]
         public void SetUp()
         {
             _store = new FakeKeyValueStore();
-            _seeds = new TestSeedStore(_store, new Random(1));
+            _testSeed = new TestSeed(_store, new Random(1));
         }
 
         #region TryParse
@@ -24,7 +24,7 @@ namespace Squarely.App.Tests
         [TestCase("18446744073709551615", ulong.MaxValue)]
         public void TryParse_Digits_ReadsSeed(string text, ulong expected)
         {
-            bool isValid = TestSeedStore.TryParse(text, out ulong seed);
+            bool isValid = TestSeed.TryParse(text, out ulong seed);
 
             Assert.That(isValid, Is.True);
             Assert.That(seed, Is.EqualTo(expected));
@@ -43,7 +43,7 @@ namespace Squarely.App.Tests
         [TestCase("18446744073709551616")]
         public void TryParse_NotASeed_ReturnsFalse(string text)
         {
-            bool isValid = TestSeedStore.TryParse(text, out ulong _);
+            bool isValid = TestSeed.TryParse(text, out ulong _);
 
             Assert.That(isValid, Is.False);
         }
@@ -51,7 +51,7 @@ namespace Squarely.App.Tests
         [Test]
         public void Format_ThenTryParse_RoundTrips()
         {
-            TestSeedStore.TryParse(TestSeedStore.Format(ulong.MaxValue), out ulong seed);
+            TestSeed.TryParse(TestSeed.Format(ulong.MaxValue), out ulong seed);
 
             Assert.That(seed, Is.EqualTo(ulong.MaxValue));
         }
@@ -63,18 +63,18 @@ namespace Squarely.App.Tests
         [Test]
         public void LoadOrCreate_NothingSaved_CreatesAndSavesSeed()
         {
-            ulong seed = _seeds.LoadOrCreate();
+            ulong seed = _testSeed.LoadOrCreate();
 
-            Assert.That(seed, Is.LessThan((ulong)TestSeedStore.NewSeedLimit));
-            Assert.That(_store.GetString(TestSeedStore.StoreKey, null), Is.EqualTo(TestSeedStore.Format(seed)));
+            Assert.That(seed, Is.LessThan((ulong)TestSeed.NewSeedLimit));
+            Assert.That(_store.GetString(TestSeed.StoreKey, null), Is.EqualTo(TestSeed.Format(seed)));
             Assert.That(_store.SaveCount, Is.EqualTo(1));
         }
 
         [Test]
         public void LoadOrCreate_Twice_ReturnsSameSeed()
         {
-            ulong first = _seeds.LoadOrCreate();
-            ulong second = new TestSeedStore(_store, new Random(2)).LoadOrCreate();
+            ulong first = _testSeed.LoadOrCreate();
+            ulong second = new TestSeed(_store, new Random(2)).LoadOrCreate();
 
             Assert.That(second, Is.EqualTo(first));
         }
@@ -82,38 +82,38 @@ namespace Squarely.App.Tests
         [Test]
         public void LoadOrCreate_AfterSave_ReturnsSavedSeed()
         {
-            _seeds.Save(ulong.MaxValue);
+            _testSeed.Save(ulong.MaxValue);
 
-            Assert.That(_seeds.LoadOrCreate(), Is.EqualTo(ulong.MaxValue));
+            Assert.That(_testSeed.LoadOrCreate(), Is.EqualTo(ulong.MaxValue));
         }
 
         [Test]
         public void LoadOrCreate_SavedTextNotASeed_CreatesAndSavesSeed()
         {
-            _store.SetString(TestSeedStore.StoreKey, "garbage");
+            _store.SetString(TestSeed.StoreKey, "garbage");
 
-            ulong seed = _seeds.LoadOrCreate();
+            ulong seed = _testSeed.LoadOrCreate();
 
-            Assert.That(_store.GetString(TestSeedStore.StoreKey, null), Is.EqualTo(TestSeedStore.Format(seed)));
+            Assert.That(_store.GetString(TestSeed.StoreKey, null), Is.EqualTo(TestSeed.Format(seed)));
         }
 
         [Test]
         public void Save_WritesToDevice()
         {
-            _seeds.Save(5);
+            _testSeed.Save(5);
 
-            Assert.That(_store.GetString(TestSeedStore.StoreKey, null), Is.EqualTo("5"));
+            Assert.That(_store.GetString(TestSeed.StoreKey, null), Is.EqualTo("5"));
             Assert.That(_store.SaveCount, Is.EqualTo(1));
         }
 
         [Test]
         public void CreateNew_ReplacesSavedSeed()
         {
-            _seeds.Save(ulong.MaxValue);
+            _testSeed.Save(ulong.MaxValue);
 
-            ulong seed = _seeds.CreateNew();
+            ulong seed = _testSeed.CreateNew();
 
-            Assert.That(_seeds.LoadOrCreate(), Is.EqualTo(seed));
+            Assert.That(_testSeed.LoadOrCreate(), Is.EqualTo(seed));
             Assert.That(seed, Is.Not.EqualTo(ulong.MaxValue));
         }
 

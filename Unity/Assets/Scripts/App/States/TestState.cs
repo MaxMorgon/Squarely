@@ -26,7 +26,7 @@ namespace Squarely.App
         {
             _screen = Object.Instantiate(_context.ScreenPrefabs.Test, _context.ScreenRoot);
             _screen.Initialize(_context.Texts.Test);
-            SetSeed(_context.TestSeeds.LoadOrCreate());
+            SetSeed(_context.TestSeed.LoadOrCreate());
 
             _screen.SeedEditEvent += OnSeedEdited;
             _screen.RandomizeRequestEvent += OnRandomizeRequested;
@@ -46,7 +46,7 @@ namespace Squarely.App
         private void SetSeed(ulong seed)
         {
             _seed = seed;
-            _screen.SetSeed(TestSeedStore.Format(seed));
+            _screen.SetSeed(TestSeed.Format(seed));
             _screen.SetPlayable(true);
         }
 
@@ -54,13 +54,13 @@ namespace Squarely.App
 
         private void OnSeedEdited(string text)
         {
-            _seed = TestSeedStore.TryParse(text, out ulong seed) ? seed : (ulong?)null;
+            _seed = TestSeed.TryParse(text, out ulong seed) ? seed : (ulong?)null;
             _screen.SetPlayable(_seed.HasValue);
         }
 
         private void OnRandomizeRequested()
         {
-            SetSeed(_context.TestSeeds.CreateNew());
+            SetSeed(_context.TestSeed.CreateNew());
         }
 
         private void OnPlayRequested()
@@ -68,7 +68,7 @@ namespace Squarely.App
             if (!_seed.HasValue)
                 return;
 
-            _context.TestSeeds.Save(_seed.Value);
+            _context.TestSeed.Save(_seed.Value);
             var setup = new GameSetup(_context.DefaultGameSetup.Config, _seed.Value);
             _stateMachine.ChangeState(new GameState(_context, _stateMachine, setup));
         }

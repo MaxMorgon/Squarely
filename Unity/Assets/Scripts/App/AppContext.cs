@@ -28,10 +28,10 @@ namespace Squarely.App
         public HighScore HighScore { get; }
 
         /// <summary>The seed the test screen plays.</summary>
-        public TestSeedStore TestSeeds { get; }
+        public TestSeed TestSeed { get; }
 
         public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, GameSetup defaultGameSetup, TextsConfig texts,
-            HighScore highScore, TestSeedStore testSeeds)
+            HighScore highScore, TestSeed testSeed)
         {
             ScreenPrefabs = screenPrefabs;
             ScreenRoot = screenRoot;
@@ -39,7 +39,7 @@ namespace Squarely.App
             DefaultGameSetup = defaultGameSetup;
             Texts = texts;
             HighScore = highScore;
-            TestSeeds = testSeeds;
+            TestSeed = testSeed;
         }
     }
 }
