@@ -113,8 +113,9 @@ Until playback exists, `GameController` has `GameView` rebuild the board, hand a
 
 - **Views update from events only.** After `Execute`, the sim is already in its final state while the view is still animating. Views never read sim state during playback. When playback ends, a debug-only check compares the views with `IReadOnlyBoard` to catch drift.
 - **Rule questions go to the sim.** "Can this be placed?", "what will clear?" and "can this hand piece go anywhere?" are answered by `Sim.Preview`, never by Unity code.
+- **Tunable assets live under `Config/<Area>/`** (`Unity/Assets/Config/Gameplay/`, `Texts/`, `Theme/`, ...), named for what they are (`ClassicGameMode`, `CellTheme`), not for their type.
 - **Code says what, assets say how.** Code provides targets and states (cells, centroids, "will clear"). Prefabs, themes and cue sequences decide how they look and sound.
-- **Texts live in one asset.** `TextsConfig` (`Config/DefaultTexts.asset`) holds every text the player reads, in one `[Serializable]` group per screen; each group is meant to become one Localization string table. `AppRoot` references it once, `AppContext` hands it to the states, and each view gets its own group through its `Initialize`. Views pick which text to show (win or lose title) and fill in format strings (`{0}`); the asset says what the text is. No prefab references the asset.
+- **Texts live in one asset.** `TextsConfig` (`Config/Texts/Texts.asset`) holds every text the player reads, in one `[Serializable]` group per screen; each group is meant to become one Localization string table. `AppRoot` references it once, `AppContext` hands it to the states, and each view gets its own group through its `Initialize`. Views pick which text to show (win or lose title) and fill in format strings (`{0}`); the asset says what the text is. No prefab references the asset.
 
 ### Sim.Preview
 
