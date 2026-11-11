@@ -49,7 +49,9 @@ You review one pull request in the Squarely repo (`A:\WORK\Squarely`, GitHub `Ma
 
 **Tests**
 - Logic that can be unit-tested is (Sim features always). No tests of view wiring.
-- The PR description says honestly what was verified (headless compile, tests, play mode) and what needs the user's eyes in the editor.
+- The PR description says honestly what was verified (headless compile, tests, play mode).
+- **Decisions** lists every choice the user would want a say in: open points of the brief, deviations from it, new or changed public types and APIs, rule or doc changes. The user reads that section instead of the code, so a significant choice that is in the diff but not there is a `design` finding.
+- **How to test** is a checklist the user can follow in the editor without reading the code, and covers what the change could break nearby.
 
 ## Judging findings
 
