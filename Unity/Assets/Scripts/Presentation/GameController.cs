@@ -24,6 +24,9 @@ namespace Squarely.Presentation
 
         public bool IsResolved => _sim.IsResolved;
 
+        /// <summary>Whether the player placed at least one piece in this game.</summary>
+        public bool HasPlacedPiece { get; private set; }
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         /// <summary>Debug only: the result of the last drift check, or null before the first playback ended.</summary>
         public ViewDrift LastDrift { get; private set; }
@@ -33,8 +36,8 @@ namespace Squarely.Presentation
 #endif
 
         /// <summary>
-        /// The game resolved: raised once, when playback of the resolving move reaches the resolution,
-        /// or right away if the game resolves on its first deal. Gives the resolution and the final score.
+        /// The game resolved: raised once, when playback reaches the resolution (of a move, or of the opening deal
+        /// if the game resolves on its first deal). Gives the resolution and the final score.
         /// </summary>
         public event Action<GameResolution, int> GameEndEvent;
 
@@ -55,7 +58,10 @@ namespace Squarely.Presentation
 
         #region Commands
 
-        /// <summary>Starts the game on the initialized view. Call once, after subscribing to <see cref="GameEndEvent"/>.</summary>
+        /// <summary>
+        /// Starts the game on the initialized view and plays its opening events (the deal) like a move's.
+        /// Call once, after subscribing to <see cref="GameEndEvent"/>.
+        /// </summary>
         public void StartGame()
         {
             _view.Player.AddHandler(new GameResolvedHandler(OnGameResolved));
@@ -65,15 +71,12 @@ namespace Squarely.Presentation
             _sim = new Sim(_setup.Config, seed);
             Debug.Log($"New game, seed {seed}.");
 
-            // The opening deal has no events: the views start from the sim's state.
-            SetViewFromSim(_sim);
-
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             _view.CreateDebugOverlay().Initialize(this, _view.Player);
 #endif
 
-            if (_sim.IsResolved)
-                RaiseGameEnd(_sim.Resolution, _sim.Score);
+            // The views start empty, as the board and hand are before the deal.
+            _view.Player.Play(_sim.OpeningEvents);
         }
 
         /// <summary>Whether placing the piece at the origin is a legal move.</summary>
@@ -101,6 +104,8 @@ namespace Squarely.Presentation
                 return;
             }
 
+            HasPlacedPiece = true;
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             _simBeforeLastMove = before;
             _lastMoveEvents = result.Events;
@@ -112,23 +117,14 @@ namespace Squarely.Presentation
 
         #endregion
 
-        private void SetViewFromSim(Sim sim)
-        {
-            _view.SetState(sim.Board, sim.Hand, sim.Score, sim.Combo);
-        }
-
+        // A replay of the resolving move reaches the resolution again; the game ends once.
         private void OnGameResolved(GameResolvedEvent resolved)
-        {
-            RaiseGameEnd(resolved.Resolution, resolved.FinalScore);
-        }
-
-        private void RaiseGameEnd(GameResolution resolution, int finalScore)
         {
             if (_gameEndRaised)
                 return;
 
             _gameEndRaised = true;
-            GameEndEvent?.Invoke(resolution, finalScore);
+            GameEndEvent?.Invoke(resolved.Resolution, resolved.FinalScore);
         }
 
         private void OnPlaybackEnded()
@@ -148,7 +144,8 @@ namespace Squarely.Presentation
                 return;
 
             _view.Player.Snap();
-            SetViewFromSim(_simBeforeLastMove);
+            Sim before = _simBeforeLastMove;
+            _view.SetState(before.Board, before.Hand, before.Score, before.Combo);
             _view.Player.Play(_lastMoveEvents, _lastMoveDropPoint);
         }
 
