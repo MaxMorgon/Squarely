@@ -97,7 +97,7 @@ namespace Squarely.Presentation
 
         /// <summary>
         /// Pauses or resumes the game: while paused, event playback holds and the hand cannot be dragged.
-        /// The HUD and screens above the game keep running.
+        /// The score count-up and combo are playback steps, so they hold too. Screens above the game keep running.
         /// </summary>
         public void SetPaused(bool isPaused)
         {

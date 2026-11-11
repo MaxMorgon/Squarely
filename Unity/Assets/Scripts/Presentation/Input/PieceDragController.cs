@@ -171,14 +171,7 @@ namespace Squarely.Presentation
             GridPos origin = _checkedOrigin;
             Vector2 dropPoint = _boardSpace.CellCoordinates(_boardRoot.InverseTransformPoint(world));
 
-            _dragged.Clear();
-            _dragged.gameObject.SetActive(false);
-            _ghost.Clear();
-            _ghost.gameObject.SetActive(false);
-            _hand.SetSlotVisible(_dragSlot, true);
-
-            _dragSlot = -1;
-            _dragPiece = null;
+            CancelDrag();
 
             if (place)
                 _game.Place(pieceInstanceId, origin, dropPoint);
