@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 
-namespace Squarely.App.Tests
+namespace Squarely.App
 {
     /// <summary>
-    /// In-memory store for tests. Counts its Save calls.
+    /// A store that keeps its values in memory only: nothing reaches the device, and the values are gone with the store.
     /// </summary>
-    internal sealed class FakeKeyValueStore : IKeyValueStore
+    public sealed class MemoryKeyValueStore : IKeyValueStore
     {
         private readonly Dictionary<string, int> _ints = new Dictionary<string, int>();
         private readonly Dictionary<string, string> _strings = new Dictionary<string, string>();
 
-        public int SaveCount { get; private set; }
+        /// <summary>How many times <see cref="Save"/> was called.</summary>
+        internal int SaveCount { get; private set; }
 
         public bool HasKey(string key)
         {
@@ -39,6 +40,7 @@ namespace Squarely.App.Tests
             _strings[key] = value;
         }
 
+        /// <summary>Writes nothing to the device: the values stay in memory.</summary>
         public void Save()
         {
             SaveCount++;

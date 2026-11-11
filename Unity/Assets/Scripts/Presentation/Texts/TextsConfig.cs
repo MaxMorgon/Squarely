@@ -13,6 +13,8 @@ namespace Squarely.Presentation
         [SerializeField] private MenuTexts _menu = new MenuTexts();
         [SerializeField] private GameHudTexts _gameHud = new GameHudTexts();
         [SerializeField] private GameOverTexts _gameOver = new GameOverTexts();
+        [SerializeField] private SettingsTexts _settings = new SettingsTexts();
+        [SerializeField] private ConfirmTexts _confirm = new ConfirmTexts();
         [SerializeField] private TestTexts _test = new TestTexts();
 
         public MenuTexts Menu => _menu;
@@ -20,6 +22,10 @@ namespace Squarely.Presentation
         public GameHudTexts GameHud => _gameHud;
 
         public GameOverTexts GameOver => _gameOver;
+
+        public SettingsTexts Settings => _settings;
+
+        public ConfirmTexts Confirm => _confirm;
 
         public TestTexts Test => _test;
     }

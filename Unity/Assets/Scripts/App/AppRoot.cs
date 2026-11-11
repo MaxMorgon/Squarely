@@ -5,7 +5,8 @@ namespace Squarely.App
 {
     /// <summary>
     /// The app's entry point and the only object in the scene that starts anything.
-    /// Builds the app context from its serialized setup and opens the menu.
+    /// Builds the app context from its serialized setup and opens the menu, or in editor and development builds
+    /// the test screen if "start in test screen" is on.
     /// </summary>
     public sealed class AppRoot : MonoBehaviour
     {
@@ -30,12 +31,23 @@ namespace Squarely.App
             var store = new PlayerPrefsStore();
             var highScore = new HighScore(store);
             var testSeed = new TestSeed(store, new System.Random());
-            var context = new AppContext(_screenPrefabs, transform, _camera, defaultGameSetup, _texts, highScore, testSeed);
+            var startInTest = new StartInTest(store);
+            var context = new AppContext(_screenPrefabs, transform, _camera, defaultGameSetup, _texts, highScore, testSeed, startInTest);
 
             _stateMachine = new AppStateMachine();
-            _stateMachine.ChangeState(new MenuState(context, _stateMachine));
+            _stateMachine.ChangeState(CreateFirstState(context));
         }
 
         #endregion
+
+        private IAppState CreateFirstState(AppContext context)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (context.StartInTest.IsOn)
+                return new TestState(context, _stateMachine);
+#endif
+
+            return new MenuState(context, _stateMachine);
+        }
     }
 }

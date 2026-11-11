@@ -30,8 +30,11 @@ namespace Squarely.App
         /// <summary>The seed the test screen plays.</summary>
         public TestSeed TestSeed { get; }
 
+        /// <summary>Whether the app opens the test screen at start. Editor and development builds only.</summary>
+        public StartInTest StartInTest { get; }
+
         public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, GameSetup defaultGameSetup, TextsConfig texts,
-            HighScore highScore, TestSeed testSeed)
+            HighScore highScore, TestSeed testSeed, StartInTest startInTest)
         {
             ScreenPrefabs = screenPrefabs;
             ScreenRoot = screenRoot;
@@ -40,6 +43,7 @@ namespace Squarely.App
             Texts = texts;
             HighScore = highScore;
             TestSeed = testSeed;
+            StartInTest = startInTest;
         }
     }
 }

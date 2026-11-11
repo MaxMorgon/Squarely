@@ -25,7 +25,7 @@ namespace Squarely.Presentation
         [SerializeField] private LayerView _layerView;
         [SerializeField] private HandView _handView;
         [SerializeField] private PieceDragController _dragController;
-        [SerializeField] private ScoreView _scoreView;
+        [SerializeField] private GameHud _hud;
 
         [Tooltip("Editor and development builds only: the playback debug panel created for each game.")]
         [SerializeField] private PlaybackDebugOverlay _debugOverlayPrefab;
@@ -39,6 +39,9 @@ namespace Squarely.Presentation
 
         /// <summary>Plays sim events on the views. Exists after <see cref="Initialize"/>.</summary>
         public EventPlayer Player { get; private set; }
+
+        /// <summary>The in-game HUD: the score, the settings button and the "new record" celebration.</summary>
+        public GameHud Hud => _hud;
 
         #region Unity
 
@@ -81,11 +84,11 @@ namespace Squarely.Presentation
             _layerView.Initialize(boardSpace, viewPool);
             _handView.Initialize(config.HandSize, viewPool, _cellSize);
             _dragController.Initialize(camera, placer, _handView, _boardRoot, boardSpace, viewPool);
-            _scoreView.Initialize(hudTexts);
+            _hud.Initialize(hudTexts);
 
-            var playbackViews = new PlaybackViews(_layerView, _handView, _scoreView, transform);
+            var playbackViews = new PlaybackViews(_layerView, _handView, _hud.Score, transform);
             Player = new EventPlayer(playbackViews, destroyCancellationToken);
-            Player.AddHandler(new PiecePlacedHandler(_cues.PiecePlaced, _cues.BoardWave));
+            Player.AddHandler(new PiecePlacedHandler(_cues.PiecePlaced, _cues.PlacementWave, _cues.ClearWave));
             Player.AddHandler(new PatternsClearedHandler(_cues.PatternsCleared));
             Player.AddHandler(new ScoreChangedHandler(_cues.ScoreChanged));
             Player.AddHandler(new ComboChangedHandler(_cues.ComboChanged));
@@ -97,8 +100,8 @@ namespace Squarely.Presentation
         {
             _layerView.Rebuild(board);
             _handView.SetHand(hand);
-            _scoreView.SetScore(score);
-            _scoreView.SetCombo(combo);
+            _hud.Score.SetScore(score);
+            _hud.Score.SetCombo(combo);
         }
 
         /// <summary>What the board, hand and score views show right now.</summary>
@@ -121,7 +124,7 @@ namespace Squarely.Presentation
             for (int slot = 0; slot < hand.Length; slot++)
                 hand[slot] = _handView.GetPiece(slot);
 
-            return new ShownState(cells, hand, _scoreView.Score, _scoreView.Combo);
+            return new ShownState(cells, hand, _hud.Score.Score, _hud.Score.Combo);
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD

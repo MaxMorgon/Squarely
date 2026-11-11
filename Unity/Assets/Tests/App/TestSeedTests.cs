@@ -5,13 +5,13 @@ namespace Squarely.App.Tests
 {
     public sealed class TestSeedTests
     {
-        private FakeKeyValueStore _store;
+        private MemoryKeyValueStore _store;
         private TestSeed _testSeed;
 
         [SetUp]
         public void SetUp()
         {
-            _store = new FakeKeyValueStore();
+            _store = new MemoryKeyValueStore();
             _testSeed = new TestSeed(_store, new Random(1));
         }
 

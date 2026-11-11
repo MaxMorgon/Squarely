@@ -9,6 +9,7 @@ namespace Squarely.Presentation
     {
         public string Title = "Squarely";
         public string Play = "Play";
+        public string Settings = "Settings";
         public string Test = "Test";
 
         [Tooltip("{0} is the high score.")]
