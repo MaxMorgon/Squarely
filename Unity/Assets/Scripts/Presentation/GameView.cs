@@ -85,7 +85,7 @@ namespace Squarely.Presentation
 
             var playbackViews = new PlaybackViews(_layerView, _handView, _scoreView, transform);
             Player = new EventPlayer(playbackViews, destroyCancellationToken);
-            Player.AddHandler(new PiecePlacedHandler(_cues.PiecePlaced));
+            Player.AddHandler(new PiecePlacedHandler(_cues.PiecePlaced, _cues.BoardWave));
             Player.AddHandler(new PatternsClearedHandler(_cues.PatternsCleared));
             Player.AddHandler(new ScoreChangedHandler(_cues.ScoreChanged));
             Player.AddHandler(new ComboChangedHandler(_cues.ComboChanged));
