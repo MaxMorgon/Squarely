@@ -21,12 +21,14 @@ namespace Squarely.Simulation.Tests
                 _pieces.Add(PieceShape.FromPattern($"scripted_{i}", patterns[i]));
         }
 
-        public PieceShape Deal(Sim sim, DeterministicRandom random)
+        public IReadOnlyList<PieceShape> DealHand(Sim sim, DeterministicRandom random)
         {
-            if (sim.PiecesDealt >= _pieces.Count)
+            int first = sim.PiecesDealt;
+
+            if (first + sim.Hand.Size > _pieces.Count)
                 throw new InvalidOperationException("ScriptedDealer ran out of pieces.");
 
-            return _pieces[sim.PiecesDealt];
+            return _pieces.GetRange(first, sim.Hand.Size);
         }
     }
 }
