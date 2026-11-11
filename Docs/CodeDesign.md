@@ -23,7 +23,7 @@ Patterns/       BoardPattern, PatternCell, PatternMatch, ClearedMatch, PatternMa
 Commands/       ISimCommand, PlacePieceCommand, CommandResult
 Rules/          IPieceDealer, IScoringRule, ScoreResult, defaults, RuleFactory, RuleIds
 Resolution/     IResolutionRule, GameResolution, GameOutcome, NoMovesLeftRule
-Config/         SimConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
+Config/         SimConfig, DealingConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
 Events/         ISimEvent + one file per event
 Random/         DeterministicRandom
 ```
@@ -61,7 +61,7 @@ Random/         DeterministicRandom
 2. Take the piece from the hand and place it → `PiecePlacedEvent` (piece, slot, origin).
 3. Find all pattern matches and clear their cells → `PatternsClearedEvent`: one `ClearedMatch` per match (the match plus the cells it emptied, so a cell shared by a row and a column is in both), and all cleared cells, each once.
 4. The scoring rule computes points from the matched patterns and updates the combo → `ScoreChangedEvent`, `ComboChangedEvent`.
-5. If the hand is now empty, deal a full new hand → one `PieceDealtEvent` per new piece.
+5. If the hand is now empty, the dealer deals a full new hand at once (`IPieceDealer.DealHand`, so it can judge the hand as a whole against the board) → one `PieceDealtEvent` per new piece. The default `WeightedRandomDealer` deals by weight, with an optional helpful piece guarantee (`DealingConfig`, rule in [Design.md](Design.md#dealing)).
 6. Resolution rules are checked in config order, and the first one that resolves wins → `GameResolvedEvent` (outcome Won/Lost, reason id, final score).
 
 Unity plays the returned events in order to animate, so the view never has to diff state.
