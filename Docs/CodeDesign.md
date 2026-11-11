@@ -167,7 +167,7 @@ Implemented: `GameController.Place` snaps before it executes, and `EventPlayer.P
 
 - Every `CueStep` has `Play` and `Snap`. `Snap` applies the step's end state and is called on running steps **and on steps that haven't started yet**. For example, a delayed score step snaps the label to its final value.
 - Transient things have an empty or trivial `Snap`: particles and sounds already playing simply finish, and a detached view that hasn't animated yet goes back to the pool.
-- **Open: effect handles.** Effects that one step starts and a later step stops (or that outlive their sequence) need a handle. Ownership, lifetime, what `Snap` does to them and how steps refer to them still need a proper design pass before step 3 builds them.
+- **Open: effect handles.** Effects that one step starts and a later step stops (or that outlive their sequence) need a handle. Ownership, lifetime, what `Snap` does to them and how steps refer to them still need a proper design pass before any step uses them.
 - So there is one rule with no per-step modes: the board views are correct instantly, and effects already playing finish on their own.
 
 ### Build order (one PR each)
