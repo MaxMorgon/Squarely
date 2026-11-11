@@ -172,6 +172,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.GameView
   _cellTheme: {fileID: 11400000, guid: 01c6dba172a1cc1479f056b3e00c5b84, type: 2}
+  _cues:
+    _piecePlaced: {fileID: 11400000, guid: 489af28855fe7264f8b2126203c97294, type: 2}
+    _patternsCleared: {fileID: 11400000, guid: d1f96c37c211527419d350954c0ec810, type: 2}
+    _scoreChanged: {fileID: 11400000, guid: 7cd9e331bfba0f54bb77a647bca3ca7b, type: 2}
+    _comboChanged: {fileID: 11400000, guid: 9680da25b76212a49bd900678a73d8fe, type: 2}
+    _pieceDealt: {fileID: 11400000, guid: 2810381c2e574824093977dd5aee9bdf, type: 2}
   _cellSize: 1
   _boardRoot: {fileID: 7262576428707993148}
   _background: {fileID: 5101687351137609360}
