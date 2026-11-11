@@ -104,6 +104,7 @@ Implementation agents (`.claude/agents/implementer.md`) work in permanent worktr
 
 ## Working with the user
 
+- **Write in ASD-STE100 (Simplified Technical English).** This applies to all text: chat, PR descriptions and comments, issues, docs and doc comments. Use short sentences (20 words max for instructions, 25 for descriptions), active voice, simple words, and one instruction per sentence. Keep it brief: give only the points the user needs.
 - Work in small steps; show plans/drafts for review before large changes.
 - Commit or push only when asked. An implementer brief counts as asking for that task's branch and PR.
 - `git reset --hard` and force pushes only on the user's explicit command (settings make them prompt).
