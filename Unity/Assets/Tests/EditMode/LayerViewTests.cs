@@ -67,5 +67,17 @@ namespace Squarely.Presentation.Tests
 
             Assert.DoesNotThrow(() => _layer.Spawn(Pos, "block"));
         }
+
+        [Test]
+        public void GetFilledSlots_ListsSlotsWithViews_InBoardOrder()
+        {
+            _layer.Spawn(new GridPos(0, 2), "block");
+            _layer.Spawn(new GridPos(2, 0), "block");
+            _layer.Spawn(new GridPos(0, 0), "block");
+            _layer.Spawn(Pos, "block");
+            _layer.Detach(Pos);
+
+            Assert.That(_layer.GetFilledSlots(), Is.EqualTo(new[] { new GridPos(0, 0), new GridPos(2, 0), new GridPos(0, 2) }));
+        }
     }
 }

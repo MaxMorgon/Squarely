@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Squarely.Simulation;
 using UnityEngine;
 
@@ -24,6 +25,25 @@ namespace Squarely.Presentation
         public CellView GetView(GridPos pos)
         {
             return _views[pos];
+        }
+
+        /// <summary>Every slot that has a view, in board order (left to right, bottom to top).</summary>
+        public List<GridPos> GetFilledSlots()
+        {
+            var slots = new List<GridPos>();
+
+            for (int y = 0; y < _views.Height; y++)
+            {
+                for (int x = 0; x < _views.Width; x++)
+                {
+                    var pos = new GridPos(x, y);
+
+                    if (_views[pos] != null)
+                        slots.Add(pos);
+                }
+            }
+
+            return slots;
         }
 
         /// <summary>World position of a cell's center. Works for cells outside the board too.</summary>
