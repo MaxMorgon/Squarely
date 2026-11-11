@@ -10,7 +10,8 @@ namespace Squarely.Presentation
 {
     /// <summary>
     /// Editor and development builds only: a small panel for tuning playback. Replays the last move (also with R),
-    /// sets the playback speed and shows the last drift check. A toggle button (or the backquote key) collapses it.
+    /// restarts the game, sets the playback speed (back to 1x each play session) and shows the last drift check.
+    /// A small toggle button (or the backquote key) collapses it.
     /// Not game UI. In other builds the component is never created and does nothing.
     /// </summary>
     public sealed class PlaybackDebugOverlay : MonoBehaviour
@@ -29,6 +30,7 @@ namespace Squarely.Presentation
         [SerializeField] private GameObject _panel;
 
         [SerializeField] private Button _replayButton;
+        [SerializeField] private Button _restartButton;
 
         [Tooltip("Inactive template, copied once per speed preset into its parent.")]
         [SerializeField] private Button _speedButtonTemplate;
@@ -36,10 +38,10 @@ namespace Squarely.Presentation
         [SerializeField] private TMP_Text _driftLabel;
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        private const string ExpandedToggleText = "Hide (`)";
-        private const string CollapsedToggleText = "Debug (`)";
+        private const string ExpandedToggleText = "×";
+        private const string CollapsedToggleText = "DBG";
 
-        // Static, so the chosen speed and the collapsed state carry over to the next game.
+        // Static, so the chosen speed and the collapsed state carry over to the next game of the same play session.
         private static float s_speed = 1f;
         private static bool s_isExpanded = true;
 
@@ -56,6 +58,7 @@ namespace Squarely.Presentation
 
             _toggleButton.onClick.AddListener(ToggleExpanded);
             _replayButton.onClick.AddListener(_game.ReplayLastMove);
+            _restartButton.onClick.AddListener(_game.RequestRestart);
             CreateSpeedButtons();
 
             SetExpanded(s_isExpanded);
@@ -64,6 +67,13 @@ namespace Squarely.Presentation
         }
 
         #region Unity
+
+        // Statics survive between play sessions when domain reload is off: each session starts at normal speed.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetSpeed()
+        {
+            s_speed = 1f;
+        }
 
         private void Update()
         {
