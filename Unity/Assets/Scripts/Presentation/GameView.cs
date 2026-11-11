@@ -27,6 +27,9 @@ namespace Squarely.Presentation
         [SerializeField] private PieceDragController _dragController;
         [SerializeField] private ScoreView _scoreView;
 
+        [Tooltip("Editor and development builds only: the playback debug panel created for each game.")]
+        [SerializeField] private PlaybackDebugOverlay _debugOverlayPrefab;
+
         [Tooltip("Edit time only: the game mode whose board and hand size the gizmos preview.")]
         [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
 
@@ -120,6 +123,14 @@ namespace Squarely.Presentation
 
             return new ShownState(cells, hand, _scoreView.Score, _scoreView.Combo);
         }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        /// <summary>Debug only: creates the playback debug overlay as a child of this view. Its creator initializes it.</summary>
+        public PlaybackDebugOverlay CreateDebugOverlay()
+        {
+            return Instantiate(_debugOverlayPrefab, transform);
+        }
+#endif
 
         private SimConfig GizmoConfig()
         {

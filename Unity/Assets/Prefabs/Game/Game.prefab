@@ -185,6 +185,7 @@ MonoBehaviour:
   _handView: {fileID: 7933357361827940875}
   _dragController: {fileID: 4369012219398867860}
   _scoreView: {fileID: 6014766823206318982}
+  _debugOverlayPrefab: {fileID: 8464684377744441409, guid: 2e41f80957b12954daf9828120cc23f1, type: 3}
   _gizmoPreviewConfig: {fileID: 11400000, guid: bbabd39d8dadbd14e894501e1bdc6a16, type: 2}
 --- !u!1 &4627409397428881836
 GameObject:
