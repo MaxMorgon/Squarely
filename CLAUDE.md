@@ -93,6 +93,7 @@ Not: `if (value < 0) return 0;`
 - Nullable and implicit usings are disabled; write explicit `using` directives.
 - **Doc comments say what, not how.** Describe the behaviour and contract, not internals ("runs on a copy") or one caller's case ("AI players should ignore X"). Mention a limitation only if it matters and the contract doesn't imply it.
 - **Tests:** new Sim features come with tests in `Sim.Tests`. Unit tests by default (Sim logic, and presentation logic like layout, pooling, slots). No tests that pin how views are wired together. Broad scenario tests only for contracts that fail silently (determinism, preview equals execute); ask before adding others.
+- **Test-only access goes through `internal` + `InternalsVisibleTo`, never `public`.** Sim and Presentation each have an `AssemblyInfo.cs` that opens their internals to their test assembly.
 
 ## Parallel agents
 
