@@ -8,7 +8,7 @@ namespace Squarely.App
         private readonly int? _best;
         private bool _isReached;
 
-        /// <param name="best">The best score when the game starts, or null if there is none yet.</param>
+        /// <param name="best">The best score when the game starts, or null if there is none yet. Null and 0 both mean no best score.</param>
         public NewRecordCheck(int? best)
         {
             _best = best;
@@ -16,11 +16,11 @@ namespace Squarely.App
 
         /// <summary>
         /// Returns true the first time the score is above the best score, and false after that.
-        /// Always false when there is no best score.
+        /// Always false when there is no best score (null or 0).
         /// </summary>
         public bool Check(int score)
         {
-            if (_isReached || !_best.HasValue || score <= _best.Value)
+            if (_isReached || !_best.HasValue || _best.Value <= 0 || score <= _best.Value)
                 return false;
 
             _isReached = true;

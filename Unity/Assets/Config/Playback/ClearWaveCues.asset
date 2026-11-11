@@ -21,8 +21,8 @@ MonoBehaviour:
     - rid: 5611427124651229184
       type: {class: AnimateCells, ns: Squarely.Presentation, asm: Squarely.Presentation}
       data:
-        _duration: 0.4
-        _stagger: 0.04
+        _duration: 0.2
+        _stagger: 0.02
         _order: 1
         _scale:
           serializedVersion: 2
