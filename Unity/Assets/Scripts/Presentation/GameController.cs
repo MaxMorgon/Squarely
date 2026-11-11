@@ -47,6 +47,7 @@ namespace Squarely.Presentation
         /// </summary>
         public void StartGame()
         {
+            _view.GameResolveEvent += OnGameResolved;
             _sim = new Sim(_setup.Config, _setup.Seed);
 
             // The views start empty, as the board and hand are before the deal.
@@ -91,11 +92,8 @@ namespace Squarely.Presentation
             return _sim.Clone();
         }
 
-        /// <summary>
-        /// Reports that playback reached the game's resolution. The view calls it. A replay of the resolving move
-        /// reaches the resolution again; the game ends once.
-        /// </summary>
-        public void OnGameResolved(GameResolvedEvent resolved)
+        // A replay of the resolving move reaches the resolution again; the game ends once.
+        private void OnGameResolved(GameResolvedEvent resolved)
         {
             if (_gameEndRaised)
                 return;

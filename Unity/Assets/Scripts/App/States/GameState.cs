@@ -53,7 +53,7 @@ namespace Squarely.App
 
             _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
             _game = new GameController(_view, setup);
-            _view.Initialize(_config, _context.Camera, _context.Texts.GameHud, _game, _game.OnGameResolved);
+            _view.Initialize(_config, _context.Camera, _context.Texts.GameHud, _game);
             _newRecordCheck = new NewRecordCheck(_highScore.Best);
 
             _view.Hud.SettingsRequestEvent += OnSettingsRequested;

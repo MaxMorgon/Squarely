@@ -41,6 +41,9 @@ namespace Squarely.Presentation
         /// <summary>Plays sim events on the views. Exists after <see cref="Initialize"/>.</summary>
         public EventPlayer Player { get; private set; }
 
+        /// <summary>Playback reached the game's resolution. Raised again if a replay of the resolving move reaches it again.</summary>
+        public event Action<GameResolvedEvent> GameResolveEvent;
+
         /// <summary>The in-game HUD: the score, the settings button and the "new record" celebration.</summary>
         public GameHud Hud => _hud;
 
@@ -69,8 +72,7 @@ namespace Squarely.Presentation
         /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
         /// <param name="hudTexts">The texts the HUD shows.</param>
         /// <param name="placer">Receives the player's placements.</param>
-        /// <param name="onGameResolved">Called when playback reaches the game's resolution.</param>
-        public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer, Action<GameResolvedEvent> onGameResolved)
+        public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer)
         {
             _config = config;
 
@@ -95,7 +97,7 @@ namespace Squarely.Presentation
             Player.AddHandler(new ScoreChangedHandler(_cues.ScoreChanged));
             Player.AddHandler(new ComboChangedHandler(_cues.ComboChanged));
             Player.AddHandler(new PieceDealtHandler(_cues.PieceDealt));
-            Player.AddHandler(new GameResolvedHandler(onGameResolved));
+            Player.AddHandler(new GameResolvedHandler(OnGameResolved));
         }
 
         /// <summary>
@@ -147,6 +149,11 @@ namespace Squarely.Presentation
             return Instantiate(_debugOverlayPrefab, transform);
         }
 #endif
+
+        private void OnGameResolved(GameResolvedEvent resolved)
+        {
+            GameResolveEvent?.Invoke(resolved);
+        }
 
         private SimConfig GizmoConfig()
         {

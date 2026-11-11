@@ -7,7 +7,7 @@ namespace Squarely.Presentation
     /// <summary>A move the game executed: the state before it, the events it gave and where the pointer dropped the piece.</summary>
     public sealed class ExecutedMove
     {
-        /// <summary>A copy of the sim as it was before the move. Null if nobody needed it.</summary>
+        /// <summary>A copy of the sim as it was before the move.</summary>
         public Sim SimBefore { get; }
 
         public IReadOnlyList<ISimEvent> Events { get; }
