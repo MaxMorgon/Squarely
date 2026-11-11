@@ -13,6 +13,11 @@ A block-placement puzzle game (the genre of 1010!, Block Blast, etc.), built as 
 - The player has a **hand of 3 pieces** (configurable). They can be placed in any order.
 - The hand refills only when it is empty: once all 3 pieces are placed, a full new hand is dealt.
 
+### Dealing
+- Pieces are dealt at random, weighted by each piece's weight in config.
+- **Helpful piece guarantee** (config switch, on in the classic mode): every new hand holds at least one *helpful* piece for the board at that moment. Helpful means it can complete a pattern somewhere; if no piece in the pool can, it means it fits somewhere. If the weighted hand has none, one slot (picked at random) is redealt from the helpful pieces only, still by weight. If no piece in the pool fits at all, the hand is dealt as normal and the game is lost as usual.
+- Each piece is judged alone on the current board, not in combination with the rest of the hand.
+
 ### Placement
 - A piece can be placed anywhere it fits entirely on empty cells inside the board.
 - After each placement, every completed **board pattern** is cleared simultaneously (a cell in several matches is cleared once).
@@ -40,7 +45,7 @@ The product should make new content and features cheap to ship:
 
 ## Open questions
 
-- Piece dealing: purely random by weight, or "fair" dealing that guarantees at least one piece fits?
+- Piece dealing: decided for now (see [Dealing](#dealing)). Open: whether to tune it further, e.g. a chance instead of always, or judging the hand as a whole.
 - Exact scoring numbers and combo rules.
 - Any undo / continue / revive mechanic in v1?
 - Game modes: endless only at first, or also level/objective modes?

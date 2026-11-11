@@ -27,6 +27,8 @@ namespace Squarely.Simulation
 
         public List<PieceDefinition> Pieces = new List<PieceDefinition>();
 
+        public DealingConfig Dealing = new DealingConfig();
+
         public ClearingConfig Clearing = new ClearingConfig();
 
         public ScoringConfig Scoring = new ScoringConfig();
@@ -41,6 +43,9 @@ namespace Squarely.Simulation
 
             if (Pieces == null || Pieces.Count == 0)
                 throw new InvalidOperationException("Config has no pieces.");
+
+            if (Dealing == null)
+                throw new InvalidOperationException("Config has no dealing settings.");
 
             if (Clearing == null)
                 throw new InvalidOperationException("Config has no clearing settings.");

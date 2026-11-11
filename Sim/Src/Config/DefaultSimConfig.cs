@@ -16,6 +16,7 @@ namespace Squarely.Simulation
                 BoardHeight = 8,
                 HandSize = 3,
                 Pieces = CreatePieces(),
+                Dealing = new DealingConfig { GuaranteeHelpfulPiece = true },
                 Clearing = new ClearingConfig(),
                 Scoring = new ScoringConfig(),
             };
