@@ -21,6 +21,17 @@ namespace Squarely.Presentation
             CellSize = cellSize;
         }
 
+        /// <summary>The board's area in its local space.</summary>
+        public Rect LocalBounds
+        {
+            get
+            {
+                float width = Width * CellSize;
+                float height = Height * CellSize;
+                return new Rect(-width * 0.5f, -height * 0.5f, width, height);
+            }
+        }
+
         /// <summary>Local position of a cell's center. Works for cells outside the board too.</summary>
         public Vector2 CellCenter(GridPos pos)
         {

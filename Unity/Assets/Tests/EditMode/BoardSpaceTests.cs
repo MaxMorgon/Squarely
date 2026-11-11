@@ -72,6 +72,16 @@ namespace Squarely.Presentation.Tests
             AssertNear(boardSpace.CellCoordinates(center + new Vector2(1f, -0.5f)), new Vector2(3.5f, 4.75f));
         }
 
+        [Test]
+        public void LocalBounds_CoverEveryCell_CenteredOnOrigin()
+        {
+            var boardSpace = new BoardSpace(3, 2, 2f);
+            Rect bounds = boardSpace.LocalBounds;
+
+            AssertNear(bounds.min, new Vector2(-3f, -2f));
+            AssertNear(bounds.max, new Vector2(3f, 2f));
+        }
+
         private static void AssertNear(Vector2 actual, Vector2 expected)
         {
             Assert.That(actual.x, Is.EqualTo(expected.x).Within(Tolerance));
