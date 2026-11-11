@@ -59,6 +59,7 @@ namespace Squarely.App
         private void OnGameEnded(GameResolution resolution, int finalScore)
         {
             _gameOver = Object.Instantiate(_context.ScreenPrefabs.GameOver, _context.ScreenRoot);
+            _gameOver.GetComponent<Canvas>().worldCamera = _context.Camera;
             _gameOver.Initialize(_context.Texts.GameOver);
             _gameOver.RestartRequestEvent += OnRestartRequested;
             _gameOver.MenuRequestEvent += OnMenuRequested;
