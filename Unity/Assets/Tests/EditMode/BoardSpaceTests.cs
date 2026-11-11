@@ -62,6 +62,16 @@ namespace Squarely.Presentation.Tests
             Assert.That(pos, Is.EqualTo(new GridPos(-1, 8)));
         }
 
+        [Test]
+        public void CellCoordinates_AreCellUnits_WithCentersOnWholeNumbers()
+        {
+            var boardSpace = new BoardSpace(8, 8, 2f);
+            Vector2 center = boardSpace.CellCenter(new GridPos(3, 5));
+
+            AssertNear(boardSpace.CellCoordinates(center), new Vector2(3f, 5f));
+            AssertNear(boardSpace.CellCoordinates(center + new Vector2(1f, -0.5f)), new Vector2(3.5f, 4.75f));
+        }
+
         private static void AssertNear(Vector2 actual, Vector2 expected)
         {
             Assert.That(actual.x, Is.EqualTo(expected.x).Within(Tolerance));

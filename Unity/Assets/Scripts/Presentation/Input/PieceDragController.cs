@@ -75,7 +75,7 @@ namespace Squarely.Presentation
             UpdateDrag(world);
 
             if (pointer.press.wasReleasedThisFrame)
-                EndDrag();
+                EndDrag(world);
         }
 
         #endregion
@@ -140,11 +140,13 @@ namespace Squarely.Presentation
             _dragged.transform.position = _dragTarget;
         }
 
-        private void EndDrag()
+        /// <param name="world">The pointer's world position where it released the piece.</param>
+        private void EndDrag(Vector3 world)
         {
             int pieceInstanceId = _dragPiece.InstanceId;
             bool place = _canPlace;
             GridPos origin = _checkedOrigin;
+            Vector2 dropPoint = _boardSpace.CellCoordinates(_boardRoot.InverseTransformPoint(world));
 
             _dragged.Clear();
             _dragged.gameObject.SetActive(false);
@@ -156,7 +158,7 @@ namespace Squarely.Presentation
             _dragPiece = null;
 
             if (place)
-                _game.Place(pieceInstanceId, origin);
+                _game.Place(pieceInstanceId, origin, dropPoint);
         }
 
         #endregion

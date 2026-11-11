@@ -23,7 +23,7 @@ MonoBehaviour:
       data:
         _duration: 0.18
         _stagger: 0.015
-        _order: 0
+        _order: 3
         _scale:
           serializedVersion: 2
           m_Curve:

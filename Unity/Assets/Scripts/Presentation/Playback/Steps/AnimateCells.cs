@@ -29,7 +29,7 @@ namespace Squarely.Presentation
             if (cells.Count == 0)
                 return;
 
-            float[] delays = CellOrdering.Delays(_order, target.CellPositions, context.PlacedCells, _stagger);
+            float[] delays = CellOrdering.Delays(_order, target.CellPositions, context.PlacedCells, context.DropPoint, _stagger);
             float end = Mathf.Max(delays) + _duration;
             float elapsed = 0f;
 

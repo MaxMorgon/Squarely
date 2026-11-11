@@ -41,11 +41,12 @@ namespace Squarely.Presentation
         }
 
         /// <summary>Snaps any pending playback, then starts playing the events.</summary>
-        public void Play(IReadOnlyList<ISimEvent> events)
+        /// <param name="dropPoint">Where the pointer dropped the command's piece, in board cell coordinates, or null. See <see cref="PlaybackContext.DropPoint"/>.</param>
+        public void Play(IReadOnlyList<ISimEvent> events, Vector2? dropPoint = null)
         {
             Snap();
 
-            var context = new PlaybackContext(_views, () => Speed, _stopToken);
+            var context = new PlaybackContext(_views, dropPoint, () => Speed, _stopToken);
             _current = new Playback(this, events, context);
             _current.Start();
         }

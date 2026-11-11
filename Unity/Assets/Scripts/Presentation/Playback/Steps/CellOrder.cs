@@ -11,5 +11,11 @@ namespace Squarely.Presentation
 
         /// <summary>From the target's center outward, both ends of a line at once.</summary>
         FromCenter,
+
+        /// <summary>
+        /// Outward from where the pointer dropped the piece. Without a drop point (e.g. a scripted placement),
+        /// from the placed piece's center, or from the target's center if nothing was placed.
+        /// </summary>
+        FromPointer,
     }
 }

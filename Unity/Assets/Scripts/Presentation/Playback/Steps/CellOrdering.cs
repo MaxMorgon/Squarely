@@ -12,19 +12,25 @@ namespace Squarely.Presentation
         /// The start delay of each cell, in seconds, in the order of <paramref name="cells"/>. The first cell reached starts at 0.
         /// For distance orders each cell unit further adds <paramref name="stagger"/>, so cells at the same distance start together.
         /// </summary>
-        /// <param name="placedCells">The cells of the placed piece, for <see cref="CellOrder.FromPlacement"/>.</param>
-        public static float[] Delays(CellOrder order, IReadOnlyList<GridPos> cells, IReadOnlyList<GridPos> placedCells, float stagger)
+        /// <param name="placedCells">The cells of the placed piece, for <see cref="CellOrder.FromPlacement"/> and <see cref="CellOrder.FromPointer"/>.</param>
+        /// <param name="dropPoint">Where the pointer dropped the piece, in board cell coordinates (<see cref="BoardSpace.CellCoordinates"/>), or null.</param>
+        public static float[] Delays(CellOrder order, IReadOnlyList<GridPos> cells, IReadOnlyList<GridPos> placedCells, Vector2? dropPoint,
+            float stagger)
         {
             var delays = new float[cells.Count];
 
             if (cells.Count == 0)
                 return delays;
 
-            if (order == CellOrder.FromPlacement && (placedCells == null || placedCells.Count == 0))
+            bool hasPlaced = placedCells != null && placedCells.Count > 0;
+
+            if (order == CellOrder.FromPlacement && !hasPlaced)
                 order = CellOrder.Listed;
 
+            Vector2 origin = Origin(order, cells, placedCells, dropPoint);
+
             for (int i = 0; i < cells.Count; i++)
-                delays[i] = Key(order, i, cells, placedCells);
+                delays[i] = Key(order, i, cells, placedCells, origin);
 
             float min = Mathf.Min(delays);
 
@@ -34,7 +40,22 @@ namespace Squarely.Presentation
             return delays;
         }
 
-        private static float Key(CellOrder order, int index, IReadOnlyList<GridPos> cells, IReadOnlyList<GridPos> placedCells)
+        /// <summary>The point distance orders measure from.</summary>
+        private static Vector2 Origin(CellOrder order, IReadOnlyList<GridPos> cells, IReadOnlyList<GridPos> placedCells, Vector2? dropPoint)
+        {
+            if (order == CellOrder.FromPointer)
+            {
+                if (dropPoint.HasValue)
+                    return dropPoint.Value;
+
+                if (placedCells != null && placedCells.Count > 0)
+                    return Center(placedCells);
+            }
+
+            return Center(cells);
+        }
+
+        private static float Key(CellOrder order, int index, IReadOnlyList<GridPos> cells, IReadOnlyList<GridPos> placedCells, Vector2 origin)
         {
             switch (order)
             {
@@ -45,7 +66,8 @@ namespace Squarely.Presentation
                     return DistanceToNearest(cells[index], placedCells);
 
                 case CellOrder.FromCenter:
-                    return Vector2.Distance(ToVector(cells[index]), Center(cells));
+                case CellOrder.FromPointer:
+                    return Vector2.Distance(ToVector(cells[index]), origin);
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(order), order, null);

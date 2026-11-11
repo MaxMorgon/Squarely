@@ -1,4 +1,5 @@
 using Squarely.Simulation;
+using UnityEngine;
 
 namespace Squarely.Presentation
 {
@@ -10,6 +11,7 @@ namespace Squarely.Presentation
         /// <summary>Whether placing the piece at the origin is a legal move.</summary>
         bool CanPlace(int pieceInstanceId, GridPos origin);
 
-        void Place(int pieceInstanceId, GridPos origin);
+        /// <param name="dropPoint">Where the pointer dropped the piece, in board cell coordinates (<see cref="BoardSpace.CellCoordinates"/>), or null.</param>
+        void Place(int pieceInstanceId, GridPos origin, Vector2? dropPoint);
     }
 }

@@ -22,6 +22,12 @@ namespace Squarely.Presentation
         /// <summary>The board cells of the piece placed by this command, empty until the placement is handled.</summary>
         public IReadOnlyList<GridPos> PlacedCells { get; internal set; } = Array.Empty<GridPos>();
 
+        /// <summary>
+        /// Where the pointer dropped the piece of this command, in board cell coordinates (<see cref="BoardSpace.CellCoordinates"/>),
+        /// or null if no pointer placed it.
+        /// </summary>
+        public Vector2? DropPoint { get; }
+
         /// <summary>World position of the last cleared match's center, or of the placed piece if nothing cleared yet.</summary>
         public Vector3 LastEffectPosition { get; internal set; }
 
@@ -34,9 +40,10 @@ namespace Squarely.Presentation
         /// <summary>This frame's playback time step, in seconds, scaled by the playback speed.</summary>
         public float DeltaTime => Time.deltaTime * _speed();
 
-        internal PlaybackContext(PlaybackViews views, Func<float> speed, CancellationToken stopToken)
+        internal PlaybackContext(PlaybackViews views, Vector2? dropPoint, Func<float> speed, CancellationToken stopToken)
         {
             Views = views;
+            DropPoint = dropPoint;
             _speed = speed;
             _stopToken = stopToken;
         }

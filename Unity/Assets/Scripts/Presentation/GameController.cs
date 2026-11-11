@@ -19,6 +19,7 @@ namespace Squarely.Presentation
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private Sim _simBeforeLastMove;
         private IReadOnlyList<ISimEvent> _lastMoveEvents;
+        private Vector2? _lastMoveDropPoint;
 #endif
 
         public bool IsResolved => _sim.IsResolved;
@@ -63,7 +64,7 @@ namespace Squarely.Presentation
             SetViewFromSim(_sim);
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            _view.gameObject.AddComponent<PlaybackDebugOverlay>().Initialize(this, _view.Player);
+            _view.CreateDebugOverlay().Initialize(this, _view.Player);
 #endif
 
             if (_sim.IsResolved)
@@ -77,7 +78,8 @@ namespace Squarely.Presentation
         }
 
         /// <summary>Places the piece and plays the move's events. Whatever is still playing from the previous move snaps to its end first.</summary>
-        public void Place(int pieceInstanceId, GridPos origin)
+        /// <param name="dropPoint">Where the pointer dropped the piece, in board cell coordinates (<see cref="BoardSpace.CellCoordinates"/>), or null without a pointer.</param>
+        public void Place(int pieceInstanceId, GridPos origin, Vector2? dropPoint)
         {
             // Snap before executing, so the playback that ends here is checked against the state it led to.
             _view.Player.Snap();
@@ -97,9 +99,10 @@ namespace Squarely.Presentation
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             _simBeforeLastMove = before;
             _lastMoveEvents = result.Events;
+            _lastMoveDropPoint = dropPoint;
 #endif
 
-            _view.Player.Play(result.Events);
+            _view.Player.Play(result.Events, dropPoint);
         }
 
         #endregion
@@ -141,7 +144,7 @@ namespace Squarely.Presentation
 
             _view.Player.Snap();
             SetViewFromSim(_simBeforeLastMove);
-            _view.Player.Play(_lastMoveEvents);
+            _view.Player.Play(_lastMoveEvents, _lastMoveDropPoint);
         }
 
         /// <summary>Compares the views with the sim and logs one error listing every difference.</summary>
