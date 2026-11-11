@@ -26,6 +26,7 @@ If the Wiring section is missing or unclear on something that changes the result
 
 - Do the work in the Wiring section. Edit only the prefabs, scenes and assets it names, and the new ones it asks for.
 - You may make small code fixes that the wiring needs: a missing serialized field, a wrong type, a missing `Initialize` argument. If the code needs a larger change, stop and report.
+- Follow the config-asset rule in `CLAUDE.md` ("Config assets are the user's"). Do not change existing values in `Unity/Assets/Config/`, also if the Wiring section asks for it, unless the brief from the user says so.
 - The rules in [implementer.md](implementer.md) apply to you: [Unity: headless only](implementer.md#unity-headless-only), [Definition of done](implementer.md#definition-of-done) steps 1 to 4, and the commit line (`Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`).
 
 ## Wiring checks

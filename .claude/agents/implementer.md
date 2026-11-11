@@ -31,6 +31,7 @@ If the prompt says **review mode**, go to [Review mode](#review-mode).
 - Do what the brief asks and nothing more. List other worthwhile changes in the PR description.
 - Do not edit `TODO.txt`. Edit `Docs/DevLog.md` only if the brief says so. Update `Docs/CodeDesign.md` and `CLAUDE.md` when you change structure or rules they describe.
 - You own the code and assets you create. Do not edit a scene or prefab the brief does not list: another agent may use it.
+- Follow the config-asset rule in `CLAUDE.md` ("Config assets are the user's"). Do not change existing values in `Unity/Assets/Config/`.
 
 ## Unity: headless only
 
