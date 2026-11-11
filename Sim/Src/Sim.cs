@@ -49,11 +49,16 @@ namespace Squarely.Simulation
 
         #endregion
 
+        /// <summary>A new game with the built-in rules. See <see cref="Sim(SimConfig, ulong, RuleFactory)"/>.</summary>
         public Sim(SimConfig config, ulong seed)
             : this(config, seed, RuleFactory.CreateDefault())
         {
         }
 
+        /// <summary>
+        /// A new game, dealt and ready to play. The sim keeps its own copy of the config:
+        /// later edits to <paramref name="config"/> don't affect it.
+        /// </summary>
         /// <param name="rules">Creates the dealer, scoring and resolution rules named in the config.</param>
         public Sim(SimConfig config, ulong seed, RuleFactory rules)
         {
@@ -63,6 +68,7 @@ namespace Squarely.Simulation
             if (rules == null)
                 throw new ArgumentNullException(nameof(rules));
 
+            config = config.Clone();
             config.Validate();
 
             Seed = seed;
@@ -81,7 +87,8 @@ namespace Squarely.Simulation
         }
 
         /// <summary>
-        /// Copies all mutable state from the source. Rules and patterns are shared: rules are stateless and patterns are immutable.
+        /// Copies all mutable state from the source. Rules and patterns are shared: rules are stateless, patterns are immutable,
+        /// and the config the rules were built from is the source's own copy, which nothing edits.
         /// </summary>
         private Sim(Sim source)
         {

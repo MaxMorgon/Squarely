@@ -31,6 +31,24 @@ namespace Squarely.Simulation
 
         public ScoringConfig Scoring = new ScoringConfig();
 
+        /// <summary>A deep copy: edits to either one don't affect the other.</summary>
+        internal SimConfig Clone()
+        {
+            var copy = (SimConfig)MemberwiseClone();
+
+            if (ResolutionRuleIds != null)
+                copy.ResolutionRuleIds = new List<string>(ResolutionRuleIds);
+
+            if (Pieces != null)
+                copy.Pieces = Pieces.ConvertAll(piece => piece?.Clone());
+
+            copy.Clearing = Clearing?.Clone();
+            copy.Scoring = Scoring?.Clone();
+
+            return copy;
+        }
+
+        /// <summary>Throws <see cref="InvalidOperationException"/> if the config can't run a game.</summary>
         public void Validate()
         {
             if (BoardWidth <= 0 || BoardHeight <= 0)
