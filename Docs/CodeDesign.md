@@ -74,8 +74,8 @@ Unity plays the returned events in order, so the view never diffs state.
 
 ## Testing
 
-- `Board`, `PieceShape`, `PatternMatcher`, scoring and the RNG have unit tests.
-- `Sim` tests use `ScriptedDealer` for exact scenarios (registered through `RuleFactory` like any dealer).
+- `Board`, `Grid`, `Hand`, `PieceShape`, `PatternMatcher`, scoring, `SimConfig` (including its copy), `WeightedRandomDealer` and the RNG have unit tests.
+- `Sim` tests use `ScriptedDealer` for exact scenarios (registered through `RuleFactory` like any dealer). `Preview` has its own tests (it equals `Execute` and leaves the state alone).
 - Determinism test: the same seed and commands give identical results.
 
 ## Presentation (Unity)
@@ -85,9 +85,10 @@ Assembly `Squarely.Presentation`. Status: views, drag input and event playback a
 ### Folder layout (`Unity/Assets/Scripts/Presentation/`)
 
 ```
-GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, plays their events, raises GameEndEvent
-GameView.cs        MonoBehaviour on the Game prefab: builds and sets the views, owns the EventPlayer, gizmos
+GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, plays their events, raises GameEndEvent and MoveExecutedEvent
+GameView.cs        MonoBehaviour on the Game prefab: builds and sets the views, owns the EventPlayer and registers all its handlers, gizmos
 GameSetup.cs       What a game starts with: config and seed
+ExecutedMove.cs    A move the game executed: sim before it, events, drop point
 AssemblyInfo.cs    InternalsVisibleTo for tests
 Config/            SimConfigAsset (SimConfig as an editable asset)
 Theme/             CellTheme, CellThemeEntry
@@ -102,7 +103,7 @@ Playback/          EventPlayer, PlaybackContext, PlaybackViews, CueSequence, Cue
   Handlers/        ISimEventHandler, SimEventHandler<T>, one handler per event type
   Steps/           CueStep and step types, CellOrder/CellOrdering (stagger order), CueStepPickerAttribute
   Drift/           ShownState, ViewDrift (debug check of views against the sim)
-Debug/             PlaybackDebugOverlay (uGUI panel, prefab in `Prefabs/Debug/`; editor and development builds only; not game UI)
+Debug/             GameDebugTools (replay, drift check, restart relay), PlaybackDebugOverlay (uGUI panel, prefab in `Prefabs/Debug/`); editor and development builds only; not game UI
 ```
 
 The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
@@ -115,7 +116,7 @@ The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
 
 ### Principles
 
-- **Owners initialize what they own.** The flow reads in code, not in the scene. An owner creates its children and passes them what they need through an explicit `Initialize(...)` (e.g. `GameView.Initialize(SimConfig, Camera, GameHudTexts, IPiecePlacer)`). `Awake`/`Start` only set up the component itself. Never start flow or find other objects there.
+- **Owners initialize what they own.** The flow reads in code, not in the scene. An owner creates its children and passes them what they need through an explicit `Initialize(...)` (e.g. `GameView.Initialize(SimConfig, Camera, GameHudTexts, IPiecePlacer, Action<GameResolvedEvent>)`). `Awake`/`Start` only set up the component itself. Never start flow or find other objects there.
 - **Views update from events only.** After `Execute`, the sim is already final while the view animates. Views never read sim state during playback.
 - **Rule questions go to the sim.** `Sim.Preview` answers "can this be placed?", "what will clear?", "can this hand piece go anywhere?". Unity code never does.
 - **Tunable assets live under `Config/<Area>/`** (`Unity/Assets/Config/Gameplay/`, `Texts/`, `Theme/`, ...). Name them for what they are (`ClassicGameMode`, `CellTheme`), not their type.
@@ -149,7 +150,7 @@ The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
 `GameController.Place` executes a command and hands its events to the `EventPlayer`. Views change only through handlers. `GameController.StartGame` plays `OpeningEvents` the same way, on the empty views `GameView.Initialize` builds. Only the debug replay sets views straight from a sim state (`GameView.SetState`).
 
 - **`EventPlayer`** (built by `GameView`) plays a command's events in order, one async step at a time (Unity `Awaitable`). It skips events without a handler.
-- **One handler per event type** (`PiecePlacedHandler`, `PatternsClearedHandler`, `ScoreChangedHandler`, `ComboChangedHandler`, `PieceDealtHandler`). A handler updates view bookkeeping at once (spawn, detach, set the hand slot), builds a `CueTarget` (cells with grid positions, a transform, a count, a world position) and plays its `CueSequence` on it through the context. Whatever the views must end up showing happens in the handler or in a cue run (steps or end action), so snapping always reaches it.
+- **One handler per event type** (`PiecePlacedHandler`, `PatternsClearedHandler`, `ScoreChangedHandler`, `ComboChangedHandler`, `PieceDealtHandler`, `GameResolvedHandler`). `GameView.Initialize` registers all of them. A handler updates view bookkeeping at once (spawn, detach, set the hand slot), builds a `CueTarget` (cells with grid positions, a transform, a count, a world position) and plays its `CueSequence` on it through the context. Whatever the views must end up showing happens in the handler or in a cue run (steps or end action), so snapping always reaches it.
 - **Shared playback context.** Handlers for one command share a `PlaybackContext`, so later handlers use earlier results (clears stagger from the placed cells; the score target gets the last clear's center). It also carries:
   - `Events`, the command's full event list, so a handler can adapt to what follows (the placement skips its cues when the same command clears);
   - `DropPoint`, presentation-only: where the pointer dropped the piece, in board cell coordinates (`BoardSpace.CellCoordinates`). It passes from `PieceDragController` through `IPiecePlacer.Place` and `EventPlayer.Play`, and is null without a pointer. The placement ripples out from the placed cell nearest to it (`CellOrder.FromPointer`).
@@ -157,9 +158,9 @@ The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
 - **Board waves.** On every placement, `PiecePlacedHandler` also plays a wave on the board's filled cells, outward from the piece (`CellOrder.FromPlacement`): `PlacementWaveCues` if the move clears nothing, `ClearWaveCues` if it clears. The wave skips the cells the command clears (read from `PlaybackContext.Events`), so no later handler takes over a wave cell and `SnapRunsOn` never cuts it short. The placed piece joins the wave only on clearing moves. Otherwise it plays `PiecePlacedCues`, which are skipped when the move clears. The wave's `WaitForEnd` is off, so the clear, score and deal do not wait for it.
 - **Overlap.** Each `CueSequence` has `WaitForEnd`. On: the next event waits for it. Off: it plays alongside (score count-up, combo punch). Any flag combination is safe: before a handler detaches or releases cell views, `PlaybackContext.SnapRunsOn` snaps the earlier runs of the same playback that still animate them. So a view never leaves the board or hand while a run animates it. Playback ends when every run has ended. If several consecutive events ever need one handler, add that when a case needs it.
 - **`CueSequence`** is a ScriptableObject (`Config/Playback/<Event>Cues`, plus `PlacementWaveCues`, `ClearWaveCues`; `GameView`'s `GameCues` references them): a list of `[SerializeReference] CueStep`s edited in the inspector with a type picker. Steps: `AnimateCells` (scale curve, tint gradient, stagger, `CellOrder`), `AnimateScale`, `CountUp`, `Wait`, `Parallel`, `SpawnParticles`. A new step type is one small class. Steps keep no state and read their settings as they play, so asset edits apply from the next play, also in play mode.
-- **Game end.** `GameController` raises `GameEndEvent` when playback reaches `GameResolvedEvent` (or when a snap does), so the last move animates before the game-over screen. This is the only path, also for a game that resolves on its first deal (its `GameResolvedEvent` is in `OpeningEvents`).
-- **Drift check.** In the editor and development builds, when a playback ends (played out or snapped), `ViewDrift` compares what the views show (`GameView.GetShownState`: board cells, hand, score, combo) with the sim. It logs one error that lists every difference.
-- **Debug overlay.** `PlaybackDebugOverlay` (editor and development builds; a uGUI canvas prefab, so it takes mouse and touch through the EventSystem) has: replay of the last move (button or R) from a `Sim.Clone()` taken before it, with the same drop point; playback speed presets; the last drift check's result; restart (`GameController.RestartRequestEvent`, handled by `GameState` like the game-over Restart); collapse (toggle button or backquote key). Speed and collapsed state carry over to the next game; speed resets to 1x each play session. `GameView` creates it (`CreateDebugOverlay`). `GameController` initializes it, because it owns replay.
+- **Game end.** `GameResolvedHandler` (given to the view by `GameState`, as `GameController.OnGameResolved`) makes `GameController` raise `GameEndEvent` when playback reaches `GameResolvedEvent` (or when a snap does), so the last move animates before the game-over screen. This is the only path, also for a game that resolves on its first deal (its `GameResolvedEvent` is in `OpeningEvents`).
+- **Drift check.** In the editor and development builds, `GameDebugTools` runs it when a playback ends (played out or snapped): `ViewDrift` compares what the views show (`GameView.GetShownState`: board cells, hand, score, combo) with a copy of the sim (`GameController.CopySim`). It logs one error that lists every difference.
+- **Debug tools.** `GameDebugTools` (editor and development builds only) is the one debug-only type of a game. `GameState` creates it under `#if` and gives it the controller and the view; `GameController` has no debug code. It keeps the last move (from `GameController.MoveExecutedEvent`, which holds a `Sim.Clone()` taken before the move, and only if someone subscribed) for replay, runs the drift check, and relays the overlay's restart as `RestartRequestEvent` (`GameState` handles it like the game-over Restart). It creates `PlaybackDebugOverlay` through `GameView.CreateDebugOverlay`. The overlay (a uGUI canvas prefab, so it takes mouse and touch through the EventSystem) has: replay of the last move (button or R) with the same drop point; playback speed presets; the last drift check's result; restart; expand and collapse (toggle button or backquote key). It starts collapsed in every game. Speed carries over to the next game and resets to 1x each play session.
 
 ### Fast-forward
 
@@ -172,7 +173,7 @@ The player can act during playback. A new command **snaps** everything still pen
 
 ## App flow (Unity)
 
-Assembly `Squarely.App`, tests `Squarely.App.Tests`. It decides which screen is up (menu, test, game, game over) and moves between them. It also owns what the app saves on the device (see [High score and device storage](#high-score-and-device-storage)). It references `Squarely.Presentation`. Presentation never references App and reports through C# events that the states subscribe to.
+Assembly `Squarely.App`, tests `Squarely.App.Tests`. It decides which screen is up (menu, test, game) and moves between them. The game state also shows the game-over screen. It also owns what the app saves on the device (see [High score and device storage](#high-score-and-device-storage)). It references `Squarely.Presentation` and `Squarely.Simulation`. Presentation never references App and reports through C# events that the states subscribe to.
 
 ### Principles
 
@@ -186,16 +187,17 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. It decides which screen is 
 
 ### Entry point and flow
 
-- **`AppRoot`** is the only scene component that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), camera, default game mode and texts. Its `Start` builds the default `GameSetup` (new seed per game) and an `AppContext`, creates the `AppStateMachine` and enters the menu. In editor and development builds it enters the test screen instead if `StartInTest` is on.
-- **`AppContext`** holds the refs every state uses: screen prefabs, screen root, camera, default game setup, texts, high score, test seed, start-in-test option. It has no behaviour.
-- **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, setup, highScore)`). It moves on by creating the next state and calling `ChangeState`.
-- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequestEvent`, against the device high score. **`GameState`** creates the Game prefab (`GameView`) and a `GameController(view, setup)`, initializes the view (game mode, camera, HUD texts, and the controller as its `IPiecePlacer`), then calls `StartGame()`. Each destroys what it created in `Exit`.
+- **`AppRoot`** is the only scene component that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), camera, default game mode and texts. Its `Start` builds the `SeedSource`, the other services and an `AppContext`, creates the `AppStateMachine` and enters the menu. In editor and development builds it enters the test screen instead if `StartInTest` is on.
+- **`AppContext`** holds the refs every state uses: screen prefabs, screen root, camera, default game mode, texts, high score, seed source, test seed, start-in-test option. It has no behaviour.
+- **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, config, seed, highScore)`). It moves on by creating the next state and calling `ChangeState`.
+- **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequestEvent`, against the device high score. **`GameState`** picks the seed (the given one, or a new one from `SeedSource`; it logs it), creates the Game prefab (`GameView`) and a `GameController(view, setup)`, initializes the view (game mode, camera, HUD texts, the controller as its `IPiecePlacer`, and `GameController.OnGameResolved`), then calls `StartGame()`. In editor and development builds it also creates and starts `GameDebugTools`. Each destroys what it created in `Exit`.
 - **Settings.** The menu Settings button and the HUD Settings button (`GameHud.SettingsRequestEvent`) open `SettingsPanel`. The state that is up creates and destroys it. Menu: title and Close. Game: Resume, Restart, Quit to menu. Restart and Quit open `ConfirmDialog` ("Are you sure?") once `GameController.HasPlacedPiece` is true. Before that they act at once. They abandon the game and do not record the high score. When the game ends, `GameState` closes the panel and dialog before the game-over screen.
-- **Game over.** `GameController` raises `GameEndEvent` (resolution, final score) once, when playback reaches the resolution (also the opening deal's). `GameState` then creates `GameOverScreen` over the game. Restart enters a fresh `GameState` with the same setup (a new Game prefab, so board and hand size edits apply). Menu enters the menu.
+- **Game over.** `GameController` raises `GameEndEvent` (resolution, final score) once, when playback reaches the resolution (also the opening deal's). `GameState` then creates `GameOverScreen` over the game. Restart enters a fresh `GameState` with the same game mode and seed setting (a menu game gets a new seed; a test game keeps its seed) (a new Game prefab, so board and hand size edits apply). Menu enters the menu.
 - **Test screen** (editor and development builds only; other builds hide the Test button). `MenuState` enters **`TestState`** on `TestRequestEvent`. `TestState` creates `TestScreen` (`Prefabs/Menu/`): seed field, Randomize, high score field, "start in test screen" toggle, Play, Back. Play enters a `GameState` with the default game mode and exactly the field's seed, so Restart replays that seed. Fields accept digits only. Play is disabled while a field is empty or too big (above `ulong.MaxValue` for the seed, `int.MaxValue` for the high score). Back and game over's Menu enter the menu.
 - **Test high score.** The field is 0 each time the screen opens. The test game plays against `TestHighScore.Create(value)`: a `HighScore` on a `MemoryKeyValueStore`, so it never writes the device high score. Restarts keep the same in-memory high score.
 - **`StartInTest`** (`App/StartInTest/`) keeps the toggle in the `IKeyValueStore` (1 or 0, off by default). `TestState` saves it on change. Release builds never read it.
-- **`TestSeed`** (`App/TestSeed/`) keeps the test seed in the `IKeyValueStore` as decimal text. `LoadOrCreate` returns the saved seed, or picks and saves a new one. `CreateNew` (Randomize) picks and saves a new one. `TestState` saves the field's seed on Play. An edit without Play is dropped. New seeds are below 10^9 (easy to type). Any `ulong` can be entered.
+- **`TestSeed`** (`App/TestSeed/`) keeps the test seed in the `IKeyValueStore` as decimal text. `LoadOrCreate` returns the saved seed, or picks and saves a new one. `CreateNew` (Randomize) picks and saves a new one. `TestState` saves the field's seed on Play. An edit without Play is dropped. Any `ulong` can be entered.
+- **`SeedSource`** (`App/SeedSource/`) is the one place that picks new seeds, for menu games and for `TestSeed`. Seeds are below 10^9 (easy to read out and type). It wraps a `System.Random` that `AppRoot` creates. The sim never picks a seed: `GameSetup` always has one.
 
 ### High score and device storage
 
