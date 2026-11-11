@@ -11,9 +11,9 @@ namespace Squarely.App
         /// <summary>A high score with <paramref name="best"/> as its best score, kept in memory only.</summary>
         public static HighScore Create(int best)
         {
-            var store = new MemoryKeyValueStore();
-            store.SetInt(HighScore.StoreKey, best);
-            return new HighScore(store);
+            var highScore = new HighScore(new MemoryKeyValueStore());
+            highScore.Record(best);
+            return highScore;
         }
 
         /// <summary>

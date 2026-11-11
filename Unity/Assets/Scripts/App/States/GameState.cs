@@ -75,6 +75,10 @@ namespace Squarely.App
 
         private void OnScoreChanged(int score)
         {
+            // The count-up can run on under the game-over screen, which has its own high score message.
+            if (_gameOver != null)
+                return;
+
             if (_newRecordCheck.Check(score))
                 _view.Hud.CelebrateNewRecord();
         }
