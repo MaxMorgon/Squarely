@@ -181,7 +181,7 @@ Later: **board layers** as one feature, Sim and view together: cell type definit
 
 ## App flow (Unity)
 
-Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up and moves between them: menu, game, game over. It references `Squarely.Presentation`; Presentation never references App, and reports what happens through C# events that the states subscribe to.
+Assembly `Squarely.App`, tests `Squarely.App.Tests`. Decides which screen is up and moves between them: menu, game, game over. Also owns what the app saves on the device (see [High score and device storage](#high-score-and-device-storage)). It references `Squarely.Presentation`; Presentation never references App, and reports what happens through C# events that the states subscribe to.
 
 ### Principles
 
