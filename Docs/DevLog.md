@@ -2,13 +2,6 @@
 
 A chronological record of what was built and the decisions behind it. **Decision by** says who drove each call: *you* = the developer, *AI* = proposed by Claude and accepted, *both* = AI proposal shaped by your input.
 
-## Session 6 — 2026-11-11
-
-### 20. Review by decisions, drift audits
-- **Agents review the code, you review decisions and play the change.** Line-by-line review added little, so each PR now has a **Decisions** section (open points of the brief, deviations from it, new APIs, rule changes) and a **How to test** checklist. The `reviewer` agent and an implementer in review mode go over each PR before you see it. The four open PRs (#15–#18) were combined into one (#19) and reviewed this way. **Decision by:** you (AI proposed the Decisions/How to test format).
-- **Drift audits.** A per-PR review only sees its diff, so the `reviewer` got an audit mode that checks the whole of `main` for drift (docs vs code, the same job done two ways, duplication, responsibility creep). It files an `audit` issue every 5 merged PRs. The first audit (#20) found six items and no rule violations. **Decision by:** both (you asked whether an agent would work; AI proposed audit mode instead of a new agent).
-- **The sim copies its config at game start** (audit #20, finding 3). Edits to the config asset apply from the next game, not live. This reverses the decision in 17: only scoring was live, and that was by accident. A copy keeps the sim fully described by its own state. **Decision by:** you, on AI recommendation.
-
 ---
 
 ## Session 1 — 2026-11-03
@@ -185,6 +178,15 @@ Each comment below improved the design:
   - **CI:** GitHub Actions runs the Sim tests on every PR and push to `main`. **Decision by:** you.
   - **Enforced guardrails:** a hook blocks `unity command` from subagents (tested with a real subagent), and `git reset --hard` and force pushes always prompt. **Decision by:** you (AI corrected the reviewer's suggested deny path and hook trigger).
 - **README deferred** until the project is closer to releasable. **Decision by:** you.
+
+---
+
+## Session 6 — 2026-11-11
+
+### 20. Review by decisions, drift audits
+- **Agents review the code, you review decisions and play the change.** Line-by-line review added little, so each PR now has a **Decisions** section (open points of the brief, deviations from it, new APIs, rule changes) and a **How to test** checklist. The `reviewer` agent and an implementer in review mode go over each PR before you see it. The four open PRs (#15–#18) were combined into one (#19) and reviewed this way. **Decision by:** you (AI proposed the Decisions/How to test format).
+- **Drift audits.** A per-PR review only sees its diff, so the `reviewer` got an audit mode that checks the whole of `main` for drift (docs vs code, the same job done two ways, duplication, responsibility creep). It files an `audit` issue every 5 merged PRs. The first audit (#20) found six items and no rule violations. **Decision by:** both (you asked whether an agent would work; AI proposed audit mode instead of a new agent).
+- **The sim copies its config at game start** (audit #20, finding 3). Edits to the config asset apply from the next game, not live. This reverses the decision in 17: only scoring was live, and that was by accident. A copy keeps the sim fully described by its own state. **Decision by:** you, on AI recommendation.
 
 ---
 
