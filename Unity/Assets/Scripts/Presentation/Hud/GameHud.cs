@@ -23,8 +23,8 @@ namespace Squarely.Presentation
         [Tooltip("Plays when the score goes above the best score. Hang the celebration (animation, particles, sound) here.")]
         [SerializeField] private UnityEvent _newRecordCelebration = new UnityEvent();
 
-        [Tooltip("Seconds the celebration runs. Set it to the celebration's length: the game-over screen waits this long after the celebration starts.")]
-        [SerializeField] private float _newRecordDuration = 1f;
+        [Tooltip("The celebration animation. Its length is how long the game-over screen waits after the celebration starts. Empty means no wait.")]
+        [SerializeField] private AnimationClip _newRecordClip;
 
         private float _celebrationTimeLeft;
 
@@ -61,7 +61,7 @@ namespace Squarely.Presentation
         /// <summary>Plays the "new record" celebration.</summary>
         public void CelebrateNewRecord()
         {
-            _celebrationTimeLeft = _newRecordDuration;
+            _celebrationTimeLeft = _newRecordClip != null ? _newRecordClip.length : 0f;
             _newRecordCelebration.Invoke();
         }
     }

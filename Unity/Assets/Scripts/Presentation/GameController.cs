@@ -21,8 +21,8 @@ namespace Squarely.Presentation
         public bool HasPlacedPiece { get; private set; }
 
         /// <summary>
-        /// The game resolved: raised once, when playback reaches the resolution (of a move, or of the opening deal
-        /// if the game resolves on its first deal). Gives the resolution and the final score.
+        /// The game ended: raised once, after the view reports the resolution (playback, the new record
+        /// celebration and the hold time are done). Also for a game that resolves on its first deal. Gives the resolution and the final score.
         /// </summary>
         public event Action<GameResolution, int> GameEndEvent;
 
