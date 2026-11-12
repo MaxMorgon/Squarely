@@ -9,10 +9,12 @@ namespace Squarely.App
     /// <summary>
     /// Runs one game of the given game mode, against the given high score. Celebrates once when the score goes above
     /// the best score. When the game ends it records the high score and shows the game-over screen:
-    /// Restart starts a fresh game with the same mode and seed setting, Menu goes back to the menu.
+    /// Restart starts a fresh game with the same mode, seed setting and back target; Menu goes back to the back target.
+    /// The back target is the state the game was started from (the menu or the test screen). Quit and the Menu button go there.
     /// The HUD's settings panel can resume, restart or quit at any time; restart and quit ask first once a piece
     /// is placed (the panel closes for the question), and abandon the game without recording the high score.
     /// The game is paused while the panel or the question is open.
+    /// Every game is saved in the replay history when it ends, or when the player leaves it after placing a piece.
     /// In editor and development builds, it also runs the game's debug tools; the debug overlay's restart restarts at once.
     /// </summary>
     public sealed class GameState : IAppState
@@ -22,6 +24,7 @@ namespace Squarely.App
         private readonly SimConfig _config;
         private readonly ulong? _seed;
         private readonly HighScore _highScore;
+        private readonly Func<IAppState> _createBackState;
 
         private GameView _view;
         private GameController _game;
@@ -33,16 +36,19 @@ namespace Squarely.App
         private SettingsPanel _settings;
         private ConfirmDialog _confirm;
         private Action _confirmedAction;
+        private bool _replayRecorded;
 
         /// <param name="seed">The seed of the game, or null for a new seed from the context's seed source. Restart does the same again.</param>
         /// <param name="highScore">The best score this game plays against and records to when it ends.</param>
-        public GameState(AppContext context, AppStateMachine stateMachine, SimConfig config, ulong? seed, HighScore highScore)
+        /// <param name="createBackState">Creates the state to go back to when the player quits or leaves the game over screen. Restart passes it on.</param>
+        public GameState(AppContext context, AppStateMachine stateMachine, SimConfig config, ulong? seed, HighScore highScore, Func<IAppState> createBackState)
         {
             _context = context;
             _stateMachine = stateMachine;
             _config = config;
             _seed = seed;
             _highScore = highScore;
+            _createBackState = createBackState ?? throw new ArgumentNullException(nameof(createBackState));
         }
 
         public void Enter()
@@ -60,7 +66,7 @@ namespace Squarely.App
             _view.Hud.Score.ScoreChangeEvent += OnScoreChanged;
             _game.GameEndEvent += OnGameEnded;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            _debugTools = new GameDebugTools(_game, _view);
+            _debugTools = new GameDebugTools(_game, _view, _context.ReplayCopier);
             _debugTools.RestartRequestEvent += OnRestartRequested;
             _debugTools.Start();
 #endif
@@ -85,12 +91,15 @@ namespace Squarely.App
             _debugTools.RestartRequestEvent -= OnRestartRequested;
             _debugTools.Stop();
 #endif
+            // A game left before it ended is saved here, if the player placed a piece.
+            RecordReplay();
+
             Object.Destroy(_view.gameObject);
         }
 
         private void OnScoreChanged(int score)
         {
-            // The count-up can run on under the game-over screen, which has its own high score message.
+            // No celebration under the game-over screen (a debug replay can still run a count-up).
             if (_gameOver != null)
                 return;
 
@@ -100,12 +109,12 @@ namespace Squarely.App
 
         private void OnRestartRequested()
         {
-            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _config, _seed, _highScore));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _config, _seed, _highScore, _createBackState));
         }
 
         private void OnMenuRequested()
         {
-            _stateMachine.ChangeState(new MenuState(_context, _stateMachine));
+            _stateMachine.ChangeState(_createBackState());
         }
 
         #region Game over
@@ -121,6 +130,20 @@ namespace Squarely.App
             _gameOver.MenuRequestEvent += OnMenuRequested;
             _gameOver.SetResult(resolution, finalScore);
             RecordHighScore(finalScore);
+            RecordReplay();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            _gameOver.SetReplay(_context.ReplayCopier,_game.BuildReplay());
+#endif
+        }
+
+        /// <summary>Saves the game in the replay history, once.</summary>
+        private void RecordReplay()
+        {
+            if (_replayRecorded)
+                return;
+
+            _replayRecorded = true;
+            _context.ReplayHistory.Record(_game.BuildReplay());
         }
 
         private void RecordHighScore(int finalScore)

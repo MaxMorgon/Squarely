@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Squarely.Presentation
 {
@@ -15,5 +16,23 @@ namespace Squarely.Presentation
         public string StartInTest = "Start in test screen";
         public string Play = "Play";
         public string Back = "Back";
+
+        public string ReplaysTitle = "Replays";
+        public string HistoryEmpty = "No games yet";
+
+        [Tooltip("{0} is the local date and time, {1} the score, {2} the number of moves, {3} the finished or unfinished text.")]
+        public string ReplayRowFormat = "{0:yyyy-MM-dd HH:mm}   Score {1}   Moves {2}   {3}";
+
+        public string ReplayFinished = "Finished";
+        public string ReplayUnfinished = "Left early";
+        public string ReplayLoad = "Load";
+        public string ReplayCopy = "Copy";
+        public string ReplayCopied = "Copied";
+        public string PastePlaceholder = "Paste a replay code";
+
+        [Tooltip("{0} is the reason the code cannot be read.")]
+        public string PasteInvalidFormat = "This replay code is not valid: {0}";
+
+        public string ConfigWarning = "Replay was recorded with a different game config. It may not play the same.";
     }
 }

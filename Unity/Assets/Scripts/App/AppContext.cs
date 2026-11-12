@@ -28,6 +28,12 @@ namespace Squarely.App
         /// <summary>The best score on this device.</summary>
         public HighScore HighScore { get; }
 
+        /// <summary>The last games played on this device.</summary>
+        public ReplayHistory ReplayHistory { get; }
+
+        /// <summary>Puts replay codes on the clipboard.</summary>
+        public ReplayCopier ReplayCopier { get; }
+
         /// <summary>Picks the seed of every new game.</summary>
         public SeedSource SeedSource { get; }
 
@@ -38,7 +44,7 @@ namespace Squarely.App
         public StartInTest StartInTest { get; }
 
         public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, SimConfig defaultConfig, TextsConfig texts,
-            HighScore highScore, SeedSource seedSource, TestSeed testSeed, StartInTest startInTest)
+            HighScore highScore, ReplayHistory replayHistory, ReplayCopier replayCopier, SeedSource seedSource, TestSeed testSeed, StartInTest startInTest)
         {
             ScreenPrefabs = screenPrefabs;
             ScreenRoot = screenRoot;
@@ -46,6 +52,8 @@ namespace Squarely.App
             DefaultConfig = defaultConfig;
             Texts = texts;
             HighScore = highScore;
+            ReplayHistory = replayHistory;
+            ReplayCopier = replayCopier;
             SeedSource = seedSource;
             TestSeed = testSeed;
             StartInTest = startInTest;

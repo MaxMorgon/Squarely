@@ -16,6 +16,7 @@ namespace Squarely.Presentation
         [SerializeField] private SettingsTexts _settings = new SettingsTexts();
         [SerializeField] private ConfirmTexts _confirm = new ConfirmTexts();
         [SerializeField] private TestTexts _test = new TestTexts();
+        [SerializeField] private ReplayTexts _replay = new ReplayTexts();
 
         public MenuTexts Menu => _menu;
 
@@ -28,5 +29,7 @@ namespace Squarely.Presentation
         public ConfirmTexts Confirm => _confirm;
 
         public TestTexts Test => _test;
+
+        public ReplayTexts Replay => _replay;
     }
 }

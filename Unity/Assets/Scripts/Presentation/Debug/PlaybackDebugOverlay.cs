@@ -9,7 +9,8 @@ using UnityEngine.InputSystem;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// Editor and development builds only: a small panel for tuning playback. Replays the last move (also with R),
+    /// Editor and development builds only: a small panel for tuning playback. Replays the last move (also with R), ends the game at once (also with E),
+    /// copies the replay code of the game so far (also with C),
     /// restarts the game, sets the playback speed (back to 1x each play session) and shows the last drift check.
     /// It starts collapsed in every game. A small toggle button (or the backquote key) expands it.
     /// Not game UI. In other builds the component is never created and does nothing.
@@ -31,6 +32,11 @@ namespace Squarely.Presentation
 
         [SerializeField] private Button _replayButton;
         [SerializeField] private Button _restartButton;
+        [SerializeField] private Button _endGameButton;
+        [SerializeField] private Button _copyReplayButton;
+
+        [Tooltip("Inactive by default. Shows briefly after a copy. Put it outside the collapsing panel, so the C key shows it too.")]
+        [SerializeField] private TMP_Text _copiedLabel;
 
         [Tooltip("Inactive template, copied once per speed preset into its parent.")]
         [SerializeField] private Button _speedButtonTemplate;
@@ -40,10 +46,13 @@ namespace Squarely.Presentation
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private const string ExpandedToggleText = "×";
         private const string CollapsedToggleText = "DBG";
+        private const string CopiedText = "Copied";
+        private const float CopiedSeconds = 1.5f;
 
         // Static, so the chosen speed carries over to the next game of the same play session.
         private static float s_speed = 1f;
         private bool _isExpanded;
+        private float _hideCopiedTime;
 
         private readonly List<Button> _speedButtons = new List<Button>();
 
@@ -59,6 +68,9 @@ namespace Squarely.Presentation
             _toggleButton.onClick.AddListener(ToggleExpanded);
             _replayButton.onClick.AddListener(_debug.ReplayLastMove);
             _restartButton.onClick.AddListener(_debug.RequestRestart);
+            _endGameButton.onClick.AddListener(_debug.EndGame);
+            _copyReplayButton.onClick.AddListener(CopyReplay);
+            _copiedLabel.gameObject.SetActive(false);
             CreateSpeedButtons();
 
             SetExpanded(false);
@@ -85,13 +97,30 @@ namespace Squarely.Presentation
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame)
                 _debug.ReplayLastMove();
 
+            if (keyboard != null && keyboard.eKey.wasPressedThisFrame)
+                _debug.EndGame();
+
+            if (keyboard != null && keyboard.cKey.wasPressedThisFrame)
+                CopyReplay();
+
             if (keyboard != null && keyboard.backquoteKey.wasPressedThisFrame)
                 ToggleExpanded();
+
+            if (_copiedLabel.gameObject.activeSelf && Time.unscaledTime >= _hideCopiedTime)
+                _copiedLabel.gameObject.SetActive(false);
 
             Refresh();
         }
 
         #endregion
+
+        private void CopyReplay()
+        {
+            _debug.CopyReplay();
+            _copiedLabel.text = CopiedText;
+            _copiedLabel.gameObject.SetActive(true);
+            _hideCopiedTime = Time.unscaledTime + CopiedSeconds;
+        }
 
         private void CreateSpeedButtons()
         {
@@ -137,6 +166,7 @@ namespace Squarely.Presentation
         private void Refresh()
         {
             _replayButton.interactable = _debug.CanReplayLastMove;
+            _endGameButton.interactable = _debug.CanEndGame;
 
             string driftText = DriftText();
 

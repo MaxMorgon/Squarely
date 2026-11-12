@@ -1,6 +1,7 @@
 SQUARELY TODO
 
 file name style for all files
+some feedback on lose is required - before showing game over
 
 sounds
 art
@@ -16,6 +17,7 @@ Unique completion patterns
 Meta features
 Levels
 Monetization features (undo, continue, revive)
+A game config id in the replay, to replay in the correct mode.
 Live Ops
 - Remote config
 - Tune scoring + combos
@@ -29,12 +31,9 @@ Live Ops
 CLAUDE: WHAT I NEED FROM YOU  (Claude edits only below this line)
 ==================================================================
 
-In progress: one PR for the whole batch (branch batch/replays-and-feel)
-- Replay core in Sim + EndGameCommand.
-- Drag swing: the dragged piece tilts against the move, elastic back to level.
-- Game end flow: game over waits for animations, Quit back to test screen, debug End game.
-- Replay UI: history, copy/paste (editor and desktop only), watch, config warning.
-I put the test list here when the batch PR is ready.
-
-Later (you deferred it)
-- TopBand height: 340 lets "New record!" cover the board top for a moment; 470 avoids it.
+Sound (branch feature/sound, no PR yet)
+- Phases 1-2 are pushed: sound core, Sound Mixer window, CC0 placeholder audio, CREDITS.md.
+- Phase 3 (wiring, settings toggles, music, assets) is unblocked: PR #36 is merged.
+  Say "continue sound" to start it.
+- Decision to check: the clear pitch rises with clear count and combo level.
+  There is no extra pitch for each cleared match.
