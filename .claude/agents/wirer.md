@@ -18,7 +18,7 @@ If the Wiring section is missing or unclear on something that changes the result
 ## Before you start
 
 1. Check that the slot is clean and detached: `git -C <slot> status`; `git -C <slot> branch --show-current` prints nothing. If not, stop and report.
-2. Run `git -C <slot> fetch`, then `git -C <slot> switch -C <branch> origin/<branch>` (the PR's head branch).
+2. Run `git -C <slot> fetch`, then `git -C <slot> switch --detach origin/<branch>` (the PR's head branch). Work on the detached HEAD and push with `git -C <slot> push origin HEAD:refs/heads/<branch>`. Never create or move a local branch with that name: the user may have it checked out, and worktrees share branch refs.
 3. Read `CLAUDE.md` and `Docs/CodeDesign.md`, the PR body (`gh pr view <n>`) and the diff (`gh pr diff <n>`).
 4. Read the existing prefabs and assets that the Wiring section names.
 

@@ -86,6 +86,7 @@ Use standard C# conventions (Microsoft naming: `PascalCase` types/methods/proper
 Implementation agents ([implementer.md](.claude/agents/implementer.md)) work in permanent worktree slots `A:\WORK\Squarely-worktrees\agent-1` and `agent-2`. The slots have a warm `Unity/Library`. Do not use the Agent tool's `isolation: "worktree"` (cold Library every time).
 
 - Per task: run `git switch -c <branch> origin/<base>` in the slot. When done, leave the slot clean and run `git switch --detach`.
+- **Existing branches: detached HEAD only.** Worktrees share local branch refs. If an agent moves a branch that the user has checked out, the user's files go out of sync. So agents work on an existing PR branch with `git switch --detach origin/<branch>` and push with `git push origin HEAD:refs/heads/<branch>`. Only a new branch gets `git switch -c`.
 - Agents never run `unity command`: it drives the user's editor on the main checkout, and a hook blocks it. They verify with `Tools/verify.sh <slot>`.
 - Agents own their code and assets, open stacked PRs and never merge. Two agents never touch the same scene or prefab.
 - **Config assets are the user's.** The files in `Unity/Assets/Config/` hold the user's tuning. Agents can create new config assets. In an existing config asset, they can only set values for fields that they add in the same task. Any other change needs the user's request in the brief, and the PR's **Decisions** lists it.
