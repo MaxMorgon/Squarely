@@ -23,6 +23,7 @@ namespace Squarely.App
 
         public void Enter()
         {
+            _context.Music.PlayMenu();
             _screen = _context.CreateScreen(_context.ScreenPrefabs.Menu);
             _screen.Initialize(_context.Texts.Menu);
             _screen.SetHighScore(_context.HighScore.Best);
@@ -66,9 +67,10 @@ namespace Squarely.App
             if (_settings != null)
                 return;
 
-            _settings = _context.CreateScreen(_context.ScreenPrefabs.Settings);
-            _settings.Initialize(_context.Texts.Settings, false);
+            _settings = _context.CreateSettings(false);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
+            _settings.SfxChangeEvent += _context.SetSfx;
+            _settings.MusicChangeEvent += _context.SetMusic;
         }
 
         private void OnSettingsCloseRequested()
@@ -82,7 +84,9 @@ namespace Squarely.App
                 return;
 
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
-            Object.Destroy(_settings.gameObject);
+            _settings.SfxChangeEvent -= _context.SetSfx;
+            _settings.MusicChangeEvent -= _context.SetMusic;
+            _context.DestroyPanel(_settings);
             _settings = null;
         }
 

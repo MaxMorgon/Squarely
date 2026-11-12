@@ -1,5 +1,6 @@
 using Squarely.Presentation;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Squarely.App
 {
@@ -21,6 +22,15 @@ namespace Squarely.App
         [Tooltip("Every text the screens show.")]
         [SerializeField] private TextsConfig _texts;
 
+        [Header("Audio")]
+        [Tooltip("Plays the sounds. Lives in the scene, so it survives screen changes. Its Sound Hooks hold the UI cues and the music.")]
+        [SerializeField] private SoundPlayer _soundPlayer;
+
+        [SerializeField] private MusicPlayer _musicPlayer;
+
+        [Tooltip("The mixer with the exposed parameters SfxVolume and MusicVolume.")]
+        [SerializeField] private AudioMixer _mixer;
+
         private AppStateMachine _stateMachine;
 
         #region Unity
@@ -33,7 +43,11 @@ namespace Squarely.App
             var seedSource = new SeedSource(new System.Random());
             var testSeed = new TestSeed(store, seedSource);
             var startInTest = new StartInTest(store);
-            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, testSeed, startInTest);
+            var soundPreferences = new SoundPreferences(store, new SoundSettings(_mixer));
+            _soundPlayer.SetHaptics(new NoHaptics());
+            var music = new MusicDirector(_musicPlayer, _soundPlayer.Hooks);
+            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, testSeed, startInTest,
+                _soundPlayer, music, soundPreferences);
 
             _stateMachine = new AppStateMachine();
             _stateMachine.ChangeState(CreateFirstState(context));

@@ -42,9 +42,10 @@ namespace Squarely.App
             SimConfig config = _context.DefaultConfig;
             Debug.Log($"Watching a replay, seed {_replay.Seed}, {_replay.Commands.Count} commands.");
 
+            _context.Music.PlayGame();
             _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
             _game = new GameController(_view, new GameSetup(config, _replay.Seed));
-            _view.Initialize(config, _context.Camera, _context.Texts.GameHud, _game);
+            _view.Initialize(config, _context.Camera, _context.Texts.GameHud, _game, _context.Sound);
             _view.SetInputBlocked(true);
             _view.Hud.HideSettings();
 

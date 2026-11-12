@@ -1,3 +1,4 @@
+using System;
 using Squarely.Simulation;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,6 +28,7 @@ namespace Squarely.Presentation
         private Transform _boardRoot;
         private BoardSpace _boardSpace;
         private CellViewPool _viewPool;
+        private SoundPlayer _sound;
 
         private PieceView _dragged;
         private PieceView _ghost;
@@ -46,8 +48,10 @@ namespace Squarely.Presentation
         /// <summary>While true, no drag starts and a running drag is cancelled.</summary>
         public bool IsBlocked { get; set; }
 
-        public void Initialize(Camera camera, IPiecePlacer game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool)
+        /// <param name="sound">Plays the pick-up, return and snap-preview sounds. Null: no sound.</param>
+        public void Initialize(Camera camera, IPiecePlacer game, HandView hand, Transform boardRoot, BoardSpace boardSpace, CellViewPool viewPool, SoundPlayer sound = null)
         {
+            _sound = sound;
             _camera = camera;
             _game = game;
             _hand = hand;
@@ -128,6 +132,7 @@ namespace Squarely.Presentation
             _swing = _dragFeel != null ? _dragFeel.CreateSwing() : null;
             _lastPointerX = world.x;
 
+            PlayHook(hooks => hooks.PiecePickUp);
             UpdateDrag(world);
         }
 
@@ -151,8 +156,19 @@ namespace Squarely.Presentation
 
             _ghost.gameObject.SetActive(_canPlace);
 
-            if (_canPlace)
-                _ghost.transform.localPosition = _boardSpace.CellCenter(origin) - _ghost.OriginLocal;
+            if (!_canPlace)
+                return;
+
+            _ghost.transform.localPosition = _boardSpace.CellCenter(origin) - _ghost.OriginLocal;
+            PlayHook(hooks => hooks.SnapPreview);
+        }
+
+        private void PlayHook(Func<SoundHooks, SoundCue> pickCue)
+        {
+            if (_sound == null || _sound.Hooks == null)
+                return;
+
+            _sound.Play(pickCue(_sound.Hooks));
         }
 
         /// <summary>Moves the dragged piece's view toward the drag target. The single place for drag feel such as lag and tilt.</summary>
@@ -196,6 +212,8 @@ namespace Squarely.Presentation
 
             if (place)
                 _game.Place(pieceInstanceId, origin, dropPoint);
+            else
+                PlayHook(hooks => hooks.PieceReturn);
         }
 
         #endregion

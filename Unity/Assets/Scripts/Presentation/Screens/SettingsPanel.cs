@@ -26,6 +26,18 @@ namespace Squarely.Presentation
         [SerializeField] private Button _quitButton;
         [SerializeField] private TMP_Text _quitLabel;
 
+        [SerializeField] private Toggle _sfxToggle;
+        [SerializeField] private TMP_Text _sfxLabel;
+
+        [SerializeField] private Toggle _musicToggle;
+        [SerializeField] private TMP_Text _musicLabel;
+
+        /// <summary>The player turned sound effects on (true) or off (false).</summary>
+        public event Action<bool> SfxChangeEvent;
+
+        /// <summary>The player turned music on (true) or off (false).</summary>
+        public event Action<bool> MusicChangeEvent;
+
         /// <summary>The player asked to close the panel.</summary>
         public event Action CloseRequestEvent;
 
@@ -42,9 +54,18 @@ namespace Squarely.Presentation
             _closeButton.onClick.AddListener(() => CloseRequestEvent?.Invoke());
             _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
             _quitButton.onClick.AddListener(() => QuitRequestEvent?.Invoke());
+            _sfxToggle.onValueChanged.AddListener(isOn => SfxChangeEvent?.Invoke(isOn));
+            _musicToggle.onValueChanged.AddListener(isOn => MusicChangeEvent?.Invoke(isOn));
         }
 
         #endregion
+
+        /// <summary>Sets the toggles without raising the change events.</summary>
+        public void SetSound(bool sfxOn, bool musicOn)
+        {
+            _sfxToggle.SetIsOnWithoutNotify(sfxOn);
+            _musicToggle.SetIsOnWithoutNotify(musicOn);
+        }
 
         /// <param name="isInGame">True over a game: shows Restart and Quit, and the close button reads Resume.</param>
         public void Initialize(SettingsTexts texts, bool isInGame)
@@ -53,6 +74,8 @@ namespace Squarely.Presentation
             _closeLabel.text = isInGame ? texts.Resume : texts.Close;
             _restartLabel.text = texts.Restart;
             _quitLabel.text = texts.Quit;
+            _sfxLabel.text = texts.Sfx;
+            _musicLabel.text = texts.Music;
 
             _restartButton.gameObject.SetActive(isInGame);
             _quitButton.gameObject.SetActive(isInGame);

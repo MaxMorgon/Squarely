@@ -57,9 +57,10 @@ namespace Squarely.App
             Debug.Log($"New game, seed {seed}.");
             var setup = new GameSetup(_config, seed);
 
+            _context.Music.PlayGame();
             _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
             _game = new GameController(_view, setup);
-            _view.Initialize(_config, _context.Camera, _context.Texts.GameHud, _game);
+            _view.Initialize(_config, _context.Camera, _context.Texts.GameHud, _game, _context.Sound);
             _newRecordCheck = new NewRecordCheck(_highScore.Best);
 
             _view.Hud.SettingsRequestEvent += OnSettingsRequested;
@@ -104,7 +105,10 @@ namespace Squarely.App
                 return;
 
             if (_newRecordCheck.Check(score))
+            {
+                _context.PlayHook(hooks => hooks.NewBest);
                 _view.Hud.CelebrateNewRecord();
+            }
         }
 
         private void OnRestartRequested()
@@ -124,11 +128,13 @@ namespace Squarely.App
             // The game is over: the settings panel has nothing left to resume, restart or quit.
             CloseSettings();
 
+            _context.Music.FadeForGameOver();
             _gameOver = _context.CreateScreen(_context.ScreenPrefabs.GameOver);
             _gameOver.Initialize(_context.Texts.GameOver);
             _gameOver.RestartRequestEvent += OnRestartRequested;
             _gameOver.MenuRequestEvent += OnMenuRequested;
             _gameOver.SetResult(resolution, finalScore);
+            _context.PlayHook(hooks => resolution.Outcome == GameOutcome.Won ? hooks.GameWon : hooks.GameLost);
             RecordHighScore(finalScore);
             RecordReplay();
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -150,6 +156,9 @@ namespace Squarely.App
         {
             bool isNew = _highScore.Record(finalScore);
             _gameOver.SetHighScore(_highScore.Best.Value, isNew);
+
+            if (isNew)
+                _context.PlayHook(hooks => hooks.NewRecord);
         }
 
         #endregion
@@ -161,9 +170,10 @@ namespace Squarely.App
             if (_settings != null || _gameOver != null)
                 return;
 
-            _settings = _context.CreateScreen(_context.ScreenPrefabs.Settings);
-            _settings.Initialize(_context.Texts.Settings, true);
+            _settings = _context.CreateSettings(true);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
+            _settings.SfxChangeEvent += _context.SetSfx;
+            _settings.MusicChangeEvent += _context.SetMusic;
             _settings.RestartRequestEvent += OnSettingsRestartRequested;
             _settings.QuitRequestEvent += OnSettingsQuitRequested;
             UpdatePause();
@@ -201,7 +211,7 @@ namespace Squarely.App
             CloseSettingsPanel();
 
             _confirmedAction = action;
-            _confirm = _context.CreateScreen(_context.ScreenPrefabs.Confirm);
+            _confirm = _context.CreatePanel(_context.ScreenPrefabs.Confirm);
             _confirm.Initialize(_context.Texts.Confirm);
             _confirm.ConfirmRequestEvent += OnConfirmRequested;
             _confirm.CancelRequestEvent += OnCancelRequested;
@@ -228,7 +238,7 @@ namespace Squarely.App
 
             _confirm.ConfirmRequestEvent -= OnConfirmRequested;
             _confirm.CancelRequestEvent -= OnCancelRequested;
-            Object.Destroy(_confirm.gameObject);
+            _context.DestroyPanel(_confirm);
             _confirm = null;
             _confirmedAction = null;
         }
@@ -252,9 +262,11 @@ namespace Squarely.App
                 return;
 
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
+            _settings.SfxChangeEvent -= _context.SetSfx;
+            _settings.MusicChangeEvent -= _context.SetMusic;
             _settings.RestartRequestEvent -= OnSettingsRestartRequested;
             _settings.QuitRequestEvent -= OnSettingsQuitRequested;
-            Object.Destroy(_settings.gameObject);
+            _context.DestroyPanel(_settings);
             _settings = null;
         }
 

@@ -16,5 +16,8 @@ namespace Squarely.Presentation
 
         public string Restart = "Restart";
         public string Quit = "Quit to menu";
+
+        public string Sfx = "Sound effects";
+        public string Music = "Music";
     }
 }
