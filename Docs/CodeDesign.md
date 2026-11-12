@@ -64,6 +64,8 @@ A replay is the seed, the config fingerprint, the successful commands in order, 
 - **Recording.** `ReplayRecorder(sim)` wraps `Execute`. It keeps only successful commands. `Build()` gives the replay so far.
 - **Code.** `ReplayCodec.Encode/Decode`: `"SQ1."` + base64url of varint bytes. A registry (`CommandCodecRegistry`, `ICommandCodec` with a unique tag) maps command types to tags. New command type: write a codec and register it in `CreateDefault`. `Decode` never throws: `ReplayDecodeResult` has a `ReplayDecodeFailure` (wrong prefix, unknown version, corrupt data, unknown command tag).
 - **Running.** `ReplayRunner.Run(replay, config)` runs all commands and reports fingerprint match, first failed index and end-state match. It runs on a fingerprint mismatch. `ReplayRunner.CreateSim(replay, config)` gives a sim at the start for step-by-step playback with `Sim.Execute`.
+- **Recording in a game.** `GameController` runs every command (place and end game) through a `ReplayRecorder`. `BuildReplay()` gives the replay of the game so far, also for a half-finished game.
+- **Copy replay** (editor and development builds only). `ReplayCopier` (`Presentation/Replay/`) puts the code of a replay on an `IClipboard`; `SystemClipboard` uses `GUIUtility.systemCopyBuffer`. There is no mobile clipboard yet. The debug overlay has a Copy replay button (and key C), and the game-over screen has one (hidden in other builds). Both show a short "Copied" label. The game-over texts hold its texts.
 
 ## Turn flow — `PlacePieceCommand`
 
@@ -116,7 +118,7 @@ Playback/          EventPlayer, PlaybackContext, PlaybackViews, CueSequence, Cue
   Handlers/        ISimEventHandler, SimEventHandler<T>, one handler per event type
   Steps/           CueStep and step types, CellOrder/CellOrdering (stagger order), CueStepPickerAttribute
   Drift/           ShownState, ViewDrift (debug check of views against the sim)
-Debug/             GameDebugTools (replay, drift check, restart relay), PlaybackDebugOverlay (uGUI panel, prefab in `Prefabs/Debug/`); editor and development builds only; not game UI
+Debug/             GameDebugTools (replay, drift check, restart relay), copy replay, copy replay, PlaybackDebugOverlay (uGUI panel, prefab in `Prefabs/Debug/`); editor and development builds only; not game UI
 ```
 
 The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
@@ -221,3 +223,8 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. It decides which screen is 
 - **`MenuState`** shows `Best` on the menu (nothing before the first finished game). **`GameState`** records the final score when `GameEndEvent` fires, once per game. It then sets the game-over screen: the "new high score" state, or the high score this game did not beat.
 - **New record in game.** `GameState` watches `ScoreView.ScoreChangeEvent` (raised at each step of the score count-up) with a `NewRecordCheck` built from the best score at game start. The first time the shown score goes above it, `GameState` calls `GameHud.CelebrateNewRecord()`, once per game. No best score yet (first game ever) means no celebration. This records nothing. Only the game end records.
 - **Celebration hook.** `GameOverScreen` plays its `_newHighScoreCelebration` UnityEvent for a new high score. `GameHud` has the same hook for the in-game record (`_newRecordCelebration`). The art pass hangs animations, particles and sounds on them in the prefab. For now they trigger placeholder Animator clips from `Art/Placeholder/Animations/` (`Celebrate` trigger on the game-over label; `NewRecordPop` on a HUD label that never takes input). Until UI gets its own cue player, UI feedback is animation assets on hooks like this, not code (code-driven animation is for playback cues only).
+
+### Replay history
+
+- **`ReplayHistory`** (`App/ReplayHistory/`) keeps the last 10 games (`ReplayHistoryEntry`: code, UTC save time, score, move count, finished flag), newest first, in one string key of the `IKeyValueStore`. The oldest entry drops past 10. `Entries` reads the list for a screen (the test screen lists it). `Record(replay)` saves a finished game always, and an unfinished game only with at least one placed piece. Entries that do not parse are skipped, so corrupt data never crashes. The clock is a `Func<DateTime>` (wall clock is fine in App, never in Sim).
+- **When it saves.** `GameState` records once per game: when the game ends, or in `Exit` if the game was left first (Restart, Quit, debug restart).

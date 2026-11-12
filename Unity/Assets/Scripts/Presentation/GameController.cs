@@ -13,6 +13,7 @@ namespace Squarely.Presentation
         private readonly GameSetup _setup;
 
         private Sim _sim;
+        private ReplayRecorder _recorder;
         private bool _gameEndRaised;
 
         public bool IsResolved => _sim.IsResolved;
@@ -49,6 +50,7 @@ namespace Squarely.Presentation
         {
             _view.GameResolveEvent += OnGameResolved;
             _sim = new Sim(_setup.Config, _setup.Seed);
+            _recorder = new ReplayRecorder(_sim);
 
             // The views start empty, as the board and hand are before the deal.
             _view.Player.Play(_sim.OpeningEvents);
@@ -91,7 +93,7 @@ namespace Squarely.Presentation
             // The copy is only needed by subscribers of MoveExecutedEvent.
             Sim before = MoveExecutedEvent != null ? _sim.Clone() : null;
 
-            CommandResult result = _sim.Execute(command);
+            CommandResult result = _recorder.Execute(command);
 
             if (!result.Success)
             {
@@ -106,6 +108,12 @@ namespace Squarely.Presentation
         }
 
         #endregion
+
+        /// <summary>The replay of the game so far: every command that succeeded. Fine for a half-finished game. Call after <see cref="StartGame"/>.</summary>
+        public GameReplay BuildReplay()
+        {
+            return _recorder.Build();
+        }
 
         /// <summary>A copy of the game's sim in its current state. Changing the copy does not change the game.</summary>
         public Sim CopySim()

@@ -30,7 +30,22 @@ namespace Squarely.Presentation
         [SerializeField] private Button _menuButton;
         [SerializeField] private TMP_Text _menuLabel;
 
+        [Tooltip("Editor and development builds only: the whole button is hidden in other builds.")]
+        [SerializeField] private Button _copyReplayButton;
+        [SerializeField] private TMP_Text _copyReplayLabel;
+
+        [Tooltip("Inactive by default. Shows briefly after a copy.")]
+        [SerializeField] private TMP_Text _copiedLabel;
+
         private GameOverTexts _texts;
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        private const float CopiedSeconds = 1.5f;
+
+        private ReplayCopier _copier;
+        private GameReplay _replay;
+        private float _hideCopiedTime;
+#endif
 
         /// <summary>The player asked to play again with the same setup.</summary>
         public event Action RestartRequestEvent;
@@ -44,7 +59,22 @@ namespace Squarely.Presentation
         {
             _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
             _menuButton.onClick.AddListener(() => MenuRequestEvent?.Invoke());
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            _copyReplayButton.onClick.AddListener(CopyReplay);
+#else
+            _copyReplayButton.gameObject.SetActive(false);
+#endif
+            _copiedLabel.gameObject.SetActive(false);
         }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        private void Update()
+        {
+            if (_copiedLabel.gameObject.activeSelf && Time.unscaledTime >= _hideCopiedTime)
+                _copiedLabel.gameObject.SetActive(false);
+        }
+#endif
 
         #endregion
 
@@ -53,6 +83,7 @@ namespace Squarely.Presentation
             _texts = texts;
             _restartLabel.text = texts.Restart;
             _menuLabel.text = texts.Menu;
+            _copyReplayLabel.text = texts.CopyReplay;
         }
 
         public void SetResult(GameResolution resolution, int finalScore)
@@ -80,6 +111,26 @@ namespace Squarely.Presentation
                 _highScoreLabel.text = string.Format(_texts.HighScoreFormat, highScore);
             }
         }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        /// <summary>Sets the replay that the Copy replay button copies, and the copier that does it.</summary>
+        public void SetReplay(ReplayCopier copier, GameReplay replay)
+        {
+            _copier = copier;
+            _replay = replay;
+        }
+
+        private void CopyReplay()
+        {
+            if (_copier == null)
+                return;
+
+            _copier.Copy(_replay);
+            _copiedLabel.text = _texts.ReplayCopied;
+            _copiedLabel.gameObject.SetActive(true);
+            _hideCopiedTime = Time.unscaledTime + CopiedSeconds;
+        }
+#endif
 
         private void CelebrateNewHighScore()
         {
