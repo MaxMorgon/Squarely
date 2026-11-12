@@ -18,6 +18,9 @@ namespace Squarely.Presentation
         [Tooltip("Sorting order of the dragged piece, above everything on the board.")]
         [SerializeField] private int _draggedSortingOrder = 100;
 
+        [Tooltip("Tunables for the tilt of the dragged piece. Leave empty for no tilt.")]
+        [SerializeField] private DragFeel _dragFeel;
+
         private Camera _camera;
         private IPiecePlacer _game;
         private HandView _hand;
@@ -34,6 +37,9 @@ namespace Squarely.Presentation
         private bool _hasCheckedOrigin;
         private GridPos _checkedOrigin;
         private bool _canPlace;
+
+        private DragSwing _swing;
+        private float _lastPointerX;
 
         private bool IsDragging => _dragPiece != null;
 
@@ -53,6 +59,8 @@ namespace Squarely.Presentation
             _dragged.gameObject.AddComponent<SortingGroup>().sortingOrder = _draggedSortingOrder;
 
             _ghost = CreatePieceView("Ghost", boardRoot);
+
+            _swing = _dragFeel != null ? _dragFeel.CreateSwing() : null;
         }
 
         #region Unity
@@ -119,13 +127,17 @@ namespace Squarely.Presentation
             _ghost.SetShape(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Ghost);
             _ghost.gameObject.SetActive(false);
 
+            _swing?.Reset();
+            _lastPointerX = world.x;
+
             UpdateDrag(world);
         }
 
         private void UpdateDrag(Vector3 world)
         {
             _dragTarget = world + Vector3.up * _liftOffset;
-            MoveDraggedView();
+            MoveDraggedView(world.x - _lastPointerX);
+            _lastPointerX = world.x;
 
             // Placement uses the target, not the dragged view, so view effects never shift where the piece lands.
             Vector3 originWorld = _dragTarget + _dragged.transform.parent.TransformVector(_dragged.OriginLocal);
@@ -146,15 +158,24 @@ namespace Squarely.Presentation
         }
 
         /// <summary>Moves the dragged piece's view toward the drag target. The single place for drag feel such as lag and tilt.</summary>
-        private void MoveDraggedView()
+        private void MoveDraggedView(float pointerDeltaX)
         {
             _dragged.transform.position = _dragTarget;
+
+            // The tilt turns the view around its center. It is visual only: placement never reads it.
+            if (_swing != null)
+            {
+                float angle = _swing.Step(pointerDeltaX, Time.deltaTime);
+                _dragged.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            }
         }
 
         private void CancelDrag()
         {
             _dragged.Clear();
             _dragged.gameObject.SetActive(false);
+            _dragged.transform.rotation = Quaternion.identity;
+            _swing?.Reset();
             _ghost.Clear();
             _ghost.gameObject.SetActive(false);
             _hand.SetSlotVisible(_dragSlot, true);
