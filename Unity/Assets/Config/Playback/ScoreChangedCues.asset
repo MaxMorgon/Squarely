@@ -52,6 +52,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+        _tickCue: {fileID: 11400000, guid: 84908deea7a7f4a419baaf2442c5dcd5, type: 2}
     - rid: 5611427121247551494
       type: {class: AnimateScale, ns: Squarely.Presentation, asm: Squarely.Presentation}
       data:

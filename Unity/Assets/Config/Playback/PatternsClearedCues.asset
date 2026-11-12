@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CueSequence
   _waitForEnd: 1
   _steps:
+  - rid: 5611427147086561280
+  - rid: 5611427147086561281
   - rid: 5611427121247551489
   references:
     version: 2
@@ -23,7 +25,6 @@ MonoBehaviour:
       data:
         _steps:
         - rid: 5611427121247551490
-        - rid: 5611427121247551491
     - rid: 5611427121247551490
       type: {class: AnimateCells, ns: Squarely.Presentation, asm: Squarely.Presentation}
       data:
@@ -93,8 +94,23 @@ MonoBehaviour:
           m_ColorSpace: -1
           m_NumColorKeys: 3
           m_NumAlphaKeys: 3
-    - rid: 5611427121247551491
-      type: {class: SpawnParticles, ns: Squarely.Presentation, asm: Squarely.Presentation}
+    - rid: 5611427147086561280
+      type: {class: PlaySound, ns: Squarely.Presentation, asm: Squarely.Presentation}
       data:
-        _prefab: {fileID: 0}
-        _lifetime: 2
+        _cue: {fileID: 11400000, guid: a01c69dfc559147408bf65d679b51ea5, type: 2}
+        _levelSource: 2
+        _levelRange:
+          _hasMin: 0
+          _minLevel: 0
+          _hasMax: 1
+          _maxLevel: 1
+    - rid: 5611427147086561281
+      type: {class: PlaySound, ns: Squarely.Presentation, asm: Squarely.Presentation}
+      data:
+        _cue: {fileID: 11400000, guid: 37f8178c4bb857849a8ec23288a4981e, type: 2}
+        _levelSource: 2
+        _levelRange:
+          _hasMin: 1
+          _minLevel: 2
+          _hasMax: 0
+          _maxLevel: 0

@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 5635159567262100751}
   - component: {fileID: 8742797798722946491}
   - component: {fileID: 2447149715684946391}
+  - component: {fileID: 435625554539338876}
   m_Layer: 0
   m_Name: NoButton
   m_TagString: Untagged
@@ -274,6 +275,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &435625554539338876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3165812323731182375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &3986796704959899190
 GameObject:
   m_ObjectHideFlags: 0
@@ -697,6 +710,7 @@ GameObject:
   - component: {fileID: 5866143582528121699}
   - component: {fileID: 4586592796625134406}
   - component: {fileID: 1197101978625382699}
+  - component: {fileID: 4821972727160929577}
   m_Layer: 0
   m_Name: YesButton
   m_TagString: Untagged
@@ -806,6 +820,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4821972727160929577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7645529096843084542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1001 &6619188229534440263
 PrefabInstance:
   m_ObjectHideFlags: 0

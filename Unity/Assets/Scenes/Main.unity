@@ -119,6 +119,65 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &736408673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 736408675}
+  - component: {fileID: 736408676}
+  - component: {fileID: 736408674}
+  m_Layer: 0
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &736408674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736408673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85a541732652d27479b49951e77a2255, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.MusicPlayer
+  _mixerGroup: {fileID: 8692912489436779751, guid: 8024f1b0558382a42935019f2fb64f96, type: 2}
+--- !u!4 &736408675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736408673}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1923862125}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &736408676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 736408673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd379a385d8e18a4482566617322175f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.SoundPlayer
+  _hooks: {fileID: 11400000, guid: d7544cb91cf5287489b4076d8b1896fd, type: 2}
 --- !u!1 &851879382
 GameObject:
   m_ObjectHideFlags: 0
@@ -130,6 +189,7 @@ GameObject:
   - component: {fileID: 851879385}
   - component: {fileID: 851879383}
   - component: {fileID: 851879384}
+  - component: {fileID: 851879386}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -247,6 +307,14 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &851879386
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 851879382}
+  m_Enabled: 1
 --- !u!1 &1305857382
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,6 +434,10 @@ MonoBehaviour:
   _camera: {fileID: 851879383}
   _defaultMode: {fileID: 11400000, guid: bbabd39d8dadbd14e894501e1bdc6a16, type: 2}
   _texts: {fileID: 11400000, guid: 540f510a9c0c91c41ad825e8c6eb039f, type: 2}
+  _soundPlayer: {fileID: 736408676}
+  _musicPlayer: {fileID: 736408674}
+  _musicSetup: {fileID: 11400000, guid: f4764d87a15a791468d025066749acc2, type: 2}
+  _mixer: {fileID: 24100000, guid: 8024f1b0558382a42935019f2fb64f96, type: 2}
 --- !u!4 &1923862125
 Transform:
   m_ObjectHideFlags: 0
@@ -378,7 +450,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 736408675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807

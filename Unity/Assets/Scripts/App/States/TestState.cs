@@ -39,6 +39,7 @@ namespace Squarely.App
 
         public void Enter()
         {
+            _context.Music.PlayMenu();
             _screen = _context.CreateScreen(_context.ScreenPrefabs.Test);
             _screen.Initialize(_context.Texts.Test);
             _screen.SetStartInTest(_context.StartInTest.IsOn);
@@ -102,6 +103,9 @@ namespace Squarely.App
             }
 
             _screen.SetHistory(rows);
+
+            // The rows are made now, after the screen was created: connect their buttons to the sound.
+            ButtonSound.Bind(_screen.gameObject, _context.Sound);
         }
 
         private void OnReplayCodeEdited(string text)

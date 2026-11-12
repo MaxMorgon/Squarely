@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 877d761afbee66a47be075369ae09e44, type: 3}
+  m_Name: SoundHooks
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.SoundHooks
+  _piecePickUp: {fileID: 11400000, guid: 565e375e67e8fce4f8141c35f43bd0f6, type: 2}
+  _pieceReturn: {fileID: 11400000, guid: 5d0df4b51e2c3f04f8a117064ed0e2fa, type: 2}
+  _snapPreview: {fileID: 11400000, guid: 7cf98df24ef04e449899d87e3cae5e64, type: 2}
+  _buttonTap: {fileID: 11400000, guid: 7f5735a25176706439a0c8e60934e7b4, type: 2}
+  _panelOpen: {fileID: 11400000, guid: 9263db8bea7ff8845bd9ec4aedcbf956, type: 2}
+  _panelClose: {fileID: 11400000, guid: ae33db9a16bedf04d94a2a9f6c379bc7, type: 2}
+  _toggleOn: {fileID: 11400000, guid: 3dd9f6e74558fb244935836d4b273df8, type: 2}
+  _toggleOff: {fileID: 11400000, guid: 3e8aa6f3ec08dc043bd9a7ca03c586cc, type: 2}
+  _gameLost: {fileID: 11400000, guid: b50856ed2eaf17240a1b9ec6e9499f1e, type: 2}
+  _gameWon: {fileID: 11400000, guid: a4b1fff3c9cdbd04e8469060b1ea4df7, type: 2}
+  _newBest: {fileID: 11400000, guid: 6c48ee6cf1d8be745b5e0874c27d8a1d, type: 2}
+  _newRecord: {fileID: 11400000, guid: 03eb420bede98a7439fe7386cd34991e, type: 2}

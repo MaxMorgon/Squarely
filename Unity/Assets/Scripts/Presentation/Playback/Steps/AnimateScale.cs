@@ -12,6 +12,8 @@ namespace Squarely.Presentation
         [Tooltip("Scale over the animation (time 0 to 1). End at 1 to leave the transform at its normal size.")]
         [SerializeField] private AnimationCurve _scale = AnimationCurve.Constant(0f, 1f, 1f);
 
+        public override float PlannedSeconds => _duration;
+
         public override async Awaitable Play(CueTarget target, PlaybackContext context)
         {
             Transform transform = target.Transform;

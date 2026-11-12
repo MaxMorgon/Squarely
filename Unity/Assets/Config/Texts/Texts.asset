@@ -38,6 +38,8 @@ MonoBehaviour:
     Resume: Resume
     Restart: Restart
     Quit: Quit to menu
+    Sfx: Sound effects
+    Music: Music
   _confirm:
     Question: Are you sure?
     Yes: Yes

@@ -22,6 +22,9 @@ namespace Squarely.Presentation
         [Tooltip("Color multiplied over the cell over the animation. Alpha fades it.")]
         [SerializeField] private Gradient _tint = new Gradient();
 
+        /// <summary>The duration of one cell. The stagger is not counted: it depends on the number of cells.</summary>
+        public override float PlannedSeconds => _duration;
+
         public override async Awaitable Play(CueTarget target, PlaybackContext context)
         {
             IReadOnlyList<CellView> cells = target.Cells;

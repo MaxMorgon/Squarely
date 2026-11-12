@@ -458,6 +458,7 @@ GameObject:
   - component: {fileID: 5643772689036229858}
   - component: {fileID: 8596482224489330811}
   - component: {fileID: 2848213236091532263}
+  - component: {fileID: 7289459375010565732}
   m_Layer: 0
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -567,6 +568,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7289459375010565732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5633409779197595954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &7907998917090790014
 GameObject:
   m_ObjectHideFlags: 0

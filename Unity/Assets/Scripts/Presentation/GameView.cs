@@ -103,7 +103,8 @@ namespace Squarely.Presentation
         /// <param name="camera">The camera that renders the game and its UI, also used to map the pointer to the board.</param>
         /// <param name="hudTexts">The texts the HUD shows.</param>
         /// <param name="placer">Receives the player's placements.</param>
-        public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer)
+        /// <param name="sound">Plays the game's sounds, or null for a silent game. Also connects the <see cref="ButtonSound"/> buttons of the view.</param>
+        public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer, SoundPlayer sound = null)
         {
             _config = config;
             _camera = camera;
@@ -119,12 +120,13 @@ namespace Squarely.Presentation
             _background.Build(boardSpace, _cellTheme.EmptyTile);
             _layerView.Initialize(boardSpace, viewPool);
             _handView.Initialize(config.HandSize, viewPool, _cellSize);
-            _dragController.Initialize(camera, placer, _handView, _boardRoot, boardSpace, viewPool);
+            _dragController.Initialize(camera, placer, _handView, _boardRoot, boardSpace, viewPool, sound);
             _hud.Initialize(hudTexts);
+            ButtonSound.Bind(gameObject, sound);
             _hudCanvas.worldCamera = camera;
             _cameraFitter.Initialize(camera, GameplayArea(config));
 
-            var playbackViews = new PlaybackViews(_layerView, _handView, _hud.Score, transform);
+            var playbackViews = new PlaybackViews(_layerView, _handView, _hud.Score, transform, sound);
             Player = new EventPlayer(playbackViews, destroyCancellationToken);
             Player.AddHandler(new PiecePlacedHandler(_cues.PiecePlaced, _cues.PlacementWave, _cues.ClearWave));
             Player.AddHandler(new PatternsClearedHandler(_cues.PatternsCleared));
