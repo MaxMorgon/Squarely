@@ -132,7 +132,7 @@ namespace Squarely.Presentation
             _swing = _dragFeel != null ? _dragFeel.CreateSwing() : null;
             _lastPointerX = world.x;
 
-            PlayHook(hooks => hooks.PiecePickUp);
+            _sound?.PlayHook(hooks => hooks.PiecePickUp);
             UpdateDrag(world);
         }
 
@@ -160,15 +160,7 @@ namespace Squarely.Presentation
                 return;
 
             _ghost.transform.localPosition = _boardSpace.CellCenter(origin) - _ghost.OriginLocal;
-            PlayHook(hooks => hooks.SnapPreview);
-        }
-
-        private void PlayHook(Func<SoundHooks, SoundCue> pickCue)
-        {
-            if (_sound == null || _sound.Hooks == null)
-                return;
-
-            _sound.Play(pickCue(_sound.Hooks));
+            _sound?.PlayHook(hooks => hooks.SnapPreview);
         }
 
         /// <summary>Moves the dragged piece's view toward the drag target. The single place for drag feel such as lag and tilt.</summary>
@@ -213,7 +205,7 @@ namespace Squarely.Presentation
             if (place)
                 _game.Place(pieceInstanceId, origin, dropPoint);
             else
-                PlayHook(hooks => hooks.PieceReturn);
+                _sound?.PlayHook(hooks => hooks.PieceReturn);
         }
 
         #endregion

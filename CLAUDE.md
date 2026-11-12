@@ -12,12 +12,12 @@ Read [Docs/Design.md](Docs/Design.md) before you work on game logic. Build for e
 | `Sim.Tests/` | NUnit tests for Sim (`Squarely.Simulation.Tests`). Run by `dotnet test` and Unity's Test Runner. |
 | `Unity/` | Unity 6000.3 (URP 2D). Uses `Sim/Src` and `Sim.Tests/Src` as local UPM packages (`Unity/Packages/manifest.json`). |
 | `Squarely.sln` | Solution for Sim and Sim.Tests. |
-| `Unity/Assets/Scripts/Presentation/` | `Squarely.Presentation`: views, input, event playback, debug tools. References `Squarely.Simulation`, `Unity.InputSystem`, `Unity.TextMeshPro` and `UnityEngine.UI`. [Design](Docs/CodeDesign.md#presentation-unity). |
+| `Unity/Assets/Scripts/Presentation/` | `Squarely.Presentation`: views, input, event playback, sound (cues, players), debug tools. References `Squarely.Simulation`, `Unity.InputSystem`, `Unity.TextMeshPro` and `UnityEngine.UI`. [Design](Docs/CodeDesign.md#presentation-unity). |
 | `Unity/Assets/Tests/EditMode/` | `Squarely.Presentation.Tests`: unit tests for presentation logic (layout, pooling, slots, playback bookkeeping, cell order, drift check). Not for view wiring. |
-| `Unity/Assets/Scripts/App/` | `Squarely.App`: app state machine and states (menu, test, game), device storage (`IKeyValueStore`), high score, seed source. References `Squarely.Presentation` and `Squarely.Simulation`; Presentation never references App. [Design](Docs/CodeDesign.md#app-flow-unity). |
+| `Unity/Assets/Scripts/App/` | `Squarely.App`: app state machine and states (menu, test, game), device storage (`IKeyValueStore`), high score, seed source, sound preferences, music director. References `Squarely.Presentation` and `Squarely.Simulation`; Presentation never references App. [Design](Docs/CodeDesign.md#app-flow-unity). |
 | `Unity/Assets/Tests/App/` | `Squarely.App.Tests`: unit tests for the state machine, storage, high score, new-record check, seed source, test seed and test high score, start-in-test option. |
 | `Unity/Assets/Scenes/Main.unity` | The only scene: camera, EventSystem, entry point. Screens are prefabs (`Prefabs/Game/`, `Prefabs/Menu/`, `Prefabs/UI/`). Debug UI: `Prefabs/Debug/`. Placeholder art: `Art/Placeholder/`. |
-| `Unity/Assets/Config/` | Assets the user tunes, one subfolder per area: `Gameplay/` (`ClassicGameMode`), `Texts/` (`Texts`), `Theme/` (`CellTheme`), `Feel/` (`DragFeel`), `Playback/` (one `CueSequence` per sim event, e.g. `PatternsClearedCues`, plus `PlacementWaveCues`, `ClearWaveCues`). |
+| `Unity/Assets/Config/` | Assets the user tunes, one subfolder per area: `Gameplay/` (`ClassicGameMode`), `Texts/` (`Texts`), `Theme/` (`CellTheme`), `Feel/` (`DragFeel`), `Audio/` (`SquarelyMixer`, `SoundBank`, `SoundHooks`, `Cues/`; the clips stay in `Assets/Audio/`), `Playback/` (one `CueSequence` per sim event, e.g. `PatternsClearedCues`, plus `PlacementWaveCues`, `ClearWaveCues`). |
 | `Unity/Assets/Editor/` | `Squarely.Editor` (Editor only): editor tools and Unity CLI commands (`Cli/`). |
 
 ## Architecture rules

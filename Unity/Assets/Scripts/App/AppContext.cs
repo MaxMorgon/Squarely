@@ -127,10 +127,7 @@ namespace Squarely.App
         /// <summary>Plays one of the hook cues. Does nothing without a sound player or hooks.</summary>
         public void PlayHook(Func<SoundHooks, SoundCue> pickCue)
         {
-            if (Sound == null || Sound.Hooks == null)
-                return;
-
-            Sound.Play(pickCue(Sound.Hooks));
+            Sound?.PlayHook(pickCue);
         }
     }
 }

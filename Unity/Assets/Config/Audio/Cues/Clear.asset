@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 56c90b701dd1617468a1815f4bfd85ac, type: 3}
-  m_Name: ClearMulti
+  m_Name: Clear
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.SoundCue
   _clips:
-  - {fileID: 8300000, guid: 08000f10bc9832344bc9acc4bb37372d, type: 3}
+  - {fileID: 8300000, guid: e49db197b8d439047ae8eb30740fd357, type: 3}
   _volume: 0.9
   _pitchMin: 1
   _pitchMax: 1
   _pitchStepSemitones: 1
   _maxLevel: 8
-  _cooldown: 0
+  _cooldown: 0.05
   _maxVoices: 4
   _mixerGroup: {fileID: -4900977086377114943, guid: 8024f1b0558382a42935019f2fb64f96, type: 2}
   _haptic: 0

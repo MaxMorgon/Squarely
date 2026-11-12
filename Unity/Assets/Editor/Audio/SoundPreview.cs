@@ -26,16 +26,11 @@ namespace Squarely.Editor
             if (cue == null)
                 return;
 
-            AudioClip clip = cue.PickClip(Random.value);
-
-            if (clip == null)
+            if (cue.Clips.Count == 0)
                 return;
 
             AudioSource source = TakeSource();
-            source.outputAudioMixerGroup = cue.MixerGroup;
-            source.clip = clip;
-            source.volume = cue.Volume;
-            source.pitch = cue.PitchFor(level, Random.value);
+            cue.ApplyTo(source, level);
             source.Play();
         }
 

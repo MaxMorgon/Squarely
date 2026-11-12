@@ -134,8 +134,8 @@ namespace Squarely.App
             _gameOver.RestartRequestEvent += OnRestartRequested;
             _gameOver.MenuRequestEvent += OnMenuRequested;
             _gameOver.SetResult(resolution, finalScore);
-            _context.PlayHook(hooks => resolution.Outcome == GameOutcome.Won ? hooks.GameWon : hooks.GameLost);
-            RecordHighScore(finalScore);
+            bool isNewRecord = RecordHighScore(finalScore);
+            PlayGameOverJingle(resolution.Outcome, isNewRecord);
             RecordReplay();
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             _gameOver.SetReplay(_context.ReplayCopier,_game.BuildReplay());
@@ -152,13 +152,27 @@ namespace Squarely.App
             _context.ReplayHistory.Record(_game.BuildReplay());
         }
 
-        private void RecordHighScore(int finalScore)
+        private bool RecordHighScore(int finalScore)
         {
             bool isNew = _highScore.Record(finalScore);
             _gameOver.SetHighScore(_highScore.Best.Value, isNew);
+            return isNew;
+        }
 
-            if (isNew)
-                _context.PlayHook(hooks => hooks.NewRecord);
+        private void PlayGameOverJingle(GameOutcome outcome, bool isNewRecord)
+        {
+            switch (GameOverJingle.Choose(outcome, isNewRecord))
+            {
+                case GameOverJingle.Kind.NewRecord:
+                    _context.PlayHook(hooks => hooks.NewRecord);
+                    break;
+                case GameOverJingle.Kind.Won:
+                    _context.PlayHook(hooks => hooks.GameWon);
+                    break;
+                default:
+                    _context.PlayHook(hooks => hooks.GameLost);
+                    break;
+            }
         }
 
         #endregion

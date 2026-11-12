@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,9 +40,7 @@ namespace Squarely.Presentation
             if (cue == null)
                 return false;
 
-            AudioClip clip = cue.PickClip(Random.value);
-
-            if (clip == null)
+            if (cue.Clips.Count == 0)
                 return false;
 
             double now = Time.unscaledTimeAsDouble;
@@ -55,16 +54,23 @@ namespace Squarely.Presentation
             Voice voice = TakeVoice();
             _lastPlayTimes[cue] = now;
             voice.Cue = cue;
-            voice.Source.outputAudioMixerGroup = cue.MixerGroup;
-            voice.Source.clip = clip;
-            voice.Source.volume = cue.Volume;
-            voice.Source.pitch = cue.PitchFor(level, Random.value);
+            cue.ApplyTo(voice.Source, level);
             voice.Source.Play();
 
             if (cue.Haptic != HapticKind.None)
                 _haptics.Play(cue.Haptic);
 
             return true;
+        }
+
+        /// <summary>Plays one of the hook cues. Does nothing without hooks.</summary>
+        /// <returns>False if nothing played.</returns>
+        public bool PlayHook(Func<SoundHooks, SoundCue> pickCue)
+        {
+            if (_hooks == null)
+                return false;
+
+            return Play(pickCue(_hooks));
         }
 
         #endregion

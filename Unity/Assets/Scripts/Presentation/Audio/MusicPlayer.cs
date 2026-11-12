@@ -15,7 +15,7 @@ namespace Squarely.Presentation
 
         #region Public API
 
-        /// <summary>Fades the current track out and the new one in. The track loops. The track that plays now is not restarted.</summary>
+        /// <summary>Fades the current track out and the new one in. The track loops. A track that still plays while it fades out is faded back in, not restarted.</summary>
         public void Play(AudioClip track, float fadeSeconds)
         {
             EnsureCreated();
@@ -26,11 +26,31 @@ namespace Squarely.Presentation
                 return;
             }
 
-            if (_sources[_active].clip == track && _fades[_active].Target > 0f)
+            int other = 1 - _active;
+            MusicSwitchRule.Action action = MusicSwitchRule.Choose(
+                _sources[_active].clip == track,
+                _sources[_active].isPlaying,
+                _fades[_active].Target,
+                _sources[other].clip == track,
+                _sources[other].isPlaying);
+
+            if (action == MusicSwitchRule.Action.Keep)
                 return;
 
+            if (action == MusicSwitchRule.Action.FadeActiveBackIn)
+            {
+                _fades[_active].FadeTo(1f, fadeSeconds);
+                return;
+            }
+
             _fades[_active].FadeTo(0f, fadeSeconds);
-            _active = 1 - _active;
+            _active = other;
+
+            if (action == MusicSwitchRule.Action.FadeOtherBackIn)
+            {
+                _fades[_active].FadeTo(1f, fadeSeconds);
+                return;
+            }
 
             AudioSource next = _sources[_active];
             next.clip = track;

@@ -30,10 +30,7 @@ namespace Squarely.Presentation
 
         private void OnClicked()
         {
-            if (_sound == null || _sound.Hooks == null)
-                return;
-
-            _sound.Play(_sound.Hooks.ButtonTap);
+            _sound?.PlayHook(hooks => hooks.ButtonTap);
         }
     }
 }

@@ -68,6 +68,24 @@ namespace Squarely.Presentation
             return _clips[index];
         }
 
+        /// <summary>
+        /// Sets up an audio source to play this cue at a level: clip, mixer group, volume and pitch. Does not start it.
+        /// </summary>
+        /// <returns>False if the cue has no clip.</returns>
+        public bool ApplyTo(AudioSource source, int level)
+        {
+            AudioClip clip = PickClip(Random.value);
+
+            if (clip == null)
+                return false;
+
+            source.outputAudioMixerGroup = _mixerGroup;
+            source.clip = clip;
+            source.volume = _volume;
+            source.pitch = PitchFor(level, Random.value);
+            return true;
+        }
+
         /// <summary>The pitch factor of a play at a level. <paramref name="randomT"/> from 0 to 1 picks the point in the variation range.</summary>
         public float PitchFor(int level, float randomT)
         {
