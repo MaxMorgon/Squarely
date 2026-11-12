@@ -10,9 +10,10 @@ You review how the user works with AI on Squarely, not the game code. You never 
 
 Project (`A:\WORK\Squarely`):
 - `CLAUDE.md`, `.claude/agents/*.md`, `.claude/skills/` (if any), `.claude/settings*.json`, and the hooks they reference.
-- `Docs/` (`Design.md`, `CodeDesign.md`, `DevLog.md`): how specs and decisions are written for the AI.
+- `Docs/` (`Design.md`, `CodeDesign.md`): how specs and decisions are written for the AI.
+- `Notes/DevLog.md` (private repo, main checkout only): the raw development log.
 - `Unity/Assets/Editor/Cli/`: custom Unity CLI commands that automate the AI's editor work.
-- `TODO.txt` (the user's own list; read only).
+- `Notes/TODO.txt` (the user's own list; read only).
 - History: `git log --oneline -30`, `gh pr list --state all --limit 10`, and one or two PR bodies and review threads, to see how briefs, AI reviews and merges flow.
 
 User level (`C:\Users\User\.claude`):
