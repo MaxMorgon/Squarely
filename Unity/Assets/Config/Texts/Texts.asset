@@ -40,6 +40,7 @@ MonoBehaviour:
     Quit: Quit to menu
     Sfx: Sound effects
     Music: Music
+    DevTools: Dev tools
   _confirm:
     Question: Are you sure?
     Yes: Yes
