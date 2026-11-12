@@ -1,3 +1,4 @@
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 namespace Squarely.App
 {
     /// <summary>
@@ -27,3 +28,4 @@ namespace Squarely.App
         }
     }
 }
+#endif

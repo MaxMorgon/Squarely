@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// Editor and development builds only: a small panel for tuning playback. Replays the last move (also with R), ends the game at once (also with E),
+    /// Editor and dev-tools builds only (`SQUARELY_DEV_TOOLS`): a small panel for tuning playback. Replays the last move (also with R), ends the game at once (also with E),
     /// copies the replay code of the game so far (also with C),
     /// restarts the game, sets the playback speed (back to 1x each play session) and shows the last drift check.
     /// It starts collapsed in every game. A small toggle button (or the backquote key) expands it.

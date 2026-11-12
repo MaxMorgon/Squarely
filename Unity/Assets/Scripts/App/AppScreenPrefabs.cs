@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Squarely.App
 {
     /// <summary>
-    /// The screen prefabs the app states create.
+    /// The screen prefabs the app states create. The test and replay fields are serialized in every build. Only builds with dev tools read them.
     /// </summary>
     [Serializable]
     public sealed class AppScreenPrefabs
@@ -29,10 +29,12 @@ namespace Squarely.App
 
         /// <summary>The "are you sure?" dialog.</summary>
         public ConfirmDialog Confirm => _confirm;
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 
         public TestScreen Test => _test;
 
         /// <summary>The replay watch screen, shown over the game view.</summary>
         public ReplayScreen Replay => _replay;
+#endif
     }
 }

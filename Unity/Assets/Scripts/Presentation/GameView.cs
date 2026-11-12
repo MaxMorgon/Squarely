@@ -169,6 +169,7 @@ namespace Squarely.Presentation
             _hud.Score.SetCombo(combo);
         }
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>What the board, hand and score views show right now.</summary>
         public ShownState GetShownState()
         {
@@ -192,7 +193,6 @@ namespace Squarely.Presentation
             return new ShownState(cells, hand, _hud.Score.Score, _hud.Score.Combo);
         }
 
-#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>
         /// Debug only: creates the playback debug overlay as a child of this view, rendered by the game camera.
         /// Its creator initializes it.

@@ -55,7 +55,7 @@ After you change Sim or Sim.Tests code, run `dotnet test Squarely.sln -v q` once
 
 Builds (needs the platform module; output in `Builds/<Target>-<Config>/`, gitignored). Menu `Squarely/Build/...` or the CLI command `build player <store|studio> <android|webgl>` (`BuildTool`, `Unity/Assets/Editor/`). Agents never run a player build.
 
-**Build configs.** Store has no dev tools: the code is compiled out. Studio is a normal (non-development) build with the scripting define `SQUARELY_DEV_TOOLS`: dev tools are compiled in (debug overlay, replays on game over, Test mode, start-in-test). Gate all dev-only code with `#if UNITY_EDITOR || SQUARELY_DEV_TOOLS`, never `DEVELOPMENT_BUILD`. In such builds the "Dev tools" setting (`DevToolsPreference`, on by default) turns the tools on and off at run time.
+**Build configs.** Store has no dev tools: the logic and entry points are compiled out (states, seeds, drift check, debug tools). What stays in the build: types with serialized fields (`TestScreen`, `ReplayScreen`, `PlaybackDebugOverlay`), the prefab refs to them (`AppScreenPrefabs`, `GameView._debugOverlayPrefab`) and the dev-only texts. Nothing reaches them. Studio is a normal (non-development) build with the scripting define `SQUARELY_DEV_TOOLS`: dev tools are compiled in (debug overlay, replays on game over, Test mode, start-in-test). Gate all dev-only code with `#if UNITY_EDITOR || SQUARELY_DEV_TOOLS`, never `DEVELOPMENT_BUILD`. In such builds the "Dev tools" setting (`DevToolsPreference`, on by default) turns the tools on and off at run time.
 
 Headless checks (no editor open, e.g. a worktree slot; CI runs the Sim part on every PR):
 

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 using System.Collections.Generic;
 using System.Text;
 using Squarely.Simulation;
@@ -105,3 +106,4 @@ namespace Squarely.Presentation
         }
     }
 }
+#endif

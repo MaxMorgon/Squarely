@@ -41,13 +41,19 @@ namespace Squarely.App
             var highScore = new HighScore(store);
             var replayHistory = new ReplayHistory(store, () => System.DateTime.UtcNow);
             var seedSource = new SeedSource(new System.Random());
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             var testSeed = new TestSeed(store, seedSource);
             var startInTest = new StartInTest(store);
+#endif
             var devTools = new DevToolsPreference(store);
             var soundPreferences = new SoundPreferences(store, new SoundSettings(_mixer));
             _soundPlayer.SetHaptics(new NoHaptics());
             var music = new MusicDirector(_musicPlayer, _soundPlayer.Hooks);
-            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, testSeed, startInTest, devTools,
+            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource,
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+                testSeed, startInTest,
+#endif
+                devTools,
                 _soundPlayer, music, soundPreferences);
 
             _stateMachine = new AppStateMachine();

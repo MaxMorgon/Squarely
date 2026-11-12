@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// Editor and development builds only: the debug tools of one game. Creates the playback debug overlay, replays
+    /// Editor and dev-tools builds only (`SQUARELY_DEV_TOOLS`): the debug tools of one game. Creates the playback debug overlay, replays
     /// the last move, checks the views against the sim when a playback ends, and relays the overlay's restart.
     /// Not game logic. The game works the same without it.
     /// </summary>
@@ -69,6 +69,7 @@ namespace Squarely.Presentation
             Object.Destroy(_overlay.gameObject);
             _overlay = null;
             _lastMove = null;
+            LastDrift = null;
         }
 
         #region Commands

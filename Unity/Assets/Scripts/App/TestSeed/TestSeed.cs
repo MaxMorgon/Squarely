@@ -1,3 +1,4 @@
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 using System;
 using System.Globalization;
 
@@ -77,3 +78,4 @@ namespace Squarely.App
         #endregion
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 using System;
 using System.Collections.Generic;
 using Squarely.Presentation;
@@ -206,3 +207,4 @@ namespace Squarely.App
         #endregion
     }
 }
+#endif

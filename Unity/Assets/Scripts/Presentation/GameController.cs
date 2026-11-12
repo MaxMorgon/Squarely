@@ -26,8 +26,10 @@ namespace Squarely.Presentation
         /// </summary>
         public event Action<GameResolution, int> GameEndEvent;
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>A move was executed, before its events play. Raised only for moves that succeed.</summary>
         public event Action<ExecutedMove> MoveExecutedEvent;
+#endif
 
         /// <summary>Creates the game in its state before the deal is played. Its state can be read at once.</summary>
         /// <param name="view">The game's view. Its owner initializes it, with this controller as its placer, before <see cref="StartGame"/>.</param>
@@ -104,8 +106,10 @@ namespace Squarely.Presentation
             // Snap before executing, so the playback that ends here is checked against the state it led to.
             _view.Player.Snap();
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             // The copy is only needed by subscribers of MoveExecutedEvent.
             Sim before = MoveExecutedEvent != null ? _sim.Clone() : null;
+#endif
 
             CommandResult result = _recorder.Execute(command);
 
@@ -115,7 +119,9 @@ namespace Squarely.Presentation
                 return false;
             }
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             MoveExecutedEvent?.Invoke(new ExecutedMove(before, result.Events, dropPoint));
+#endif
 
             _view.Player.Play(result.Events, dropPoint);
             return true;
@@ -129,11 +135,13 @@ namespace Squarely.Presentation
             return _recorder.Build();
         }
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>A copy of the game's sim in its current state. Changing the copy does not change the game.</summary>
         public Sim CopySim()
         {
             return _sim.Clone();
         }
+#endif
 
         // A replay of the resolving move reaches the resolution again; the game ends once.
         private void OnGameResolved(GameResolvedEvent resolved)

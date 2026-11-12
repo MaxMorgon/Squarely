@@ -39,11 +39,13 @@ namespace Squarely.App
         /// <summary>Picks the seed of every new game.</summary>
         public SeedSource SeedSource { get; }
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>The seed the test screen plays.</summary>
         public TestSeed TestSeed { get; }
 
         /// <summary>Whether the app opens the test screen at start. Ignored when dev tools are off.</summary>
         public StartInTest StartInTest { get; }
+#endif
 
         /// <summary>The "Dev tools" setting. Dev tools run only in builds that have them, and while this is on.</summary>
         public DevToolsPreference DevTools { get; }
@@ -58,7 +60,10 @@ namespace Squarely.App
         public SoundPreferences SoundPrefs { get; }
 
         public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, SimConfig defaultConfig, TextsConfig texts,
-            HighScore highScore, ReplayHistory replayHistory, ReplayCopier replayCopier, SeedSource seedSource, TestSeed testSeed, StartInTest startInTest,
+            HighScore highScore, ReplayHistory replayHistory, ReplayCopier replayCopier, SeedSource seedSource,
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            TestSeed testSeed, StartInTest startInTest,
+#endif
             DevToolsPreference devTools, SoundPlayer sound, MusicDirector music, SoundPreferences soundPrefs)
         {
             ScreenPrefabs = screenPrefabs;
@@ -70,8 +75,10 @@ namespace Squarely.App
             ReplayHistory = replayHistory;
             ReplayCopier = replayCopier;
             SeedSource = seedSource;
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             TestSeed = testSeed;
             StartInTest = startInTest;
+#endif
             DevTools = devTools;
             Sound = sound;
             Music = music;
