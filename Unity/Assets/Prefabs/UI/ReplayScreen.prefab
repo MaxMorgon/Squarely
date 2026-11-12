@@ -757,6 +757,7 @@ GameObject:
   - component: {fileID: 6772134221116009184}
   - component: {fileID: 4212445949148686400}
   - component: {fileID: 3807468975464943948}
+  - component: {fileID: 6795235523083444603}
   m_Layer: 0
   m_Name: RestartButton
   m_TagString: Untagged
@@ -866,6 +867,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6795235523083444603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2293661545314731443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &2691503072326298197
 GameObject:
   m_ObjectHideFlags: 0
@@ -878,6 +891,7 @@ GameObject:
   - component: {fileID: 3837697914168510996}
   - component: {fileID: 4578800812900958057}
   - component: {fileID: 5382639523883306056}
+  - component: {fileID: 9018819703749627218}
   m_Layer: 0
   m_Name: BackButton
   m_TagString: Untagged
@@ -987,6 +1001,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9018819703749627218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2691503072326298197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &2838739261193275334
 GameObject:
   m_ObjectHideFlags: 0
@@ -1711,6 +1737,7 @@ GameObject:
   - component: {fileID: 8470444878013269053}
   - component: {fileID: 1590695480470897394}
   - component: {fileID: 1034817288711452365}
+  - component: {fileID: 6232221158622639442}
   m_Layer: 0
   m_Name: StepButton
   m_TagString: Untagged
@@ -1820,6 +1847,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6232221158622639442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6488453232360997803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &6755712447584750869
 GameObject:
   m_ObjectHideFlags: 0
@@ -2346,6 +2385,7 @@ GameObject:
   - component: {fileID: 8233262329505863458}
   - component: {fileID: 4072284197217770457}
   - component: {fileID: 2799821187713650999}
+  - component: {fileID: 2979965407495392795}
   m_Layer: 0
   m_Name: PlayPauseButton
   m_TagString: Untagged
@@ -2455,6 +2495,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2979965407495392795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7911051889378298969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &8206984223494036395
 GameObject:
   m_ObjectHideFlags: 0

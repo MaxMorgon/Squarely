@@ -589,6 +589,7 @@ GameObject:
   - component: {fileID: 3578243992120856198}
   - component: {fileID: 2525114539760075889}
   - component: {fileID: 7279875910193323145}
+  - component: {fileID: 3382548995979236190}
   m_Layer: 0
   m_Name: CopyButton
   m_TagString: Untagged
@@ -718,6 +719,18 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &3382548995979236190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3918425613384219866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &7656969659848569858
 GameObject:
   m_ObjectHideFlags: 0
@@ -731,6 +744,7 @@ GameObject:
   - component: {fileID: 478576501225298624}
   - component: {fileID: 3085041502919314101}
   - component: {fileID: 8476597256417926181}
+  - component: {fileID: 6321669365997085390}
   m_Layer: 0
   m_Name: PlayButton
   m_TagString: Untagged
@@ -860,3 +874,15 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &6321669365997085390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7656969659848569858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound

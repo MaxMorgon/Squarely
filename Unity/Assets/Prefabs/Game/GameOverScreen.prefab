@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1359447424356252808}
   - component: {fileID: 1851285682680565174}
   - component: {fileID: 7674812542454115900}
+  - component: {fileID: 1800116155361397781}
   m_Layer: 0
   m_Name: CopyReplayButton
   m_TagString: Untagged
@@ -121,6 +122,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1800116155361397781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 984233316651352755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &1171102343483358707
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,6 +443,7 @@ GameObject:
   - component: {fileID: 2206296287978548104}
   - component: {fileID: 6581045056408987914}
   - component: {fileID: 782811698307351791}
+  - component: {fileID: 5536385452362965241}
   m_Layer: 0
   m_Name: RestartButton
   m_TagString: Untagged
@@ -539,6 +553,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5536385452362965241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2092764720557024710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &4585949000865527470
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,6 +851,7 @@ GameObject:
   - component: {fileID: 3837964298028441662}
   - component: {fileID: 5468262213056145250}
   - component: {fileID: 1659939952960394328}
+  - component: {fileID: 7223190715348733534}
   m_Layer: 0
   m_Name: MenuButton
   m_TagString: Untagged
@@ -934,6 +961,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7223190715348733534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5911393451931703630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2d4aa890e2f114180a7d41950909d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ButtonSound
 --- !u!1 &7773380462359084845
 GameObject:
   m_ObjectHideFlags: 0
