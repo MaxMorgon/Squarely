@@ -69,6 +69,7 @@ MonoBehaviour:
     Pause: Pause
     Step: Step
     Back: Back
+    Restart: Restart
     SpeedFormat: x{0}
     ProgressFormat: Move {0} / {1}
     ConfigWarning: Replay was recorded with a different game config. It may not play

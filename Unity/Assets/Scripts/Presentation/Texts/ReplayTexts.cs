@@ -11,6 +11,7 @@ namespace Squarely.Presentation
         public string Pause = "Pause";
         public string Step = "Step";
         public string Back = "Back";
+        public string Restart = "Restart";
 
         [Tooltip("{0} is the playback speed.")]
         public string SpeedFormat = "x{0}";

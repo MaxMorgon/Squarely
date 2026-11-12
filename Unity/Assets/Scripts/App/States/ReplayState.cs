@@ -10,7 +10,7 @@ namespace Squarely.App
     /// Watches a recorded game on a game view, with no player input. Starts a game with the replay's seed and the
     /// default game mode, then runs the replay's commands one by one through the game controller, so the
     /// playback is the same as in a game. Auto-play runs the next command a short delay after the previous playback ended.
-    /// It starts paused. Play/Pause, Step and the speed button control it. A banner warns if the replay was recorded with a different game config.
+    /// It starts paused. Play/Pause, Step, Restart and the speed dropdown control it. A banner warns if the replay was recorded with a different game config.
     /// If a command fails, it stops and says where. At the end it shows the final score and whether the end state matches the recording.
     /// It never records a high score or a history entry and has no game-over screen. Back enters the back target.
     /// </summary>
@@ -25,7 +25,6 @@ namespace Squarely.App
         private GameController _game;
         private ReplayScreen _screen;
         private ReplayStepper _stepper;
-        private int _speedIndex;
         private bool _isOver;
         private int _movesShown;
 
@@ -54,15 +53,16 @@ namespace Squarely.App
             _screen.SetWarning(ReplayPaste.Check(_replay, config).Status == ReplayPasteStatus.ConfigMismatch);
 
             _stepper = new ReplayStepper(_replay.Commands.Count, _screen.StepDelay);
-            _speedIndex = Mathf.Max(0, Array.IndexOf(_screen.SpeedPresets, 1f));
-            ApplySpeed();
+            _view.Player.Speed = 1f;
+            _screen.SetSpeed(1f);
             _stepper.SetPaused(true);
             _screen.SetPlaying(false);
             UpdateProgress();
 
             _screen.PlayPauseRequestEvent += OnPlayPauseRequested;
             _screen.StepRequestEvent += OnStepRequested;
-            _screen.SpeedRequestEvent += OnSpeedRequested;
+            _screen.RestartRequestEvent += OnRestartRequested;
+            _screen.SpeedSelectEvent += OnSpeedSelected;
             _screen.BackRequestEvent += OnBackRequested;
             _screen.TickEvent += OnTick;
 
@@ -74,7 +74,8 @@ namespace Squarely.App
         {
             _screen.PlayPauseRequestEvent -= OnPlayPauseRequested;
             _screen.StepRequestEvent -= OnStepRequested;
-            _screen.SpeedRequestEvent -= OnSpeedRequested;
+            _screen.RestartRequestEvent -= OnRestartRequested;
+            _screen.SpeedSelectEvent -= OnSpeedSelected;
             _screen.BackRequestEvent -= OnBackRequested;
             _screen.TickEvent -= OnTick;
             Object.Destroy(_screen.gameObject);
@@ -110,10 +111,14 @@ namespace Squarely.App
                 ExecuteNext();
         }
 
-        private void OnSpeedRequested()
+        private void OnRestartRequested()
         {
-            _speedIndex = (_speedIndex + 1) % _screen.SpeedPresets.Length;
-            ApplySpeed();
+            _stateMachine.ChangeState(new ReplayState(_context, _stateMachine, _replay, _createBackState));
+        }
+
+        private void OnSpeedSelected(float speed)
+        {
+            _view.Player.Speed = speed;
         }
 
         private void OnBackRequested()
@@ -161,13 +166,6 @@ namespace Squarely.App
             _screen.SetPlaying(false);
             _screen.SetControlsEnabled(false);
             _screen.SetStatus(status);
-        }
-
-        private void ApplySpeed()
-        {
-            float speed = _screen.SpeedPresets[_speedIndex];
-            _view.Player.Speed = speed;
-            _screen.SetSpeed(speed);
         }
 
         private void UpdateProgress(bool isGameEnded = false)

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,13 +7,13 @@ using UnityEngine.UI;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// The replay watch screen, shown over the game view: the move counter, a Play/Pause button,
-    /// Step, a speed button, Back, a warning banner and the status or result text.
+    /// The replay watch screen, shown over the game view: the move counter, a Play/Pause button, Restart,
+    /// Step, a speed dropdown, Back, a warning banner and the status or result text.
     /// Reports the player's choices; whoever owns it decides what happens next.
     /// </summary>
     public sealed class ReplayScreen : MonoBehaviour
     {
-        [Tooltip("The playback speeds the speed button cycles through, in order.")]
+        [Tooltip("The playback speeds the speed dropdown offers, in order.")]
         [SerializeField] private float[] _speedPresets = { 0.5f, 1f, 2f, 4f };
 
         [Tooltip("Seconds auto-play waits, at speed 1, between the end of a move's playback and the next move.")]
@@ -24,8 +25,9 @@ namespace Squarely.Presentation
         [SerializeField] private TMP_Text _playPauseLabel;
         [SerializeField] private Button _stepButton;
         [SerializeField] private TMP_Text _stepLabel;
-        [SerializeField] private Button _speedButton;
-        [SerializeField] private TMP_Text _speedLabel;
+        [SerializeField] private Button _restartButton;
+        [SerializeField] private TMP_Text _restartLabel;
+        [SerializeField] private TMP_Dropdown _speedDropdown;
         [SerializeField] private Button _backButton;
         [SerializeField] private TMP_Text _backLabel;
 
@@ -40,17 +42,17 @@ namespace Squarely.Presentation
         /// <summary>Seconds auto-play waits between a move's playback and the next move, at speed 1.</summary>
         public float StepDelay => _stepDelay;
 
-        /// <summary>The playback speeds the speed button cycles through.</summary>
-        public float[] SpeedPresets => _speedPresets;
-
         /// <summary>The player pressed Play or Pause.</summary>
         public event Action PlayPauseRequestEvent;
 
         /// <summary>The player asked to run the next command.</summary>
         public event Action StepRequestEvent;
 
-        /// <summary>The player asked for the next speed preset.</summary>
-        public event Action SpeedRequestEvent;
+        /// <summary>The player asked to watch the replay again from the start.</summary>
+        public event Action RestartRequestEvent;
+
+        /// <summary>The player picked a playback speed. Gives the speed.</summary>
+        public event Action<float> SpeedSelectEvent;
 
         /// <summary>The player asked to go back.</summary>
         public event Action BackRequestEvent;
@@ -64,7 +66,8 @@ namespace Squarely.Presentation
         {
             _playPauseButton.onClick.AddListener(() => PlayPauseRequestEvent?.Invoke());
             _stepButton.onClick.AddListener(() => StepRequestEvent?.Invoke());
-            _speedButton.onClick.AddListener(() => SpeedRequestEvent?.Invoke());
+            _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
+            _speedDropdown.onValueChanged.AddListener(index => SpeedSelectEvent?.Invoke(_speedPresets[index]));
             _backButton.onClick.AddListener(() => BackRequestEvent?.Invoke());
         }
 
@@ -80,6 +83,8 @@ namespace Squarely.Presentation
             _texts = texts;
             _stepLabel.text = texts.Step;
             _backLabel.text = texts.Back;
+            _restartLabel.text = texts.Restart;
+            SetSpeedOptions();
             SetPlaying(false);
             SetWarning(false);
             SetStatus(null);
@@ -103,10 +108,29 @@ namespace Squarely.Presentation
             _playPauseLabel.text = isPlaying ? _texts.Pause : _texts.Play;
         }
 
-        /// <summary>Sets the speed shown on the speed button.</summary>
+        /// <summary>Selects the speed preset nearest to the speed. Raises no event.</summary>
         public void SetSpeed(float speed)
         {
-            _speedLabel.text = string.Format(_texts.SpeedFormat, speed);
+            int nearest = 0;
+
+            for (int i = 1; i < _speedPresets.Length; i++)
+            {
+                if (Mathf.Abs(_speedPresets[i] - speed) < Mathf.Abs(_speedPresets[nearest] - speed))
+                    nearest = i;
+            }
+
+            _speedDropdown.SetValueWithoutNotify(nearest);
+        }
+
+        private void SetSpeedOptions()
+        {
+            List<string> options = new List<string>();
+
+            foreach (float speed in _speedPresets)
+                options.Add(string.Format(_texts.SpeedFormat, speed));
+
+            _speedDropdown.ClearOptions();
+            _speedDropdown.AddOptions(options);
         }
 
         /// <summary>Shows or hides the banner that says the replay was recorded with a different game config.</summary>
