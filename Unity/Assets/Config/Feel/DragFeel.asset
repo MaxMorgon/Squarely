@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 518a8ac67ac9c2e4398952c4bc012f99, type: 3}
   m_Name: DragFeel
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.DragFeel
+  _liftOffset: 2
   _maxAngle: 12
   _degreesPerSpeed: 2
   _springFrequency: 3
