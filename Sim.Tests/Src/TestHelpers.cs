@@ -56,10 +56,25 @@ namespace Squarely.Simulation.Tests
         }
 
         /// <summary>
-        /// The first piece, in slot order, at the first origin where it fits (bottom row first, left to right).
+        /// The first valid move: first piece in slot order, at the first origin where it fits (bottom row first, left to right).
         /// </summary>
         public static PlacePieceCommand FirstValidMove(Sim sim)
         {
+            List<PlacePieceCommand> moves = AllValidMoves(sim);
+
+            if (moves.Count == 0)
+                throw new InvalidOperationException("No valid move although the game is not resolved.");
+
+            return moves[0];
+        }
+
+        /// <summary>
+        /// Every valid placement, in slot order, then bottom row first, left to right.
+        /// </summary>
+        public static List<PlacePieceCommand> AllValidMoves(Sim sim)
+        {
+            var moves = new List<PlacePieceCommand>();
+
             for (int slot = 0; slot < sim.Hand.Size; slot++)
             {
                 PieceInstance piece = sim.Hand.GetSlot(slot);
@@ -74,12 +89,12 @@ namespace Squarely.Simulation.Tests
                         var origin = new GridPos(x, y);
 
                         if (sim.Board.CanPlace(piece.Shape, origin))
-                            return new PlacePieceCommand(piece.InstanceId, origin);
+                            moves.Add(new PlacePieceCommand(piece.InstanceId, origin));
                     }
                 }
             }
 
-            throw new InvalidOperationException("No valid move although the game is not resolved.");
+            return moves;
         }
 
         #endregion
