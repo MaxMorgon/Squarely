@@ -46,4 +46,4 @@ Test: sound PR #37 (branch feature/sound, checked out in the main checkout)
 - PR housekeeping: the agent was not allowed to post 6 review replies and the PR body update.
   Say "post the PR replies" if you want me to do it.
 
-Audit: running while you test. I give you the findings when it ends.
+Audit: issue #38. Pick which findings become tasks (see chat). I close #38 when each is a task or dropped.
