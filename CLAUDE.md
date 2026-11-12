@@ -58,6 +58,12 @@ Headless checks (no editor open, e.g. a worktree slot; CI runs the Sim part on e
 bash Tools/verify.sh [checkout] [--sim-only]   # dotnet test, then Unity import + compile + EditMode tests; prints errors and totals only
 ```
 
+Subagent token use per agent and model, from the local transcripts (the user asks for it to compare agent models):
+
+```sh
+bash Tools/agent-usage.sh [--since YYYY-MM-DD] [--by-day] [--all-projects]
+```
+
 ## Code style
 
 Use standard C# conventions (Microsoft naming: `PascalCase` types/methods/properties, `camelCase` locals/parameters, `_camelCase` private fields, `I` prefix for interfaces), with these preferences:
