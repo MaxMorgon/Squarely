@@ -65,12 +65,12 @@ namespace Squarely.App
             _stateMachine.ChangeState(CreateFirstState(context));
         }
 
-        #endregion
-
         private void Update()
         {
             _stateMachine.Tick(Time.deltaTime);
         }
+
+        #endregion
 
         private IAppState CreateFirstState(AppContext context)
         {
