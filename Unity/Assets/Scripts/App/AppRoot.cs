@@ -33,7 +33,7 @@ namespace Squarely.App
             var seedSource = new SeedSource(new System.Random());
             var testSeed = new TestSeed(store, seedSource);
             var startInTest = new StartInTest(store);
-            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, seedSource, testSeed, startInTest);
+            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, testSeed, startInTest);
 
             _stateMachine = new AppStateMachine();
             _stateMachine.ChangeState(CreateFirstState(context));

@@ -66,7 +66,7 @@ namespace Squarely.App
             _view.Hud.Score.ScoreChangeEvent += OnScoreChanged;
             _game.GameEndEvent += OnGameEnded;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            _debugTools = new GameDebugTools(_game, _view, new ReplayCopier(new SystemClipboard()));
+            _debugTools = new GameDebugTools(_game, _view, _context.ReplayCopier);
             _debugTools.RestartRequestEvent += OnRestartRequested;
             _debugTools.Start();
 #endif
@@ -132,7 +132,7 @@ namespace Squarely.App
             RecordHighScore(finalScore);
             RecordReplay();
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-            _gameOver.SetReplay(new ReplayCopier(new SystemClipboard()), _game.BuildReplay());
+            _gameOver.SetReplay(_context.ReplayCopier,_game.BuildReplay());
 #endif
         }
 

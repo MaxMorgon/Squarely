@@ -27,6 +27,7 @@ namespace Squarely.App
         private ReplayStepper _stepper;
         private int _speedIndex;
         private bool _isOver;
+        private int _movesShown;
 
         /// <param name="createBackState">Creates the state Back enters.</param>
         public ReplayState(AppContext context, AppStateMachine stateMachine, GameReplay replay, Func<IAppState> createBackState)
@@ -46,6 +47,7 @@ namespace Squarely.App
             _game = new GameController(_view, new GameSetup(config, _replay.Seed));
             _view.Initialize(config, _context.Camera, _context.Texts.GameHud, _game);
             _view.SetInputBlocked(true);
+            _view.Hud.HideSettings();
 
             _screen = _context.CreateScreen(_context.ScreenPrefabs.Replay);
             _screen.Initialize(_context.Texts.Replay);
@@ -123,8 +125,9 @@ namespace Squarely.App
         private void ExecuteNext()
         {
             int index = _stepper.Executed;
+            ISimCommand command = _replay.Commands[index];
 
-            if (!_game.ExecuteCommand(_replay.Commands[index]))
+            if (!_game.ExecuteCommand(command))
             {
                 _stepper.Stop();
                 Finish(string.Format(_context.Texts.Replay.DivergedFormat, index + 1));
@@ -132,14 +135,18 @@ namespace Squarely.App
             }
 
             _stepper.MarkExecuted();
-            UpdateProgress();
+
+            if (command is PlacePieceCommand)
+                _movesShown++;
+
+            UpdateProgress(command is EndGameCommand);
         }
 
         private void ShowResult()
         {
             ReplayTexts texts = _context.Texts.Replay;
             Sim sim = _game.CopySim();
-            bool matches = sim.Score == _replay.EndScore && sim.IsResolved == _replay.EndIsResolved;
+            bool matches = _replay.MatchesEnd(sim);
             string recordedState = _replay.EndIsResolved ? texts.ResultFinished : texts.ResultUnfinished;
             string comparison = matches ? texts.ResultMatch : string.Format(texts.ResultMismatchFormat, _replay.EndScore, recordedState);
 
@@ -162,9 +169,12 @@ namespace Squarely.App
             _screen.SetSpeed(speed);
         }
 
-        private void UpdateProgress()
+        private void UpdateProgress(bool isGameEnded = false)
         {
-            _screen.SetProgress(_stepper.Executed, _stepper.Total);
+            if (isGameEnded)
+                _screen.SetGameEnded();
+            else
+                _screen.SetProgress(_movesShown, _replay.MoveCount);
         }
     }
 }

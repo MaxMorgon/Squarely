@@ -91,6 +91,12 @@ namespace Squarely.Presentation
             _progressLabel.text = string.Format(_texts.ProgressFormat, shown, total);
         }
 
+        /// <summary>Shows the game-ended text instead of the move counter.</summary>
+        public void SetGameEnded()
+        {
+            _progressLabel.text = _texts.GameEnded;
+        }
+
         /// <summary>Sets whether auto-play runs. The button shows the action it does next: Pause while playing, Play while paused.</summary>
         public void SetPlaying(bool isPlaying)
         {

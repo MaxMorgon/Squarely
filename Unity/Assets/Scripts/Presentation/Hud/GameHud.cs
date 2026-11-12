@@ -58,6 +58,12 @@ namespace Squarely.Presentation
             _newRecordLabel.text = texts.NewRecord;
         }
 
+        /// <summary>Hides the settings button.</summary>
+        public void HideSettings()
+        {
+            _settingsButton.gameObject.SetActive(false);
+        }
+
         /// <summary>Plays the "new record" celebration.</summary>
         public void CelebrateNewRecord()
         {

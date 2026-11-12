@@ -18,6 +18,9 @@ namespace Squarely.Presentation
         [Tooltip("{0} is the number of moves shown, {1} the number of moves in the replay.")]
         public string ProgressFormat = "Move {0} / {1}";
 
+        [Tooltip("Shown instead of the move number when the step is the end-game command.")]
+        public string GameEnded = "Game ended";
+
         public string ConfigWarning = "Replay was recorded with a different game config. It may not play the same.";
 
         [Tooltip("{0} is the number of the move that failed.")]

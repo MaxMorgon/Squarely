@@ -49,7 +49,7 @@ namespace Squarely.Simulation
                 break;
             }
 
-            bool endMatches = sim.Score == replay.EndScore && sim.IsResolved == replay.EndIsResolved;
+            bool endMatches = replay.MatchesEnd(sim);
 
             return new ReplayRunResult(
                 sim.ConfigFingerprint == replay.ConfigFingerprint,

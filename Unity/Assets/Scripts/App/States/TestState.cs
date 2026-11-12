@@ -16,7 +16,7 @@ namespace Squarely.App
     /// The replays section lists the replay history (newest first) with Play and Copy per row, and has a field to paste
     /// a replay code. Play opens the replay watch (<see cref="ReplayState"/>) with the default game mode; Back there returns here.
     /// A pasted code shows an error if it cannot be read, or a warning if it was recorded with a different game config (Play still works).
-    /// Pasted Play is unavailable while the field is empty.
+    /// Pasted Play is unavailable until the field holds a code that can be read.
     /// </summary>
     public sealed class TestState : IAppState
     {
@@ -107,7 +107,7 @@ namespace Squarely.App
         private void OnReplayCodeEdited(string text)
         {
             ReplayPasteResult result = ReplayPaste.Check(text, _context.DefaultConfig);
-            _screen.SetReplayCodePlayable(result.Status != ReplayPasteStatus.Empty);
+            _screen.SetReplayCodePlayable(result.CanPlay);
             _screen.SetReplayMessage(MessageFor(result));
             _pasteResult = result;
         }
@@ -133,7 +133,7 @@ namespace Squarely.App
 
         private void OnHistoryCopyRequested(int index)
         {
-            new SystemClipboard().SetText(_historyEntries[index].Code);
+            _context.ReplayCopier.CopyCode(_historyEntries[index].Code);
             _screen.SetReplayMessage(_context.Texts.Test.ReplayCopied);
         }
 

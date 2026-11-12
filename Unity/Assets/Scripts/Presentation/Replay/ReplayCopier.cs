@@ -17,8 +17,14 @@ namespace Squarely.Presentation
         public string Copy(GameReplay replay)
         {
             string code = ReplayCodec.Encode(replay);
-            _clipboard.SetText(code);
+            CopyCode(code);
             return code;
+        }
+
+        /// <summary>Puts a replay code on the clipboard.</summary>
+        public void CopyCode(string code)
+        {
+            _clipboard.SetText(code);
         }
     }
 }

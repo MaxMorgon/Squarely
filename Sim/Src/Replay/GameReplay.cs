@@ -25,6 +25,23 @@ namespace Squarely.Simulation
 
         public bool EndIsResolved { get; }
 
+        /// <summary>The number of place commands: the moves the player made.</summary>
+        public int MoveCount
+        {
+            get
+            {
+                int count = 0;
+
+                foreach (ISimCommand command in Commands)
+                {
+                    if (command is PlacePieceCommand)
+                        count++;
+                }
+
+                return count;
+            }
+        }
+
         public GameReplay(
             ulong seed,
             ulong configFingerprint,
@@ -42,6 +59,15 @@ namespace Squarely.Simulation
             Commands = new List<ISimCommand>(commands);
             EndScore = endScore;
             EndIsResolved = endIsResolved;
+        }
+
+        /// <summary>Whether the sim has the recorded end score and resolved flag.</summary>
+        public bool MatchesEnd(Sim sim)
+        {
+            if (sim == null)
+                throw new ArgumentNullException(nameof(sim));
+
+            return sim.Score == EndScore && sim.IsResolved == EndIsResolved;
         }
     }
 }

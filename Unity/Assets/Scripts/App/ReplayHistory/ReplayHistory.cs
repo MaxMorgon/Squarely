@@ -44,7 +44,7 @@ namespace Squarely.App
             if (replay == null)
                 throw new ArgumentNullException(nameof(replay));
 
-            int moveCount = CountMoves(replay);
+            int moveCount = replay.MoveCount;
 
             if (!replay.EndIsResolved && moveCount == 0)
                 return false;
@@ -61,19 +61,6 @@ namespace Squarely.App
             _store.SetString(StoreKey, Serialize(entries));
             _store.Save();
             return true;
-        }
-
-        private static int CountMoves(GameReplay replay)
-        {
-            int count = 0;
-
-            foreach (ISimCommand command in replay.Commands)
-            {
-                if (command is PlacePieceCommand)
-                    count++;
-            }
-
-            return count;
         }
 
         #region Storage format
