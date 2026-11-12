@@ -31,9 +31,19 @@ Live Ops
 CLAUDE: WHAT I NEED FROM YOU  (Claude edits only below this line)
 ==================================================================
 
-Sound (branch feature/sound, no PR yet)
-- Phases 1-2 are pushed: sound core, Sound Mixer window, CC0 placeholder audio, CREDITS.md.
-- Phase 3 (wiring, settings toggles, music, assets) is unblocked: PR #36 is merged.
-  Say "continue sound" to start it.
+Test: sound PR #37 (branch feature/sound, checked out in the main checkout)
+- Read the PR's Decisions and How to test. The volumes are guesses: tune them in
+  Window > Squarely > Sound Mixer. The tuning assets are in Config/Audio/.
+- Settings: SFX and Music toggles. Both are saved.
+- A 3-line clear plays one clear sound. 2+ clears play ClearMulti. Combo 0 plays ComboLost.
+- A record game plays only the record jingle.
+- Menu > Play, then Settings > Quit within 1 s: the menu music fades back in, no jump.
 - Decision to check: the clear pitch rises with clear count and combo level.
   There is no extra pitch for each cleared match.
+- Question: a placement that clears plays no drop sound (only the clear sound).
+  Do you want the drop sound there too?
+- No tap sound on the replay speed dropdown and on the debug overlay buttons.
+- PR housekeeping: the agent was not allowed to post 6 review replies and the PR body update.
+  Say "post the PR replies" if you want me to do it.
+
+Audit: running while you test. I give you the findings when it ends.
