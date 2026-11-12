@@ -103,7 +103,7 @@ namespace Squarely.Presentation
         /// <param name="camera">The camera that renders the game and its UI, also used to map the pointer to the board.</param>
         /// <param name="hudTexts">The texts the HUD shows.</param>
         /// <param name="placer">Receives the player's placements.</param>
-        /// <param name="sound">Plays the game's sounds, or null for a silent game. Also connects the <see cref="ButtonSound"/> buttons of the view.</param>
+        /// <param name="sound">Plays the game's sounds, or null for a silent game. Also gives the <see cref="ButtonSound"/> buttons of the view their sound.</param>
         public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer, SoundPlayer sound = null)
         {
             _config = config;
@@ -122,7 +122,7 @@ namespace Squarely.Presentation
             _handView.Initialize(config.HandSize, viewPool, _cellSize);
             _dragController.Initialize(camera, placer, _handView, _boardRoot, boardSpace, viewPool, sound);
             _hud.Initialize(hudTexts);
-            ButtonSound.Bind(gameObject, sound);
+            ButtonSoundScope.Attach(gameObject, sound);
             _hudCanvas.worldCamera = camera;
             _cameraFitter.Initialize(camera, GameplayArea(config));
 

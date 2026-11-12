@@ -40,13 +40,13 @@ namespace Squarely.App
 
         public void Enter()
         {
-            _context.Music.PlayMenu();
-            _screen = _context.CreateScreen(_context.ScreenPrefabs.Test);
+            _context.Audio.Music.PlayMenu();
+            _screen = _context.Screens.CreateScreen(_context.Screens.Prefabs.Test);
             _screen.Initialize(_context.Texts.Test);
-            _screen.SetStartInTest(_context.StartInTest.IsOn);
+            _screen.SetStartInTest(_context.Services.StartInTest.IsOn);
             _highScore = StartHighScore;
             _screen.SetHighScore(TestHighScore.Format(StartHighScore));
-            SetSeed(_context.TestSeed.LoadOrCreate());
+            SetSeed(_context.Services.TestSeed.LoadOrCreate());
             ShowHistory();
             _screen.SetReplayCodePlayable(false);
 
@@ -95,7 +95,7 @@ namespace Squarely.App
         {
             TestTexts texts = _context.Texts.Test;
             var rows = new List<string>();
-            _historyEntries = _context.ReplayHistory.Entries;
+            _historyEntries = _context.Services.ReplayHistory.Entries;
 
             foreach (ReplayHistoryEntry entry in _historyEntries)
             {
@@ -104,9 +104,6 @@ namespace Squarely.App
             }
 
             _screen.SetHistory(rows);
-
-            // The rows are made now, after the screen was created: connect their buttons to the sound.
-            ButtonSound.Bind(_screen.gameObject, _context.Sound);
         }
 
         private void OnReplayCodeEdited(string text)
@@ -138,7 +135,7 @@ namespace Squarely.App
 
         private void OnHistoryCopyRequested(int index)
         {
-            _context.ReplayCopier.CopyCode(_historyEntries[index].Code);
+            _context.Services.ReplayCopier.CopyCode(_historyEntries[index].Code);
             _screen.SetReplayMessage(_context.Texts.Test.ReplayCopied);
         }
 
@@ -181,12 +178,12 @@ namespace Squarely.App
 
         private void OnStartInTestChanged(bool isOn)
         {
-            _context.StartInTest.Set(isOn);
+            _context.Services.StartInTest.Set(isOn);
         }
 
         private void OnRandomizeRequested()
         {
-            SetSeed(_context.TestSeed.CreateNew());
+            SetSeed(_context.Services.TestSeed.CreateNew());
         }
 
         private void OnPlayRequested()
@@ -194,7 +191,7 @@ namespace Squarely.App
             if (!_seed.HasValue || !_highScore.HasValue)
                 return;
 
-            _context.TestSeed.Save(_seed.Value);
+            _context.Services.TestSeed.Save(_seed.Value);
             HighScore highScore = TestHighScore.Create(_highScore.Value);
             _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, _seed.Value, highScore, () => new TestState(_context, _stateMachine)));
         }

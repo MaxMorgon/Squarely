@@ -24,15 +24,15 @@ namespace Squarely.App
 
         public void Enter()
         {
-            _context.Music.PlayMenu();
-            _screen = _context.CreateScreen(_context.ScreenPrefabs.Menu);
+            _context.Audio.Music.PlayMenu();
+            _screen = _context.Screens.CreateScreen(_context.Screens.Prefabs.Menu);
             _screen.Initialize(_context.Texts.Menu);
-            _screen.SetHighScore(_context.HighScore.Best);
+            _screen.SetHighScore(_context.Services.HighScore.Best);
             _screen.PlayRequestEvent += OnPlayRequested;
             _screen.SettingsRequestEvent += OnSettingsRequested;
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _screen.TestRequestEvent += OnTestRequested;
-            _context.DevTools.ChangeEvent += OnDevToolsChanged;
+            _context.Services.DevTools.ChangeEvent += OnDevToolsChanged;
 #endif
             UpdateTestButton();
         }
@@ -45,14 +45,14 @@ namespace Squarely.App
             _screen.SettingsRequestEvent -= OnSettingsRequested;
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _screen.TestRequestEvent -= OnTestRequested;
-            _context.DevTools.ChangeEvent -= OnDevToolsChanged;
+            _context.Services.DevTools.ChangeEvent -= OnDevToolsChanged;
 #endif
             Object.Destroy(_screen.gameObject);
         }
 
         private void OnPlayRequested()
         {
-            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, null, _context.HighScore, () => new MenuState(_context, _stateMachine)));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, null, _context.Services.HighScore, () => new MenuState(_context, _stateMachine)));
         }
 
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
@@ -69,7 +69,7 @@ namespace Squarely.App
 
         private void UpdateTestButton()
         {
-            if (_context.DevTools.IsActive)
+            if (_context.Services.DevTools.IsActive)
                 _screen.ShowTestButton();
             else
                 _screen.HideTestButton();
@@ -82,9 +82,8 @@ namespace Squarely.App
             if (_settings != null)
                 return;
 
-            _settings = _context.CreateSettings(false);
+            _settings = _context.Screens.CreateSettings(false);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
-            _settings.DevToolsChangeEvent += _context.SetDevTools;
         }
 
         private void OnSettingsCloseRequested()
@@ -98,8 +97,7 @@ namespace Squarely.App
                 return;
 
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
-            _settings.DevToolsChangeEvent -= _context.SetDevTools;
-            _context.DestroyPanel(_settings);
+            _context.Screens.DestroyPanel(_settings);
             _settings = null;
         }
 

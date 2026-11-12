@@ -43,11 +43,11 @@ namespace Squarely.App
             SimConfig config = _context.DefaultConfig;
             Debug.Log($"Watching a replay, seed {_replay.Seed}, {_replay.Commands.Count} commands.");
 
-            (_view, _game) = _context.CreateGame(new GameSetup(config, _replay.Seed));
+            (_view, _game) = _context.Screens.CreateGame(new GameSetup(config, _replay.Seed));
             _view.SetInputBlocked(true);
             _view.Hud.HideSettings();
 
-            _screen = _context.CreateScreen(_context.ScreenPrefabs.Replay);
+            _screen = _context.Screens.CreateScreen(_context.Screens.Prefabs.Replay);
             _screen.Initialize(_context.Texts.Replay);
             _screen.SetWarning(ReplayPaste.Check(_replay, config).Status == ReplayPasteStatus.ConfigMismatch);
 

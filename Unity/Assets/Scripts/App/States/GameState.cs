@@ -53,22 +53,22 @@ namespace Squarely.App
 
         public void Enter()
         {
-            ulong seed = _seed ?? _context.SeedSource.Next();
+            ulong seed = _seed ?? _context.Services.SeedSource.Next();
             Debug.Log($"New game, seed {seed}.");
             var setup = new GameSetup(_config, seed);
 
-            (_view, _game) = _context.CreateGame(setup);
+            (_view, _game) = _context.Screens.CreateGame(setup);
             _newRecordCheck = new NewRecordCheck(_highScore.Best);
 
             _view.Hud.SettingsRequestEvent += OnSettingsRequested;
             _view.Hud.Score.ScoreChangeEvent += OnScoreChanged;
             _game.GameEndEvent += OnGameEnded;
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
-            _debugTools = new GameDebugTools(_game, _view, _context.ReplayCopier);
+            _debugTools = new GameDebugTools(_game, _view, _context.Services.ReplayCopier);
             _debugTools.RestartRequestEvent += OnRestartRequested;
-            _context.DevTools.ChangeEvent += OnDevToolsChanged;
+            _context.Services.DevTools.ChangeEvent += OnDevToolsChanged;
 
-            if (_context.DevTools.IsOn)
+            if (_context.Services.DevTools.IsOn)
                 _debugTools.Start();
 #endif
             _game.StartGame();
@@ -90,7 +90,7 @@ namespace Squarely.App
             _game.GameEndEvent -= OnGameEnded;
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _debugTools.RestartRequestEvent -= OnRestartRequested;
-            _context.DevTools.ChangeEvent -= OnDevToolsChanged;
+            _context.Services.DevTools.ChangeEvent -= OnDevToolsChanged;
             _debugTools.Stop();
 #endif
             // A game left before it ended is saved here, if the player placed a piece.
@@ -107,7 +107,7 @@ namespace Squarely.App
 
             if (_newRecordCheck.Check(score))
             {
-                _context.PlayHook(hooks => hooks.NewBest);
+                _context.Audio.Sound.PlayHook(hooks => hooks.NewBest);
                 _view.Hud.CelebrateNewRecord();
             }
         }
@@ -139,8 +139,8 @@ namespace Squarely.App
             // The game is over: the settings panel has nothing left to resume, restart or quit.
             CloseSettings();
 
-            _context.Music.FadeForGameOver();
-            _gameOver = _context.CreateScreen(_context.ScreenPrefabs.GameOver);
+            _context.Audio.Music.FadeForGameOver();
+            _gameOver = _context.Screens.CreateScreen(_context.Screens.Prefabs.GameOver);
             _gameOver.Initialize(_context.Texts.GameOver);
             _gameOver.RestartRequestEvent += OnRestartRequested;
             _gameOver.MenuRequestEvent += OnMenuRequested;
@@ -149,8 +149,8 @@ namespace Squarely.App
             PlayGameOverJingle(resolution.Outcome, isNewRecord);
             RecordReplay();
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
-            if (_context.DevTools.IsOn)
-                _gameOver.SetReplay(_context.ReplayCopier, _game.BuildReplay());
+            if (_context.Services.DevTools.IsOn)
+                _gameOver.SetReplay(_context.Services.ReplayCopier, _game.BuildReplay());
 #endif
         }
 
@@ -161,7 +161,7 @@ namespace Squarely.App
                 return;
 
             _replayRecorded = true;
-            _context.ReplayHistory.Record(_game.BuildReplay());
+            _context.Services.ReplayHistory.Record(_game.BuildReplay());
         }
 
         private bool RecordHighScore(int finalScore)
@@ -176,13 +176,13 @@ namespace Squarely.App
             switch (GameOverJingle.Choose(outcome, isNewRecord))
             {
                 case GameOverJingle.Kind.NewRecord:
-                    _context.PlayHook(hooks => hooks.NewRecord);
+                    _context.Audio.Sound.PlayHook(hooks => hooks.NewRecord);
                     break;
                 case GameOverJingle.Kind.Won:
-                    _context.PlayHook(hooks => hooks.GameWon);
+                    _context.Audio.Sound.PlayHook(hooks => hooks.GameWon);
                     break;
                 default:
-                    _context.PlayHook(hooks => hooks.GameLost);
+                    _context.Audio.Sound.PlayHook(hooks => hooks.GameLost);
                     break;
             }
         }
@@ -196,9 +196,8 @@ namespace Squarely.App
             if (_settings != null || _gameOver != null)
                 return;
 
-            _settings = _context.CreateSettings(true);
+            _settings = _context.Screens.CreateSettings(true);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
-            _settings.DevToolsChangeEvent += _context.SetDevTools;
             _settings.RestartRequestEvent += OnSettingsRestartRequested;
             _settings.QuitRequestEvent += OnSettingsQuitRequested;
             UpdatePause();
@@ -236,7 +235,7 @@ namespace Squarely.App
             CloseSettingsPanel();
 
             _confirmedAction = action;
-            _confirm = _context.CreatePanel(_context.ScreenPrefabs.Confirm);
+            _confirm = _context.Screens.CreatePanel(_context.Screens.Prefabs.Confirm);
             _confirm.Initialize(_context.Texts.Confirm);
             _confirm.ConfirmRequestEvent += OnConfirmRequested;
             _confirm.CancelRequestEvent += OnCancelRequested;
@@ -263,7 +262,7 @@ namespace Squarely.App
 
             _confirm.ConfirmRequestEvent -= OnConfirmRequested;
             _confirm.CancelRequestEvent -= OnCancelRequested;
-            _context.DestroyPanel(_confirm);
+            _context.Screens.DestroyPanel(_confirm);
             _confirm = null;
             _confirmedAction = null;
         }
@@ -287,10 +286,9 @@ namespace Squarely.App
                 return;
 
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
-            _settings.DevToolsChangeEvent -= _context.SetDevTools;
             _settings.RestartRequestEvent -= OnSettingsRestartRequested;
             _settings.QuitRequestEvent -= OnSettingsQuitRequested;
-            _context.DestroyPanel(_settings);
+            _context.Screens.DestroyPanel(_settings);
             _settings = null;
         }
 

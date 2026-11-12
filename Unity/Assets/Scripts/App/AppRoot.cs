@@ -52,12 +52,14 @@ namespace Squarely.App
             var soundPreferences = new SoundPreferences(store, new SoundSettings(_mixer));
             _soundPlayer.SetHaptics(new NoHaptics());
             var music = new MusicDirector(_musicPlayer, _musicSetup);
-            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource,
+            var services = new AppServices(highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, devTools
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
-                testSeed, startInTest,
+                , testSeed, startInTest
 #endif
-                devTools,
-                _soundPlayer, music, soundPreferences);
+                );
+            var audio = new AppAudio(_soundPlayer, music, soundPreferences);
+            var screens = new ScreenFactory(_screenPrefabs, transform, _camera, _texts, audio, devTools);
+            var context = new AppContext(services, audio, screens, _defaultMode.Config, _texts);
 
             _stateMachine = new AppStateMachine();
             _stateMachine.ChangeState(CreateFirstState(context));
@@ -73,7 +75,7 @@ namespace Squarely.App
         private IAppState CreateFirstState(AppContext context)
         {
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
-            if (context.DevTools.IsActive && context.StartInTest.IsOn)
+            if (context.Services.DevTools.IsActive && context.Services.StartInTest.IsOn)
                 return new TestState(context, _stateMachine);
 #endif
 
