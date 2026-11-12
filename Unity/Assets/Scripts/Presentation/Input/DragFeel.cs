@@ -8,6 +8,10 @@ namespace Squarely.Presentation
     [CreateAssetMenu(menuName = "Squarely/Drag Feel", fileName = "DragFeel")]
     public sealed class DragFeel : ScriptableObject
     {
+        [Header("Lift")]
+        [Tooltip("How far above the pointer the dragged piece floats, in world units.")]
+        [SerializeField, Min(0f)] private float _liftOffset = 2f;
+
         [Header("Swing")]
         [Tooltip("Largest tilt of the dragged piece, in degrees.")]
         [SerializeField, Range(0f, 45f)] private float _maxAngle = 12f;
@@ -23,6 +27,9 @@ namespace Squarely.Presentation
 
         [Tooltip("Time constant in seconds for smoothing the pointer speed. 0 turns smoothing off.")]
         [SerializeField, Min(0f)] private float _velocitySmoothing = 0.05f;
+
+        /// <summary>How far above the pointer the dragged piece floats, in world units.</summary>
+        public float LiftOffset => _liftOffset;
 
         /// <summary>Creates a swing with the current values.</summary>
         public DragSwing CreateSwing()

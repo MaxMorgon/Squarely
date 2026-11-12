@@ -13,13 +13,10 @@ namespace Squarely.Presentation
     /// </summary>
     public sealed class PieceDragController : MonoBehaviour
     {
-        [Tooltip("How far above the pointer the dragged piece floats, in world units.")]
-        [SerializeField] private float _liftOffset = 2f;
-
         [Tooltip("Sorting order of the dragged piece, above everything on the board.")]
         [SerializeField] private int _draggedSortingOrder = 100;
 
-        [Tooltip("Tunables for the tilt of the dragged piece. Leave empty for no tilt.")]
+        [Tooltip("Tunables for the lift and tilt of the dragged piece. Leave empty for no lift and no tilt.")]
         [SerializeField] private DragFeel _dragFeel;
 
         private Camera _camera;
@@ -138,7 +135,7 @@ namespace Squarely.Presentation
 
         private void UpdateDrag(Vector3 world)
         {
-            _dragTarget = world + Vector3.up * _liftOffset;
+            _dragTarget = world + Vector3.up * (_dragFeel != null ? _dragFeel.LiftOffset : 0f);
             MoveDraggedView(world, world.x - _lastPointerX);
             _lastPointerX = world.x;
 
