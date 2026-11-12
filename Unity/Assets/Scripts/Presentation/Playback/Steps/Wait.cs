@@ -9,6 +9,8 @@ namespace Squarely.Presentation
     {
         [SerializeField] private float _seconds = 0.1f;
 
+        public override float PlannedSeconds => _seconds;
+
         public override async Awaitable Play(CueTarget target, PlaybackContext context)
         {
             float elapsed = 0f;

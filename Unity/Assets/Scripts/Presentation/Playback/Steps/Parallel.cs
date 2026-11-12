@@ -10,6 +10,31 @@ namespace Squarely.Presentation
     {
         [SerializeReference, CueStepPicker] private List<CueStep> _steps = new List<CueStep>();
 
+        public override float PlannedSeconds
+        {
+            get
+            {
+                float longest = 0f;
+
+                foreach (CueStep step in _steps)
+                {
+                    if (step != null)
+                        longest = Mathf.Max(longest, step.PlannedSeconds);
+                }
+
+                return longest;
+            }
+        }
+
+        public override void CollectSounds(float startSeconds, SoundLevelInput input, List<ScheduledSound> sounds)
+        {
+            foreach (CueStep step in _steps)
+            {
+                if (step != null)
+                    step.CollectSounds(startSeconds, input, sounds);
+            }
+        }
+
         public override async Awaitable Play(CueTarget target, PlaybackContext context)
         {
             var running = new List<Awaitable>();

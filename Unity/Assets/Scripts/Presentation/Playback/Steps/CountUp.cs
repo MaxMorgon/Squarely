@@ -12,6 +12,8 @@ namespace Squarely.Presentation
         [Tooltip("Progress of the count over the animation (time 0 to 1, value 0 to 1).")]
         [SerializeField] private AnimationCurve _progress = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
+        public override float PlannedSeconds => _duration;
+
         public override async Awaitable Play(CueTarget target, PlaybackContext context)
         {
             if (!target.HasCount)

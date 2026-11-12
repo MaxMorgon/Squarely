@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Squarely.Presentation
@@ -21,6 +22,21 @@ namespace Squarely.Presentation
         /// and may be called on a step that already played. Transient effects do nothing here.
         /// </summary>
         public abstract void Snap(CueTarget target, PlaybackContext context);
+
+        /// <summary>
+        /// How long the step plays, in seconds, at speed 1. Steps with no fixed time are 0.
+        /// A step that takes time overrides it. Previews use it to time the steps that follow.
+        /// </summary>
+        public virtual float PlannedSeconds => 0f;
+
+        /// <summary>
+        /// Adds the sounds this step starts to <paramref name="sounds"/>, with the times they play at.
+        /// Steps that play sounds override it.
+        /// </summary>
+        /// <param name="startSeconds">When the step starts, counted from the start of the sequence.</param>
+        public virtual void CollectSounds(float startSeconds, SoundLevelInput input, List<ScheduledSound> sounds)
+        {
+        }
 
         /// <summary>An awaitable that has already completed, for steps that end as soon as they start.</summary>
         protected static Awaitable Completed()

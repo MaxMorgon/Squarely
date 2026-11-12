@@ -16,8 +16,12 @@ namespace Squarely.Presentation
         /// <summary>Parent of spawned effects such as particles.</summary>
         public Transform EffectsRoot { get; }
 
-        public PlaybackViews(LayerView board, HandView hand, ScoreView score, Transform effectsRoot)
+        /// <summary>Plays the sounds of cues, or null if the game has none.</summary>
+        public SoundPlayer Sound { get; }
+
+        public PlaybackViews(LayerView board, HandView hand, ScoreView score, Transform effectsRoot, SoundPlayer sound = null)
         {
+            Sound = sound;
             Board = board;
             Hand = hand;
             Score = score;
