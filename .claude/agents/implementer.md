@@ -99,7 +99,7 @@ The prompt gives the slot, the PR number(s) (for a stack, bottom first) and any 
 ### Setup
 
 1. Check that the slot is clean and detached, as above.
-2. Run `git -C <slot> fetch`, then per PR `git -C <slot> switch -C <branch> origin/<branch>`.
+2. Run `git -C <slot> fetch`, then per PR `git -C <slot> switch --detach origin/<branch>`. Work on the detached HEAD and push with `git -C <slot> push origin HEAD:refs/heads/<branch>`. Never create or move a local branch for an existing PR: the user may have it checked out, and worktrees share branch refs.
 3. Read `CLAUDE.md`, `Docs/CodeDesign.md` and [reviewer.md](reviewer.md). Per PR read the description (`gh pr view <n>`), the diff (`gh pr diff <n>`) and every review thread:
 
 ```sh

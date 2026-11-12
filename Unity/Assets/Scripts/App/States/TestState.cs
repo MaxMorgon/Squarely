@@ -97,9 +97,8 @@ namespace Squarely.App
                 return;
 
             _context.TestSeed.Save(_seed.Value);
-            var setup = new GameSetup(_context.DefaultGameSetup.Config, _seed.Value);
             HighScore highScore = TestHighScore.Create(_highScore.Value);
-            _stateMachine.ChangeState(new GameState(_context, _stateMachine, setup, highScore));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, _seed.Value, highScore));
         }
 
         private void OnBackRequested()

@@ -1,4 +1,5 @@
 using Squarely.Presentation;
+using Squarely.Simulation;
 using UnityEngine;
 
 namespace Squarely.App
@@ -18,8 +19,8 @@ namespace Squarely.App
         /// <summary>The camera that renders the game.</summary>
         public Camera Camera { get; }
 
-        /// <summary>The game started from the menu's Play button.</summary>
-        public GameSetup DefaultGameSetup { get; }
+        /// <summary>The game mode the menu's Play button starts.</summary>
+        public SimConfig DefaultConfig { get; }
 
         /// <summary>Every text the screens show.</summary>
         public TextsConfig Texts { get; }
@@ -27,21 +28,25 @@ namespace Squarely.App
         /// <summary>The best score on this device.</summary>
         public HighScore HighScore { get; }
 
+        /// <summary>Picks the seed of every new game.</summary>
+        public SeedSource SeedSource { get; }
+
         /// <summary>The seed the test screen plays.</summary>
         public TestSeed TestSeed { get; }
 
         /// <summary>Whether the app opens the test screen at start. Editor and development builds only.</summary>
         public StartInTest StartInTest { get; }
 
-        public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, GameSetup defaultGameSetup, TextsConfig texts,
-            HighScore highScore, TestSeed testSeed, StartInTest startInTest)
+        public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, SimConfig defaultConfig, TextsConfig texts,
+            HighScore highScore, SeedSource seedSource, TestSeed testSeed, StartInTest startInTest)
         {
             ScreenPrefabs = screenPrefabs;
             ScreenRoot = screenRoot;
             Camera = camera;
-            DefaultGameSetup = defaultGameSetup;
+            DefaultConfig = defaultConfig;
             Texts = texts;
             HighScore = highScore;
+            SeedSource = seedSource;
             TestSeed = testSeed;
             StartInTest = startInTest;
         }
