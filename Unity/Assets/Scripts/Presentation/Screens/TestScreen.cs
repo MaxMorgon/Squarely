@@ -9,7 +9,7 @@ namespace Squarely.Presentation
     /// <summary>
     /// The test screen: a seed field, a high score field, the "start in test screen" toggle,
     /// and the buttons to play, pick a new seed or go back. It also has a replays section:
-    /// the list of the last games with Play and Copy buttons, and a field to paste a replay code and play it.
+    /// the list of the last games with Load and Copy buttons, and a field to paste a replay code and load it.
     /// Reports the player's edits and choices; whoever owns it reads the fields and decides what happens next.
     /// </summary>
     public sealed class TestScreen : MonoBehaviour
@@ -125,7 +125,7 @@ namespace Squarely.Presentation
             _replaysTitleLabel.text = texts.ReplaysTitle;
             _historyEmptyLabel.text = texts.HistoryEmpty;
             _replayCodePlaceholder.text = texts.PastePlaceholder;
-            _replayCodePlayLabel.text = texts.ReplayPlay;
+            _replayCodePlayLabel.text = texts.ReplayLoad;
         }
 
         /// <summary>Sets the seed field's text.</summary>
@@ -167,14 +167,14 @@ namespace Squarely.Presentation
             {
                 int index = i;
                 ReplayRow row = Instantiate(_rowPrefab, _historyRoot);
-                row.SetContent(rowTexts[i], _texts.ReplayPlay, _texts.ReplayCopy);
+                row.SetContent(rowTexts[i], _texts.ReplayLoad, _texts.ReplayCopy);
                 row.PlayRequestEvent += () => HistoryPlayRequestEvent?.Invoke(index);
                 row.CopyRequestEvent += () => HistoryCopyRequestEvent?.Invoke(index);
                 _rows.Add(row);
             }
         }
 
-        /// <summary>Sets whether the replay code field's Play can be pressed.</summary>
+        /// <summary>Sets whether the replay code field's Load can be pressed.</summary>
         public void SetReplayCodePlayable(bool isPlayable)
         {
             _replayCodePlayButton.interactable = isPlayable;

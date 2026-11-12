@@ -134,7 +134,7 @@ namespace Squarely.Presentation
         private void UpdateDrag(Vector3 world)
         {
             _dragTarget = world + Vector3.up * _liftOffset;
-            MoveDraggedView(world.x - _lastPointerX);
+            MoveDraggedView(world, world.x - _lastPointerX);
             _lastPointerX = world.x;
 
             // Placement uses the target, not the dragged view, so view effects never shift where the piece lands.
@@ -156,15 +156,17 @@ namespace Squarely.Presentation
         }
 
         /// <summary>Moves the dragged piece's view toward the drag target. The single place for drag feel such as lag and tilt.</summary>
-        private void MoveDraggedView(float pointerDeltaX)
+        /// <param name="pointer">The pointer's world position. The tilt turns the view around it.</param>
+        private void MoveDraggedView(Vector3 pointer, float pointerDeltaX)
         {
             _dragged.transform.position = _dragTarget;
 
-            // The tilt turns the view around its center. It is visual only: placement never reads it.
+            // The tilt is visual only: placement never reads it.
             if (_swing != null)
             {
                 float angle = _swing.Step(pointerDeltaX, Time.deltaTime);
-                _dragged.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+                Quaternion tilt = Quaternion.Euler(0f, 0f, angle);
+                _dragged.transform.SetPositionAndRotation(pointer + tilt * (_dragTarget - pointer), tilt);
             }
         }
 

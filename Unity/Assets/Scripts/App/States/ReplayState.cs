@@ -10,7 +10,7 @@ namespace Squarely.App
     /// Watches a recorded game on a game view, with no player input. Starts a game with the replay's seed and the
     /// default game mode, then runs the replay's commands one by one through the game controller, so the
     /// playback is the same as in a game. Auto-play runs the next command a short delay after the previous playback ended.
-    /// Play/Pause, Step and the speed button control it. A banner warns if the replay was recorded with a different game config.
+    /// It starts paused. Play/Pause, Step and the speed button control it. A banner warns if the replay was recorded with a different game config.
     /// If a command fails, it stops and says where. At the end it shows the final score and whether the end state matches the recording.
     /// It never records a high score or a history entry and has no game-over screen. Back enters the back target.
     /// </summary>
@@ -56,7 +56,8 @@ namespace Squarely.App
             _stepper = new ReplayStepper(_replay.Commands.Count, _screen.StepDelay);
             _speedIndex = Mathf.Max(0, Array.IndexOf(_screen.SpeedPresets, 1f));
             ApplySpeed();
-            _screen.SetPlaying(true);
+            _stepper.SetPaused(true);
+            _screen.SetPlaying(false);
             UpdateProgress();
 
             _screen.PlayPauseRequestEvent += OnPlayPauseRequested;

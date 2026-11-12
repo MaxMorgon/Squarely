@@ -25,7 +25,7 @@ namespace Squarely.Presentation
 
         public string ReplayFinished = "Finished";
         public string ReplayUnfinished = "Left early";
-        public string ReplayPlay = "Play";
+        public string ReplayLoad = "Load";
         public string ReplayCopy = "Copy";
         public string ReplayCopied = "Copied";
         public string PastePlaceholder = "Paste a replay code";

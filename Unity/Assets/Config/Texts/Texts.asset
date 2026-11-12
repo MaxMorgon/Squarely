@@ -57,7 +57,7 @@ MonoBehaviour:
     ReplayRowFormat: '{0:yyyy-MM-dd HH:mm}   Score {1}   Moves {2}   {3}'
     ReplayFinished: Finished
     ReplayUnfinished: Left early
-    ReplayPlay: Play
+    ReplayLoad: Load
     ReplayCopy: Copy
     ReplayCopied: Copied
     PastePlaceholder: Paste a replay code

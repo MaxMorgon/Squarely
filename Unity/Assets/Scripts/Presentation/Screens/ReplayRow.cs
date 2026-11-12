@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Squarely.Presentation
 {
-    /// <summary>One row of the test screen's replay list: a description with Play and Copy buttons.</summary>
+    /// <summary>One row of the test screen's replay list: a description with Load and Copy buttons.</summary>
     public sealed class ReplayRow : MonoBehaviour
     {
         [SerializeField] private TMP_Text _label;
