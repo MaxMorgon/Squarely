@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CueSequence
   _waitForEnd: 1
   _steps:
+  - rid: 5611427147086561286
   - rid: 5611427121247551496
   references:
     version: 2
@@ -87,3 +88,13 @@ MonoBehaviour:
           m_ColorSpace: -1
           m_NumColorKeys: 2
           m_NumAlphaKeys: 2
+    - rid: 5611427147086561286
+      type: {class: PlaySound, ns: Squarely.Presentation, asm: Squarely.Presentation}
+      data:
+        _cue: {fileID: 11400000, guid: 32aa5321e3bcf1a4cb6657f1b4115476, type: 2}
+        _levelSource: 0
+        _levelRange:
+          _hasMin: 0
+          _minLevel: 0
+          _hasMax: 0
+          _maxLevel: 0

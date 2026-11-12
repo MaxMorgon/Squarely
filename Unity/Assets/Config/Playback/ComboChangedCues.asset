@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CueSequence
   _waitForEnd: 0
   _steps:
+  - rid: 5611427147086561283
+  - rid: 5611427147086561284
   - rid: 5611427121247551495
   references:
     version: 2
@@ -55,3 +57,23 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
+    - rid: 5611427147086561283
+      type: {class: PlaySound, ns: Squarely.Presentation, asm: Squarely.Presentation}
+      data:
+        _cue: {fileID: 11400000, guid: 893eac2769415454cb31b6982d0746ac, type: 2}
+        _levelSource: 3
+        _levelRange:
+          _hasMin: 1
+          _minLevel: 1
+          _hasMax: 0
+          _maxLevel: 0
+    - rid: 5611427147086561284
+      type: {class: PlaySound, ns: Squarely.Presentation, asm: Squarely.Presentation}
+      data:
+        _cue: {fileID: 11400000, guid: 42f8f8fec78869e448e4011bbed383cb, type: 2}
+        _levelSource: 3
+        _levelRange:
+          _hasMin: 0
+          _minLevel: 0
+          _hasMax: 1
+          _maxLevel: 0
