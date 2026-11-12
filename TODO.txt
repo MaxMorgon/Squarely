@@ -1,49 +1,40 @@
 SQUARELY TODO
 
-Staging
-- Playback: EventPlayer, handlers, CueSequence, fast-forward
-- Debug drift check: views vs board
+file name style for all files
 
-Presentation
-- Hover/preview feedback via Sim.preview
-- Real art
-- Resolution reactive visuals
- - zoom
-- Some look and feel work 
+sounds
+art
+board clear bonus - score, animation, sound
+
+Feel:
  - Drag feel: lag + rotation lerp
- - Placement should be fun
- - Matching should be extra fun
 
-Sound
-- Define required sounds
-
-Sim
-- Board layers (Sim + views together)
-- Special cells: stone, wood, fire, traps, bombs
-- Pattern content: pixel art, shapes, tattoo
-- Resolution rules: target score, move limit
-
-Config / live ops
-- Tune scoring + combos
+Future:
+Special cells
+Pattern content
+Unique completion patterns
+Meta features
+Levels
+Monetization features (undo, continue, revive)
+Live Ops
 - Remote config
-- Replays (save config + seed + commands)
-- Daily challenge (shared seed)
+- Tune scoring + combos
+- Save replays in server
+- bug report with replay ID in server, or replay text itself
 - Server-side run validation
-- Analytics from sim events
-
-Meta
-- Meta layer design doc
-- Progression, currencies, quests, events
-- Main menu (MenuTheme)
-
-Open questions
-- Fair dealing (at least one piece fits)?
-- Undo / continue / revive in v1?
-- Endless only, or level modes too?
+- Analytics
 
 
 ==================================================================
 CLAUDE: WHAT I NEED FROM YOU  (Claude edits only below this line)
 ==================================================================
 
-Nothing waiting on you right now.
+In progress: one PR for the whole batch (branch batch/replays-and-feel)
+- Replay core in Sim + EndGameCommand.
+- Drag swing: the dragged piece tilts against the move, elastic back to level.
+- Game end flow: game over waits for animations, Quit back to test screen, debug End game.
+- Replay UI: history, copy/paste (editor and desktop only), watch, config warning.
+I put the test list here when the batch PR is ready.
+
+Later (you deferred it)
+- TopBand height: 340 lets "New record!" cover the board top for a moment; 470 avoids it.
