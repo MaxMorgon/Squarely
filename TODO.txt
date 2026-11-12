@@ -31,16 +31,9 @@ Live Ops
 CLAUDE: WHAT I NEED FROM YOU  (Claude edits only below this line)
 ==================================================================
 
-Test: batch PR #36 (branch batch/replays-and-feel). Still open:
-Replays
-- Speed is now a dropdown (x4/x2/x1/x0.5).
-  I built Restart and the dropdown in ReplayScreen.prefab with a script. Check the look and fit of the bottom bar.
-  The dropdown list uses default TMP styling.
-When these pass, say "merge" and I merge PR #36.
-
 Sound (branch feature/sound, no PR yet)
 - Phases 1-2 are pushed: sound core, Sound Mixer window, CC0 placeholder audio, CREDITS.md.
-- Phase 3 (wiring, settings toggles, music, assets) waits for the batch PR #36 to merge.
+- Phase 3 (wiring, settings toggles, music, assets) is unblocked: PR #36 is merged.
   Say "continue sound" to start it.
 - Decision to check: the clear pitch rises with clear count and combo level.
   There is no extra pitch for each cleared match.
