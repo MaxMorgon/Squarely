@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Squarely.App
 {
-    /// <summary>The music tracks and fade values. The only place that holds music setup. <see cref="MusicDirector"/> reads it.</summary>
+    /// <summary>The music tracks and fade values.</summary>
     [CreateAssetMenu(menuName = "Squarely/Music Setup", fileName = "MusicSetup")]
     public sealed class MusicSetup : ScriptableObject
     {

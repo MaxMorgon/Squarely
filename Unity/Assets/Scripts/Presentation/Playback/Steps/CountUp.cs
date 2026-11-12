@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Squarely.Presentation
 {
-    /// <summary>Counts the target's number from its start value to its end value. Can play a tick each time the shown number changes.</summary>
+    /// <summary>Counts the target's number from its start value to its end value. Can play a tick each time the shown number changes, at most once per cooldown of the tick cue.</summary>
     [Serializable]
     public sealed class CountUp : CueStep
     {
@@ -18,10 +18,9 @@ namespace Squarely.Presentation
         [Tooltip("Plays each time the shown number changes. Empty: no tick.")]
         [SerializeField] private SoundCue _tickCue;
 
-        [Tooltip("Least seconds between two ticks. A faster count skips the ticks in between.")]
-        [SerializeField] private float _minTickSeconds = 0.05f;
-
         public override float PlannedSeconds => _duration;
+
+        private float TickSeconds => _tickCue != null ? _tickCue.Cooldown : 0f;
 
         public override async Awaitable Play(CueTarget target, PlaybackContext context)
         {
@@ -29,7 +28,7 @@ namespace Squarely.Presentation
                 return;
 
             float elapsed = 0f;
-            var gate = new CountTickGate(target.CountFrom, _minTickSeconds);
+            var gate = new CountTickGate(target.CountFrom, TickSeconds);
             SetCount(target, 0f);
 
             while (elapsed < _duration)
@@ -57,7 +56,7 @@ namespace Squarely.Presentation
             if (_tickCue == null)
                 return;
 
-            var gate = new CountTickGate(input.CountFrom, _minTickSeconds);
+            var gate = new CountTickGate(input.CountFrom, TickSeconds);
             float elapsed = 0f;
 
             while (elapsed < _duration)
