@@ -17,7 +17,7 @@ Design and rules: [Docs/Design.md](Docs/Design.md) — read it before working on
 | `Unity/Assets/Scripts/App/` | `Squarely.App` asmdef: app state machine and states (menu, test, game, game over), device storage (`IKeyValueStore`) and the high score. Design: [Docs/CodeDesign.md](Docs/CodeDesign.md#app-flow-unity). References `Squarely.Presentation`; Presentation never references App. |
 | `Unity/Assets/Tests/App/` | `Squarely.App.Tests` asmdef: unit tests for the app flow, storage and high score. |
 | `Unity/Assets/Scenes/Main.unity` | The only scene: camera, EventSystem, entry point. Screens are prefabs (`Prefabs/Game/`, `Prefabs/Menu/`, `Prefabs/UI/`), debug UI in `Prefabs/Debug/`. Placeholder art in `Art/Placeholder/`, prefabs in `Prefabs/`. |
-| `Unity/Assets/Config/` | Every asset the user tunes, one subfolder per area: `Gameplay/` (`ClassicGameMode`), `Texts/` (`Texts`), `Theme/` (`CellTheme`), `Playback/` (one `CueSequence` per sim event, e.g. `PatternsClearedCues`, plus `BoardWaveCues`). |
+| `Unity/Assets/Config/` | Every asset the user tunes, one subfolder per area: `Gameplay/` (`ClassicGameMode`), `Texts/` (`Texts`), `Theme/` (`CellTheme`), `Playback/` (one `CueSequence` per sim event, e.g. `PatternsClearedCues`, plus `PlacementWaveCues` and `ClearWaveCues`). |
 | `Unity/Assets/Editor/` | `Squarely.Editor` asmdef (Editor-only): editor tools and custom Unity CLI commands (`Cli/`). |
 
 ## Architecture rules
@@ -93,7 +93,7 @@ Not: `if (value < 0) return 0;`
 - Nullable and implicit usings are disabled; write explicit `using` directives.
 - **Doc comments say what, not how.** Describe the behaviour and contract, not internals ("runs on a copy") or one caller's case ("AI players should ignore X"). Mention a limitation only if it matters and the contract doesn't imply it.
 - **Tests:** new Sim features come with tests in `Sim.Tests`. Unit tests by default (Sim logic, and presentation logic like layout, pooling, slots). No tests that pin how views are wired together. Broad scenario tests only for contracts that fail silently (determinism, preview equals execute); ask before adding others.
-- **Test-only access goes through `internal` + `InternalsVisibleTo`, never `public`.** Sim and Presentation each have an `AssemblyInfo.cs` that opens their internals to their test assembly.
+- **Test-only access goes through `internal` + `InternalsVisibleTo`, never `public`.** Sim, Presentation and App each have an `AssemblyInfo.cs` that opens their internals to their test assembly.
 
 ## Parallel agents
 

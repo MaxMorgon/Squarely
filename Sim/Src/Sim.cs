@@ -44,6 +44,12 @@ namespace Squarely.Simulation
 
         public bool IsResolved => Resolution != null;
 
+        /// <summary>
+        /// What happened when the game was created, in order: a <see cref="PieceDealtEvent"/> per piece of the opening hand,
+        /// then a <see cref="GameResolvedEvent"/> if the game resolves on its first deal. A clone has the same opening events.
+        /// </summary>
+        public IReadOnlyList<ISimEvent> OpeningEvents { get; }
+
         /// <summary>Mutable board for tests and in-assembly code only.</summary>
         internal Board EditableBoard => _board;
 
@@ -81,9 +87,10 @@ namespace Squarely.Simulation
             _scoringRule = rules.CreateScoringRule(config);
             _resolutionRules = rules.CreateResolutionRules(config);
 
-            // The opening hand is part of the initial state; the view reads it directly.
-            DealNewHand(new List<ISimEvent>());
-            CheckResolution(new List<ISimEvent>());
+            var openingEvents = new List<ISimEvent>();
+            DealNewHand(openingEvents);
+            CheckResolution(openingEvents);
+            OpeningEvents = openingEvents;
         }
 
         /// <summary>
@@ -106,6 +113,7 @@ namespace Squarely.Simulation
             Score = source.Score;
             Combo = source.Combo;
             Resolution = source.Resolution;
+            OpeningEvents = source.OpeningEvents;
         }
 
         public CommandResult Execute(ISimCommand command)

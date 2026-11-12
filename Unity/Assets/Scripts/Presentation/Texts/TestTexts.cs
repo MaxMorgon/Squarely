@@ -10,6 +10,9 @@ namespace Squarely.Presentation
         public string Seed = "Seed";
         public string SeedPlaceholder = "Enter a seed";
         public string Randomize = "Randomize";
+        public string HighScore = "High score";
+        public string HighScorePlaceholder = "Enter a high score";
+        public string StartInTest = "Start in test screen";
         public string Play = "Play";
         public string Back = "Back";
     }

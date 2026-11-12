@@ -359,6 +359,8 @@ MonoBehaviour:
     _menu: {fileID: 6752922966993574350, guid: 7cc23822fa09b6e4f80364ff2ebdc174, type: 3}
     _game: {fileID: 4383475621636752744, guid: 4fe61a6296aeef64db47290550acedde, type: 3}
     _gameOver: {fileID: 3722214199150667668, guid: 6b02b097b0279524dabb362b2708d40b, type: 3}
+    _settings: {fileID: 7586580063892221759, guid: 195a9ec169e606d40a8d70ccae5d9320, type: 3}
+    _confirm: {fileID: 7463786603179897088, guid: 2eb369a7d71282b47aae49e88f5a50ae, type: 3}
     _test: {fileID: 9151735210017052714, guid: b07faee3f3c19124c9b73b3eea510dcf, type: 3}
   _camera: {fileID: 851879383}
   _defaultMode: {fileID: 11400000, guid: bbabd39d8dadbd14e894501e1bdc6a16, type: 2}

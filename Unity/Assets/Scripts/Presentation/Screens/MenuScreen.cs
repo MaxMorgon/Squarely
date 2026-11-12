@@ -14,6 +14,8 @@ namespace Squarely.Presentation
         [SerializeField] private Button _playButton;
         [SerializeField] private TMP_Text _playLabel;
         [SerializeField] private TMP_Text _highScoreLabel;
+        [SerializeField] private Button _settingsButton;
+        [SerializeField] private TMP_Text _settingsLabel;
 
         [Tooltip("Opens the test screen. Shown unless the menu's owner hides it.")]
         [SerializeField] private Button _testButton;
@@ -24,6 +26,9 @@ namespace Squarely.Presentation
         /// <summary>The player asked to start a game.</summary>
         public event Action PlayRequestEvent;
 
+        /// <summary>The player asked for the settings panel.</summary>
+        public event Action SettingsRequestEvent;
+
         /// <summary>The player asked for the test screen.</summary>
         public event Action TestRequestEvent;
 
@@ -32,6 +37,7 @@ namespace Squarely.Presentation
         private void Awake()
         {
             _playButton.onClick.AddListener(() => PlayRequestEvent?.Invoke());
+            _settingsButton.onClick.AddListener(() => SettingsRequestEvent?.Invoke());
             _testButton.onClick.AddListener(() => TestRequestEvent?.Invoke());
         }
 
@@ -42,6 +48,7 @@ namespace Squarely.Presentation
             _texts = texts;
             _titleLabel.text = texts.Title;
             _playLabel.text = texts.Play;
+            _settingsLabel.text = texts.Settings;
             _testLabel.text = texts.Test;
         }
 

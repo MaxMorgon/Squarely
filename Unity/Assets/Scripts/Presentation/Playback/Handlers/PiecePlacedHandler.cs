@@ -7,19 +7,23 @@ namespace Squarely.Presentation
     /// <summary>
     /// Empties the piece's hand slot, spawns its cells on the board and plays the placement cues on them.
     /// If the same command clears patterns, the cells appear without cues, so the clear plays right away.
-    /// On every placement it also plays the board wave on the board's filled cells that stay (see <see cref="WaveCells"/>).
+    /// On every placement it also plays a board wave on the board's filled cells that stay (see <see cref="WaveCells"/>):
+    /// the placement wave if the move clears nothing, the clear wave if it clears.
     /// </summary>
     public sealed class PiecePlacedHandler : SimEventHandler<PiecePlacedEvent>
     {
         private readonly CueSequence _cues;
-        private readonly CueSequence _boardWaveCues;
+        private readonly CueSequence _placementWaveCues;
+        private readonly CueSequence _clearWaveCues;
 
         /// <param name="cues">Played on the placed piece's cells when the move clears nothing.</param>
-        /// <param name="boardWaveCues">Played on the board's filled cells that the move does not clear.</param>
-        public PiecePlacedHandler(CueSequence cues, CueSequence boardWaveCues)
+        /// <param name="placementWaveCues">Played on the board's other filled cells when the move clears nothing.</param>
+        /// <param name="clearWaveCues">Played on the board's filled cells that the move does not clear, when it clears.</param>
+        public PiecePlacedHandler(CueSequence cues, CueSequence placementWaveCues, CueSequence clearWaveCues)
         {
             _cues = cues;
-            _boardWaveCues = boardWaveCues;
+            _placementWaveCues = placementWaveCues;
+            _clearWaveCues = clearWaveCues;
         }
 
         protected override void Handle(PiecePlacedEvent simEvent, PlaybackContext context)
@@ -27,6 +31,7 @@ namespace Squarely.Presentation
             PlaybackViews views = context.Views;
             PieceShape shape = simEvent.Piece.Shape;
             HashSet<GridPos> cleared = ClearedCells(context.Events);
+            bool clears = cleared.Count > 0;
 
             context.SnapRunsOn(views.Hand.GetSlotView(simEvent.Slot).Cells);
             views.Hand.SetPiece(simEvent.Slot, null);
@@ -45,10 +50,11 @@ namespace Squarely.Presentation
             context.PlacedCells = positions;
             context.LastEffectPosition = center;
 
-            if (cleared.Count == 0)
+            if (!clears)
                 context.Play(_cues, CueTarget.ForCells(cells, positions, center));
 
-            PlayBoardWave(WaveCells(views.Board.GetFilledSlots(), positions, cleared), center, context);
+            CueSequence waveCues = clears ? _clearWaveCues : _placementWaveCues;
+            PlayBoardWave(waveCues, WaveCells(views.Board.GetFilledSlots(), positions, cleared), center, context);
         }
 
         /// <summary>
@@ -96,14 +102,14 @@ namespace Squarely.Presentation
             return wave;
         }
 
-        private void PlayBoardWave(List<GridPos> positions, Vector3 center, PlaybackContext context)
+        private static void PlayBoardWave(CueSequence cues, List<GridPos> positions, Vector3 center, PlaybackContext context)
         {
             var cells = new List<CellView>(positions.Count);
 
             foreach (GridPos pos in positions)
                 cells.Add(context.Views.Board.GetView(pos));
 
-            context.Play(_boardWaveCues, CueTarget.ForCells(cells, positions, center));
+            context.Play(cues, CueTarget.ForCells(cells, positions, center));
         }
 
         private static bool Contains(IReadOnlyList<GridPos> positions, GridPos pos)

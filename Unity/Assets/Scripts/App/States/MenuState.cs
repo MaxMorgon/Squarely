@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Squarely.App
 {
     /// <summary>
-    /// Shows the main menu and the high score. Play starts the default game.
+    /// Shows the main menu and the high score. Play starts the default game; Settings opens the settings panel.
     /// In editor and development builds, Test opens the test screen; other builds hide it.
     /// </summary>
     public sealed class MenuState : IAppState
@@ -13,6 +13,7 @@ namespace Squarely.App
         private readonly AppStateMachine _stateMachine;
 
         private MenuScreen _screen;
+        private SettingsPanel _settings;
 
         public MenuState(AppContext context, AppStateMachine stateMachine)
         {
@@ -26,6 +27,7 @@ namespace Squarely.App
             _screen.Initialize(_context.Texts.Menu);
             _screen.SetHighScore(_context.HighScore.Best);
             _screen.PlayRequestEvent += OnPlayRequested;
+            _screen.SettingsRequestEvent += OnSettingsRequested;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             _screen.TestRequestEvent += OnTestRequested;
 #else
@@ -35,7 +37,10 @@ namespace Squarely.App
 
         public void Exit()
         {
+            CloseSettings();
+
             _screen.PlayRequestEvent -= OnPlayRequested;
+            _screen.SettingsRequestEvent -= OnSettingsRequested;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             _screen.TestRequestEvent -= OnTestRequested;
 #endif
@@ -44,7 +49,7 @@ namespace Squarely.App
 
         private void OnPlayRequested()
         {
-            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultGameSetup));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultGameSetup, _context.HighScore));
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -53,5 +58,34 @@ namespace Squarely.App
             _stateMachine.ChangeState(new TestState(_context, _stateMachine));
         }
 #endif
+
+        #region Settings
+
+        private void OnSettingsRequested()
+        {
+            if (_settings != null)
+                return;
+
+            _settings = Object.Instantiate(_context.ScreenPrefabs.Settings, _context.ScreenRoot);
+            _settings.Initialize(_context.Texts.Settings, false);
+            _settings.CloseRequestEvent += OnSettingsCloseRequested;
+        }
+
+        private void OnSettingsCloseRequested()
+        {
+            CloseSettings();
+        }
+
+        private void CloseSettings()
+        {
+            if (_settings == null)
+                return;
+
+            _settings.CloseRequestEvent -= OnSettingsCloseRequested;
+            Object.Destroy(_settings.gameObject);
+            _settings = null;
+        }
+
+        #endregion
     }
 }

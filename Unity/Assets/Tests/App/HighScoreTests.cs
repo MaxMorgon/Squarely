@@ -4,13 +4,13 @@ namespace Squarely.App.Tests
 {
     public sealed class HighScoreTests
     {
-        private FakeKeyValueStore _store;
+        private MemoryKeyValueStore _store;
         private HighScore _highScore;
 
         [SetUp]
         public void SetUp()
         {
-            _store = new FakeKeyValueStore();
+            _store = new MemoryKeyValueStore();
             _highScore = new HighScore(_store);
         }
 

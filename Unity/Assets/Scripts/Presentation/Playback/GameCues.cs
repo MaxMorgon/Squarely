@@ -9,9 +9,13 @@ namespace Squarely.Presentation
     {
         [SerializeField] private CueSequence _piecePlaced;
 
-        [Tooltip("Plays on every placement, on the board's other filled cells (not the placed piece, not the cells the move clears). " +
+        [Tooltip("Plays on a placement that clears nothing, on the board's other filled cells (not the placed piece). " +
                  "Order its cells FromPlacement to spread outward from the piece.")]
-        [SerializeField] private CueSequence _boardWave;
+        [SerializeField] private CueSequence _placementWave;
+
+        [Tooltip("Plays on a placement that clears, on the board's filled cells that stay (the placed piece's too). " +
+                 "Order its cells FromPlacement to spread outward from the piece.")]
+        [SerializeField] private CueSequence _clearWave;
 
         [SerializeField] private CueSequence _patternsCleared;
         [SerializeField] private CueSequence _scoreChanged;
@@ -20,8 +24,11 @@ namespace Squarely.Presentation
 
         public CueSequence PiecePlaced => _piecePlaced;
 
-        /// <summary>Played by <see cref="PiecePlacedHandler"/> on every placement, on the filled board cells the move neither placed nor clears.</summary>
-        public CueSequence BoardWave => _boardWave;
+        /// <summary>Played by <see cref="PiecePlacedHandler"/> when the move clears nothing, on the filled board cells the move did not place.</summary>
+        public CueSequence PlacementWave => _placementWave;
+
+        /// <summary>Played by <see cref="PiecePlacedHandler"/> when the move clears, on the filled board cells the move does not clear.</summary>
+        public CueSequence ClearWave => _clearWave;
 
         public CueSequence PatternsCleared => _patternsCleared;
 
