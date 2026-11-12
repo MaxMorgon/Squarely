@@ -15,7 +15,7 @@ namespace Squarely.Simulation.Tests
 
             for (int move = 0; move < maxMoves && !sim.IsResolved; move++)
             {
-                List<PlacePieceCommand> moves = AllValidMoves(sim);
+                List<PlacePieceCommand> moves = TestHelpers.AllValidMoves(sim);
                 recorder.Execute(moves[choice.Next(moves.Count)]);
             }
 
@@ -23,32 +23,6 @@ namespace Squarely.Simulation.Tests
                 recorder.Execute(new EndGameCommand());
 
             return recorder.Build();
-        }
-
-        public static List<PlacePieceCommand> AllValidMoves(Sim sim)
-        {
-            var moves = new List<PlacePieceCommand>();
-
-            for (int slot = 0; slot < sim.Hand.Size; slot++)
-            {
-                PieceInstance piece = sim.Hand.GetSlot(slot);
-
-                if (piece == null)
-                    continue;
-
-                for (int y = 0; y < sim.Board.Height; y++)
-                {
-                    for (int x = 0; x < sim.Board.Width; x++)
-                    {
-                        var origin = new GridPos(x, y);
-
-                        if (sim.Board.CanPlace(piece.Shape, origin))
-                            moves.Add(new PlacePieceCommand(piece.InstanceId, origin));
-                    }
-                }
-            }
-
-            return moves;
         }
     }
 }

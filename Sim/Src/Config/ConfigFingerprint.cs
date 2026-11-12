@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text;
 
 namespace Squarely.Simulation
@@ -40,8 +41,11 @@ namespace Squarely.Simulation
             hash.Add(config.Clearing.ClearRows);
             hash.Add(config.Clearing.ClearColumns);
             hash.Add(config.Clearing.LinePoints);
-            hash.Add(config.Clearing.Patterns.Count);
-            foreach (BoardPatternDefinition pattern in config.Clearing.Patterns)
+
+            // A null list plays the same as an empty one, so it hashes the same.
+            List<BoardPatternDefinition> patterns = config.Clearing.Patterns ?? new List<BoardPatternDefinition>();
+            hash.Add(patterns.Count);
+            foreach (BoardPatternDefinition pattern in patterns)
             {
                 hash.Add(pattern.Id);
                 hash.Add(pattern.Pattern);

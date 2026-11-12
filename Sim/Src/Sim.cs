@@ -189,7 +189,7 @@ namespace Squarely.Simulation
                 return CommandResult.Failed("The game is already resolved.");
 
             var events = new List<ISimEvent>();
-            Resolve(new GameResolution(GameOutcome.Lost, RuleIds.NoMovesLeft), events);
+            Resolve(NoMovesLeftRule.CreateResolution(), events);
 
             return CommandResult.Succeeded(events);
         }

@@ -9,7 +9,7 @@ namespace Squarely.Simulation.Tests
     public class ConfigFingerprintTests
     {
         // Pinned on purpose: a change means every recorded replay stops matching. Change it only together with a replay format bump.
-        private const ulong PinnedValue = 8639028774229987887UL;
+        private const ulong PinnedValue = 1895163833762786009UL;
 
         #region Stability
 
@@ -22,9 +22,51 @@ namespace Squarely.Simulation.Tests
         [Test]
         public void Compute_IsAFixedValue_OnEveryMachine()
         {
-            var config = new SimConfig { Pieces = new List<PieceDefinition> { new PieceDefinition("dot", "#") } };
+            // Every field is set explicitly, so a change of a default value does not break this test.
+            var config = new SimConfig
+            {
+                BoardWidth = 8,
+                BoardHeight = 8,
+                HandSize = 3,
+                DealerId = "dealer",
+                ScoringRuleId = "scoring",
+                ResolutionRuleIds = new List<string> { "resolution" },
+                Pieces = new List<PieceDefinition> { new PieceDefinition("dot", "#") { Weight = 2, CellTypeId = "cell" } },
+                Dealing = new DealingConfig { GuaranteeHelpfulPiece = true },
+                Clearing = new ClearingConfig
+                {
+                    ClearRows = true,
+                    ClearColumns = false,
+                    LinePoints = 10,
+                    Patterns = new List<BoardPatternDefinition>
+                    {
+                        new BoardPatternDefinition { Id = "pattern", Pattern = "##", Points = 5, IsAnchored = true, AnchorX = 1, AnchorY = 2 },
+                    },
+                },
+                Scoring = new ScoringConfig { PointsPerCellPlaced = 1, MultiMatchBonusPerExtra = 10, ComboBonusPercent = 50 },
+            };
 
             Assert.That(ConfigFingerprint.Compute(config), Is.EqualTo(PinnedValue));
+        }
+
+        [Test]
+        public void Compute_NullPatterns_EqualsEmptyPatterns()
+        {
+            SimConfig withNull = DefaultSimConfig.Create();
+            SimConfig withEmpty = DefaultSimConfig.Create();
+            withNull.Clearing.Patterns = null;
+            withEmpty.Clearing.Patterns = new List<BoardPatternDefinition>();
+
+            Assert.That(ConfigFingerprint.Compute(withNull), Is.EqualTo(ConfigFingerprint.Compute(withEmpty)));
+        }
+
+        [Test]
+        public void Sim_NullPatterns_Works()
+        {
+            SimConfig config = DefaultSimConfig.Create();
+            config.Clearing.Patterns = null;
+
+            Assert.DoesNotThrow(() => new Sim(config, 1));
         }
 
         [Test]

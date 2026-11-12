@@ -15,6 +15,12 @@ namespace Squarely.Simulation
                     return null;
             }
 
+            return CreateResolution();
+        }
+
+        /// <summary>The resolution of a game that ends because no move is left.</summary>
+        internal static GameResolution CreateResolution()
+        {
             return new GameResolution(GameOutcome.Lost, RuleIds.NoMovesLeft);
         }
     }
