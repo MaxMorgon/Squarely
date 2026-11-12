@@ -28,6 +28,11 @@ namespace Squarely.Presentation
         [SerializeField] private PieceDragController _dragController;
         [SerializeField] private GameHud _hud;
 
+        [Tooltip("The HUD's canvas, rendered by the game camera.")]
+        [SerializeField] private Canvas _hudCanvas;
+
+        [SerializeField] private CameraFitter _cameraFitter;
+
         [Tooltip("Editor and development builds only: the playback debug panel created for each game.")]
         [SerializeField] private PlaybackDebugOverlay _debugOverlayPrefab;
 
@@ -35,6 +40,7 @@ namespace Squarely.Presentation
         [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
 
         private SimConfig _config;
+        private Camera _camera;
         private BoardSpace _boardSpace;
         private int _handSize;
 
@@ -61,20 +67,25 @@ namespace Squarely.Presentation
 
             if (_handView != null)
                 _handView.DrawGizmos(config.HandSize, _cellSize);
+
+            if (_cameraFitter != null && _boardRoot != null && _handView != null)
+                _cameraFitter.DrawGizmos(GameplayArea(config));
         }
 
         #endregion
 
         /// <summary>
         /// Builds the board, hand and HUD views for the game mode, connects drag input to the placer
-        /// and creates the event player with a handler per event. Call once.
+        /// and creates the event player with a handler per event. Frames the camera on the board and hand
+        /// and keeps it framed while the game is up. Call once.
         /// </summary>
-        /// <param name="camera">The camera that renders the board, used to map the pointer to the board.</param>
+        /// <param name="camera">The camera that renders the game and its UI, also used to map the pointer to the board.</param>
         /// <param name="hudTexts">The texts the HUD shows.</param>
         /// <param name="placer">Receives the player's placements.</param>
         public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer)
         {
             _config = config;
+            _camera = camera;
 
             var poolRoot = new GameObject("Cell View Pool").transform;
             poolRoot.SetParent(transform, false);
@@ -89,6 +100,8 @@ namespace Squarely.Presentation
             _handView.Initialize(config.HandSize, viewPool, _cellSize);
             _dragController.Initialize(camera, placer, _handView, _boardRoot, boardSpace, viewPool);
             _hud.Initialize(hudTexts);
+            _hudCanvas.worldCamera = camera;
+            _cameraFitter.Initialize(camera, GameplayArea(config));
 
             var playbackViews = new PlaybackViews(_layerView, _handView, _hud.Score, transform);
             Player = new EventPlayer(playbackViews, destroyCancellationToken);
@@ -143,16 +156,42 @@ namespace Squarely.Presentation
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        /// <summary>Debug only: creates the playback debug overlay as a child of this view. Its creator initializes it.</summary>
+        /// <summary>
+        /// Debug only: creates the playback debug overlay as a child of this view, rendered by the game camera.
+        /// Its creator initializes it.
+        /// </summary>
         public PlaybackDebugOverlay CreateDebugOverlay()
         {
-            return Instantiate(_debugOverlayPrefab, transform);
+            PlaybackDebugOverlay overlay = Instantiate(_debugOverlayPrefab, transform);
+            overlay.GetComponent<Canvas>().worldCamera = _camera;
+            return overlay;
         }
 #endif
 
         private void OnGameResolved(GameResolvedEvent resolved)
         {
             GameResolveEvent?.Invoke(resolved);
+        }
+
+        /// <summary>The world area the board and the hand's slots cover, for a game mode's board and hand size.</summary>
+        private Rect GameplayArea(SimConfig config)
+        {
+            var boardSpace = new BoardSpace(config.BoardWidth, config.BoardHeight, _cellSize);
+            Rect board = ToWorld(_boardRoot, boardSpace.LocalBounds);
+            Rect hand = ToWorld(_handView.transform, _handView.LocalBounds(config.HandSize));
+
+            return Rect.MinMaxRect(
+                Mathf.Min(board.xMin, hand.xMin),
+                Mathf.Min(board.yMin, hand.yMin),
+                Mathf.Max(board.xMax, hand.xMax),
+                Mathf.Max(board.yMax, hand.yMax));
+        }
+
+        private static Rect ToWorld(Transform space, Rect local)
+        {
+            Vector3 a = space.TransformPoint(local.min);
+            Vector3 b = space.TransformPoint(local.max);
+            return Rect.MinMaxRect(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y));
         }
 
         private SimConfig GizmoConfig()

@@ -87,6 +87,13 @@ namespace Squarely.Presentation
             return -1;
         }
 
+        /// <summary>The area the slots' pick-up squares cover in this transform's local space, for a hand of the given size.</summary>
+        public Rect LocalBounds(int slotCount)
+        {
+            float width = slotCount * _slotSpacing;
+            return new Rect(-width * 0.5f, -_slotSpacing * 0.5f, width, _slotSpacing);
+        }
+
         public void SetSlotVisible(int slot, bool visible)
         {
             _slots[slot].gameObject.SetActive(visible);

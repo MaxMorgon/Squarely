@@ -94,6 +94,7 @@ Config/            SimConfigAsset (SimConfig as an editable asset)
 Theme/             CellTheme, CellThemeEntry
 Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
+Camera/            CameraFit (pure fit math), CameraFrame, CameraFitter (keeps the camera framed on board and hand)
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController, IPiecePlacer (what drag input needs from the game)
 Screens/           MenuScreen, GameOverScreen, TestScreen, SettingsPanel, ConfirmDialog (report the player's choices as C# events)
@@ -112,7 +113,9 @@ The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
 
 - **One scene** (`Main.unity`) holds only what every screen shares: the camera, the EventSystem, the entry point. Code creates and destroys screen prefabs.
 - **`Prefabs/Game/Game.prefab`** is the whole game: `GameView` with board, hand, input and `GameHud` under it. `GameController` is plain C# created by its owner (`GameState`), so it has no prefab references.
-- **`Prefabs/UI/UiCanvas.prefab`** is the base of every UI screen: an overlay canvas scaled for portrait 1080×1920. Screens are its prefab variants (`GameHud`, `GameOverScreen`, `MenuScreen`, `TestScreen`). Panels that open over any screen are variants in `Prefabs/UI/`: `SettingsPanel` (sorted above game over) and `ConfirmDialog` (above the panel). Each has a full-screen dimmer that blocks input to everything under it, board and hand included (see "UI blocks world input"). Debug UI (`Prefabs/Debug/PlaybackDebugOverlay`) is a variant sorted above the screens.
+- **`Prefabs/UI/UiCanvas.prefab`** is the base of every UI screen: a Screen Space - Camera canvas scaled for portrait 1080×1920, plane distance 1, on the `UI` sorting layer. That layer is above `Default`, where all world sprites stay. Screens are its prefab variants (`GameHud`, `GameOverScreen`, `MenuScreen`, `TestScreen`). Panels that open over any screen are variants in `Prefabs/UI/`: `SettingsPanel` (sorted above game over) and `ConfirmDialog` (above the panel). Each has a full-screen dimmer that blocks input to everything under it, board and hand included (see "UI blocks world input"). Debug UI (`Prefabs/Debug/PlaybackDebugOverlay`) is a variant sorted above the screens.
+- **Canvas camera.** The code that creates a screen sets its canvas's `worldCamera` to the game camera: the states call `AppContext.CreateScreen` for their screens and panels, and `GameView` for the HUD and the debug overlay. Without it, a canvas falls back to overlay rendering.
+- **Camera fit.** While a game is up, `CameraFitter` (on the Game prefab) frames the camera on the board and the hand's slots plus a margin, for any aspect. The frame stays below the HUD's `TopBand`, a top-anchored rect in `GameHud`. Only its height counts. The fitter refits in `LateUpdate` when the screen size, the band's share of the screen or the margin changes. The math is the pure `CameraFit.Fit`.
 
 ### Principles
 
@@ -141,7 +144,7 @@ The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
 - **Themes are modular.** Each area has its own theme asset (`CellTheme` now, e.g. `MenuTheme` later). Views never reference cell view prefabs directly. A `CellTheme` resolves a cell type id to a view prefab, so a theme change is one asset swap. With layers, the theme also sets each layer's sorting order (a Sorting Group on each `LayerView`). Prefabs order only inside their own layer.
 - **Cell view states.** Idle, or Ghost (the translucent landing preview while dragging). Code sets the state. The prefab decides how to show it (Animator, tween, shader parameter). Add states when a feature needs them.
 - **Board background.** Static empty-slot tiles only. Hover and preview highlights are a separate view.
-- **Edit-time previews.** Anything whose size or position comes only from config or serialized values draws a gizmo preview, so the scene is WYSIWYG outside play mode. Such views expose `DrawGizmos(...)` with the config values they need. `GameView` calls them from `OnDrawGizmos` with its game mode, or at edit time with its gizmo preview config (`_gizmoPreviewConfig`). Today: board outline and grid (`BoardBackground`), hand slot pick-up areas (`HandView`).
+- **Edit-time previews.** Anything whose size or position comes only from config or serialized values draws a gizmo preview, so the scene is WYSIWYG outside play mode. Such views expose `DrawGizmos(...)` with the config values they need. `GameView` calls them from `OnDrawGizmos` with its game mode, or at edit time with its gizmo preview config (`_gizmoPreviewConfig`). Today: board outline and grid (`BoardBackground`), hand slot pick-up areas (`HandView`), the area the camera keeps on screen (`CameraFitter`).
 - **Drag feel is view-only.** `PieceDragController` computes the landing cell from a logical drag target (pointer plus lift), never from the dragged view's transform. The dragged view follows the target in one place (`MoveDraggedView`). Lag, tilt and other feel go there and do not change placement.
 - **UI blocks world input.** A press that starts over UI (`EventSystem.current.IsPointerOverGameObject`) never starts a drag. World input that checks this runs in `LateUpdate`, after the EventSystem has processed the frame's press (touch states exist only from then).
 

@@ -29,7 +29,7 @@ namespace Squarely.App
 
         public void Enter()
         {
-            _screen = Object.Instantiate(_context.ScreenPrefabs.Test, _context.ScreenRoot);
+            _screen = _context.CreateScreen(_context.ScreenPrefabs.Test);
             _screen.Initialize(_context.Texts.Test);
             _screen.SetStartInTest(_context.StartInTest.IsOn);
             _highScore = StartHighScore;

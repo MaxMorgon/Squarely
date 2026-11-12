@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1049162298317069756}
   - component: {fileID: 4383475621636752744}
+  - component: {fileID: 8255627761394363729}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -187,8 +188,24 @@ MonoBehaviour:
   _handView: {fileID: 7933357361827940875}
   _dragController: {fileID: 4369012219398867860}
   _hud: {fileID: 8155254064865488058}
+  _hudCanvas: {fileID: 1678054714628243423}
+  _cameraFitter: {fileID: 8255627761394363729}
   _debugOverlayPrefab: {fileID: 8464684377744441409, guid: 2e41f80957b12954daf9828120cc23f1, type: 3}
   _gizmoPreviewConfig: {fileID: 11400000, guid: bbabd39d8dadbd14e894501e1bdc6a16, type: 2}
+--- !u!114 &8255627761394363729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3987845589905021931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b88efd4d96e7649b83a1e36267a4da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CameraFitter
+  _margin: 0.4
+  _topBand: {fileID: 5466916705541318402}
 --- !u!1 &4627409397428881836
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,9 +405,19 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
+--- !u!223 &1678054714628243423 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 6532025455215684427, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
+  m_PrefabInstance: {fileID: 5615935221429261460}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3604482372244447273 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9217318995935163581, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
+  m_PrefabInstance: {fileID: 5615935221429261460}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &5466916705541318402 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 446327585590555542, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
   m_PrefabInstance: {fileID: 5615935221429261460}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &8155254064865488058 stripped
