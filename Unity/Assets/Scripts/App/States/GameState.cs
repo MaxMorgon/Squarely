@@ -57,10 +57,7 @@ namespace Squarely.App
             Debug.Log($"New game, seed {seed}.");
             var setup = new GameSetup(_config, seed);
 
-            _context.Music.PlayGame();
-            _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
-            _game = new GameController(_view, setup);
-            _view.Initialize(_config, _context.Camera, _context.Texts.GameHud, _game, _context.Sound);
+            (_view, _game) = _context.CreateGame(setup);
             _newRecordCheck = new NewRecordCheck(_highScore.Best);
 
             _view.Hud.SettingsRequestEvent += OnSettingsRequested;
@@ -201,8 +198,6 @@ namespace Squarely.App
 
             _settings = _context.CreateSettings(true);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
-            _settings.SfxChangeEvent += _context.SetSfx;
-            _settings.MusicChangeEvent += _context.SetMusic;
             _settings.DevToolsChangeEvent += _context.SetDevTools;
             _settings.RestartRequestEvent += OnSettingsRestartRequested;
             _settings.QuitRequestEvent += OnSettingsQuitRequested;
@@ -292,8 +287,6 @@ namespace Squarely.App
                 return;
 
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
-            _settings.SfxChangeEvent -= _context.SetSfx;
-            _settings.MusicChangeEvent -= _context.SetMusic;
             _settings.DevToolsChangeEvent -= _context.SetDevTools;
             _settings.RestartRequestEvent -= OnSettingsRestartRequested;
             _settings.QuitRequestEvent -= OnSettingsQuitRequested;

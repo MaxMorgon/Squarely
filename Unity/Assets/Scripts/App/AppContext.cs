@@ -97,12 +97,30 @@ namespace Squarely.App
             return screen;
         }
 
-        /// <summary>Creates the settings panel with its toggles set, and plays the panel-open sound.</summary>
+        /// <summary>
+        /// Starts the game music and creates the game view and its controller for the setup, connected to each other.
+        /// The caller starts the game and destroys the view.
+        /// </summary>
+        public (GameView View, GameController Controller) CreateGame(GameSetup setup)
+        {
+            Music.PlayGame();
+            GameView view = Object.Instantiate(ScreenPrefabs.Game, ScreenRoot);
+            var controller = new GameController(view, setup);
+            view.Initialize(setup.Config, Camera, Texts.GameHud, controller, Sound);
+            return (view, controller);
+        }
+
+        /// <summary>
+        /// Creates the settings panel with its toggles set, and plays the panel-open sound.
+        /// The sound effects and music toggles save their setting. Destroy the panel with <see cref="DestroyPanel"/>.
+        /// </summary>
         public SettingsPanel CreateSettings(bool isInGame)
         {
             SettingsPanel panel = CreatePanel(ScreenPrefabs.Settings);
             panel.Initialize(Texts.Settings, isInGame);
             panel.SetSound(SoundPrefs.SfxOn, SoundPrefs.MusicOn);
+            panel.SfxChangeEvent += SetSfx;
+            panel.MusicChangeEvent += SetMusic;
 
             if (DevToolsPreference.IsCompiledIn)
                 panel.SetDevTools(DevTools.IsOn);
@@ -121,6 +139,12 @@ namespace Squarely.App
         /// <summary>Destroys a panel made by <see cref="CreatePanel{T}"/> and plays the panel-close sound.</summary>
         public void DestroyPanel(Component panel)
         {
+            if (panel is SettingsPanel settings)
+            {
+                settings.SfxChangeEvent -= SetSfx;
+                settings.MusicChangeEvent -= SetMusic;
+            }
+
             Object.Destroy(panel.gameObject);
             PlayHook(hooks => hooks.PanelClose);
         }

@@ -57,9 +57,6 @@ namespace Squarely.Presentation
         /// <summary>The player asked to go back.</summary>
         public event Action BackRequestEvent;
 
-        /// <summary>Every frame. Gives the frame time in seconds. Drives the replay's auto-play.</summary>
-        public event Action<float> TickEvent;
-
         #region Unity
 
         private void Awake()
@@ -69,11 +66,6 @@ namespace Squarely.Presentation
             _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
             _speedDropdown.onValueChanged.AddListener(index => SpeedSelectEvent?.Invoke(_speedPresets[index]));
             _backButton.onClick.AddListener(() => BackRequestEvent?.Invoke());
-        }
-
-        private void Update()
-        {
-            TickEvent?.Invoke(Time.deltaTime);
         }
 
         #endregion

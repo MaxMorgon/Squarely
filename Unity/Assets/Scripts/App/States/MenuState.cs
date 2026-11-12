@@ -84,8 +84,6 @@ namespace Squarely.App
 
             _settings = _context.CreateSettings(false);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
-            _settings.SfxChangeEvent += _context.SetSfx;
-            _settings.MusicChangeEvent += _context.SetMusic;
             _settings.DevToolsChangeEvent += _context.SetDevTools;
         }
 
@@ -100,8 +98,6 @@ namespace Squarely.App
                 return;
 
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
-            _settings.SfxChangeEvent -= _context.SetSfx;
-            _settings.MusicChangeEvent -= _context.SetMusic;
             _settings.DevToolsChangeEvent -= _context.SetDevTools;
             _context.DestroyPanel(_settings);
             _settings = null;

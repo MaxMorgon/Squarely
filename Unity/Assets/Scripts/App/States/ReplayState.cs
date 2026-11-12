@@ -15,7 +15,7 @@ namespace Squarely.App
     /// If a command fails, it stops and says where. At the end it shows the final score and whether the end state matches the recording.
     /// It never records a high score or a history entry and has no game-over screen. Back enters the back target.
     /// </summary>
-    public sealed class ReplayState : IAppState
+    public sealed class ReplayState : ITickableState
     {
         private readonly AppContext _context;
         private readonly AppStateMachine _stateMachine;
@@ -43,10 +43,7 @@ namespace Squarely.App
             SimConfig config = _context.DefaultConfig;
             Debug.Log($"Watching a replay, seed {_replay.Seed}, {_replay.Commands.Count} commands.");
 
-            _context.Music.PlayGame();
-            _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
-            _game = new GameController(_view, new GameSetup(config, _replay.Seed));
-            _view.Initialize(config, _context.Camera, _context.Texts.GameHud, _game, _context.Sound);
+            (_view, _game) = _context.CreateGame(new GameSetup(config, _replay.Seed));
             _view.SetInputBlocked(true);
             _view.Hud.HideSettings();
 
@@ -66,7 +63,6 @@ namespace Squarely.App
             _screen.RestartRequestEvent += OnRestartRequested;
             _screen.SpeedSelectEvent += OnSpeedSelected;
             _screen.BackRequestEvent += OnBackRequested;
-            _screen.TickEvent += OnTick;
 
             // The opening deal plays like a game's.
             _game.StartGame();
@@ -79,14 +75,11 @@ namespace Squarely.App
             _screen.RestartRequestEvent -= OnRestartRequested;
             _screen.SpeedSelectEvent -= OnSpeedSelected;
             _screen.BackRequestEvent -= OnBackRequested;
-            _screen.TickEvent -= OnTick;
             Object.Destroy(_screen.gameObject);
             Object.Destroy(_view.gameObject);
         }
 
-        #region Screen events
-
-        private void OnTick(float deltaTime)
+        public void Tick(float deltaTime)
         {
             if (_isOver)
                 return;
@@ -100,6 +93,8 @@ namespace Squarely.App
             if (!_isOver && !_stepper.HasNext && !_view.Player.IsPlaying)
                 ShowResult();
         }
+
+        #region Screen events
 
         private void OnPlayPauseRequested()
         {

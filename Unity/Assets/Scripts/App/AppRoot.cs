@@ -65,6 +65,11 @@ namespace Squarely.App
 
         #endregion
 
+        private void Update()
+        {
+            _stateMachine.Tick(Time.deltaTime);
+        }
+
         private IAppState CreateFirstState(AppContext context)
         {
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
