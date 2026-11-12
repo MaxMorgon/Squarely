@@ -3,6 +3,7 @@
     "rootNamespace": "Squarely.App.Tests",
     "references": [
         "Squarely.App",
+        "Squarely.Simulation",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

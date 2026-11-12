@@ -48,6 +48,8 @@ namespace Squarely.Presentation
         private int _handSize;
         private GameEndGate _gameEndGate;
         private GameResolvedEvent _resolved;
+        private bool _isPaused;
+        private bool _isInputBlocked;
 
         /// <summary>Plays sim events on the views. Exists after <see cref="Initialize"/>.</summary>
         public EventPlayer Player { get; private set; }
@@ -141,8 +143,19 @@ namespace Squarely.Presentation
         /// </summary>
         public void SetPaused(bool isPaused)
         {
+            _isPaused = isPaused;
             Player.IsPaused = isPaused;
-            _dragController.IsBlocked = isPaused;
+            _dragController.IsBlocked = _isPaused || _isInputBlocked;
+        }
+
+        /// <summary>
+        /// Blocks or allows the player's drag input, whatever the pause state. Playback keeps running.
+        /// For a view that only shows a game, such as a replay.
+        /// </summary>
+        public void SetInputBlocked(bool isBlocked)
+        {
+            _isInputBlocked = isBlocked;
+            _dragController.IsBlocked = _isPaused || _isInputBlocked;
         }
 
         /// <summary>Sets the board, the hand, the score and the combo straight from a sim state, without playback.</summary>

@@ -30,6 +30,8 @@ MonoBehaviour:
     NewHighScore: New high score!
     Restart: Restart
     Menu: Menu
+    CopyReplay: Copy replay
+    ReplayCopied: Copied
   _settings:
     Title: Settings
     Close: Close
@@ -50,3 +52,30 @@ MonoBehaviour:
     StartInTest: Start in test screen
     Play: Play
     Back: Back
+    ReplaysTitle: Replays
+    HistoryEmpty: No games yet
+    ReplayRowFormat: '{0:yyyy-MM-dd HH:mm}   Score {1}   Moves {2}   {3}'
+    ReplayFinished: Finished
+    ReplayUnfinished: Left early
+    ReplayPlay: Play
+    ReplayCopy: Copy
+    ReplayCopied: Copied
+    PastePlaceholder: Paste a replay code
+    PasteInvalidFormat: 'This replay code is not valid: {0}'
+    ConfigWarning: Replay was recorded with a different game config. It may not play
+      the same.
+  _replay:
+    Play: Play
+    Pause: Pause
+    Step: Step
+    Back: Back
+    SpeedFormat: x{0}
+    ProgressFormat: Move {0} / {1}
+    ConfigWarning: Replay was recorded with a different game config. It may not play
+      the same.
+    DivergedFormat: Replay diverged at move {0}
+    ResultFormat: 'Final score: {0}'
+    ResultMatch: Same result as recorded.
+    ResultMismatchFormat: 'Different from the recording: score {0}, {1}.'
+    ResultFinished: finished
+    ResultUnfinished: not finished

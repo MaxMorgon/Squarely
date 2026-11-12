@@ -20,5 +20,11 @@ namespace Squarely.Presentation
 
         public string Restart = "Restart";
         public string Menu = "Menu";
+
+        [Tooltip("Editor and development builds only.")]
+        public string CopyReplay = "Copy replay";
+
+        [Tooltip("Feedback after the replay code is copied. Editor and development builds only.")]
+        public string ReplayCopied = "Copied";
     }
 }

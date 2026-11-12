@@ -19,7 +19,7 @@ AssemblyInfo.cs InternalsVisibleTo for tests
 Core/           GridPos, Grid<T>, Cell, PieceShape, PieceInstance, Board, Hand, read-only interfaces
 Patterns/       BoardPattern, PatternCell, PatternMatch, ClearedMatch, PatternMatcher, cell conditions
 Commands/       ISimCommand, PlacePieceCommand, EndGameCommand, CommandResult
-Replay/         GameReplay, ReplayRecorder, ReplayRunner, ReplayRunResult, ReplayCodec, command codecs
+Replay/         GameReplay (with MoveCount and MatchesEnd), ReplayRecorder, ReplayRunner, ReplayRunResult, ReplayCodec, command codecs
 Rules/          IPieceDealer, IScoringRule, ScoreResult, defaults, RuleFactory, RuleIds
 Resolution/     IResolutionRule, GameResolution, GameOutcome, NoMovesLeftRule
 Config/         ConfigFingerprint, SimConfig, DealingConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
@@ -64,6 +64,8 @@ A replay is the seed, the config fingerprint, the successful commands in order, 
 - **Recording.** `ReplayRecorder(sim)` wraps `Execute`. It keeps only successful commands. `Build()` gives the replay so far.
 - **Code.** `ReplayCodec.Encode/Decode`: `"SQ1."` + base64url of varint bytes. A registry (`CommandCodecRegistry`, `ICommandCodec` with a unique tag) maps command types to tags. New command type: write a codec and register it in `CreateDefault`. `Decode` never throws: `ReplayDecodeResult` has a `ReplayDecodeFailure` (wrong prefix, unknown version, corrupt data, unknown command tag).
 - **Running.** `ReplayRunner.Run(replay, config)` runs all commands and reports fingerprint match, first failed index and end-state match. It runs on a fingerprint mismatch. `ReplayRunner.CreateSim(replay, config)` gives a sim at the start for step-by-step playback with `Sim.Execute`.
+- **Recording in a game.** `GameController` runs every command (place and end game) through a `ReplayRecorder`. `BuildReplay()` gives the replay of the game so far, also for a half-finished game.
+- **Copy replay** (editor and development builds only). `ReplayCopier` (`Presentation/Replay/`, built once in `AppRoot`, in `AppContext.ReplayCopier`) puts a replay code on an `IClipboard`; `SystemClipboard` uses `GUIUtility.systemCopyBuffer`. There is no mobile clipboard yet. The debug overlay has a Copy replay button (and key C), and the game-over screen has one (hidden in other builds). Both show a short "Copied" label. The copy buttons of the test screen history work in all builds. History saving is always on, also in release builds. The game-over texts hold its texts.
 
 ## Turn flow — `PlacePieceCommand`
 
@@ -109,14 +111,15 @@ Board/             BoardSpace (cells <-> board local space), LayerView, BoardBac
 Camera/            CameraFit (pure fit math), CameraFrame, CameraFitter (keeps the camera framed on board and hand)
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController, IPiecePlacer (what drag input needs from the game), DragSwing (tilt spring), DragFeel (its tunables, `Config/Feel/DragFeel.asset`)
-Screens/           MenuScreen, GameOverScreen, TestScreen, SettingsPanel, ConfirmDialog (report the player's choices as C# events)
+Screens/           MenuScreen, GameOverScreen, TestScreen (with ReplayRow), ReplayScreen, SettingsPanel, ConfirmDialog (report the player's choices as C# events)
+Replay/            IClipboard, SystemClipboard, ReplayCopier (replay code to the clipboard)
 Hud/               GameHud (settings button, "new record" celebration), ScoreView (score, combo); both on the GameHud prefab
-Texts/             TextsConfig and per-screen groups (MenuTexts, GameHudTexts, GameOverTexts, SettingsTexts, ConfirmTexts, TestTexts)
+Texts/             TextsConfig and per-screen groups (MenuTexts, GameHudTexts, GameOverTexts, SettingsTexts, ConfirmTexts, TestTexts, ReplayTexts)
 Playback/          EventPlayer, PlaybackContext, PlaybackViews, CueSequence, CueRun, CueTarget, GameCues
   Handlers/        ISimEventHandler, SimEventHandler<T>, one handler per event type
   Steps/           CueStep and step types, CellOrder/CellOrdering (stagger order), CueStepPickerAttribute
   Drift/           ShownState, ViewDrift (debug check of views against the sim)
-Debug/             GameDebugTools (replay, drift check, restart relay), PlaybackDebugOverlay (uGUI panel, prefab in `Prefabs/Debug/`); editor and development builds only; not game UI
+Debug/             GameDebugTools (replay, drift check, restart relay, copy replay), PlaybackDebugOverlay (uGUI panel, prefab in `Prefabs/Debug/`); editor and development builds only; not game UI
 ```
 
 The inspector's step type picker is `Editor/Playback/CueStepPickerDrawer`.
@@ -203,7 +206,7 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. It decides which screen is 
 ### Entry point and flow
 
 - **`AppRoot`** is the only scene component that starts anything. It holds the screen prefabs (`AppScreenPrefabs`), camera, default game mode and texts. Its `Start` builds the `SeedSource`, the other services and an `AppContext`, creates the `AppStateMachine` and enters the menu. In editor and development builds it enters the test screen instead if `StartInTest` is on.
-- **`AppContext`** holds the refs every state uses: screen prefabs, screen root, camera, default game mode, texts, high score, seed source, test seed, start-in-test option. It has no behaviour.
+- **`AppContext`** holds the refs every state uses: screen prefabs, screen root, camera, default game mode, texts, high score, replay history, replay copier, seed source, test seed, start-in-test option. It has no behaviour.
 - **States transition themselves.** Each state takes the context, the state machine and its own arguments (`GameState(context, stateMachine, config, seed, highScore, createBackState)`). It moves on by creating the next state and calling `ChangeState`.
 - **`MenuState`** creates `MenuScreen` and starts the default game on `PlayRequestEvent`, against the device high score. **`GameState`** picks the seed (the given one, or a new one from `SeedSource`; it logs it), creates the Game prefab (`GameView`) and a `GameController(view, setup)`, initializes the view (game mode, camera, HUD texts, the controller as its `IPiecePlacer`), then calls `StartGame()`. In editor and development builds it also creates and starts `GameDebugTools`. Each destroys what it created in `Exit`.
 - **Settings.** The menu Settings button and the HUD Settings button (`GameHud.SettingsRequestEvent`) open `SettingsPanel`. The state that is up creates and destroys it. Menu: title and Close. Game: Resume, Restart, Quit to menu. Restart and Quit open `ConfirmDialog` ("Are you sure?") once `GameController.HasPlacedPiece` is true. Before that they act at once. They abandon the game and do not record the high score. When the game ends, `GameState` closes the panel and dialog before the game-over screen.
@@ -221,3 +224,10 @@ Assembly `Squarely.App`, tests `Squarely.App.Tests`. It decides which screen is 
 - **`MenuState`** shows `Best` on the menu (nothing before the first finished game). **`GameState`** records the final score when `GameEndEvent` fires, once per game. It then sets the game-over screen: the "new high score" state, or the high score this game did not beat.
 - **New record in game.** `GameState` watches `ScoreView.ScoreChangeEvent` (raised at each step of the score count-up) with a `NewRecordCheck` built from the best score at game start. The first time the shown score goes above it, `GameState` calls `GameHud.CelebrateNewRecord()`, once per game. No best score yet (first game ever) means no celebration. This records nothing. Only the game end records.
 - **Celebration hook.** `GameOverScreen` plays its `_newHighScoreCelebration` UnityEvent for a new high score. `GameHud` has the same hook for the in-game record (`_newRecordCelebration`). The art pass hangs animations, particles and sounds on them in the prefab. For now they trigger placeholder Animator clips from `Art/Placeholder/Animations/` (`Celebrate` trigger on the game-over label; `NewRecordPop` on a HUD label that never takes input). Until UI gets its own cue player, UI feedback is animation assets on hooks like this, not code (code-driven animation is for playback cues only).
+
+### Replay history
+
+- **`ReplayHistory`** (`App/ReplayHistory/`) keeps the last 10 games (`ReplayHistoryEntry`: code, UTC save time, score, move count, finished flag), newest first, in one string key of the `IKeyValueStore`. The oldest entry drops past 10. `Entries` reads the list for a screen (the test screen lists it). `Record(replay)` saves a finished game always, and an unfinished game only with at least one placed piece. Entries that do not parse are skipped, so corrupt data never crashes. The clock is a `Func<DateTime>` (wall clock is fine in App, never in Sim).
+- **Replays on the test screen.** `TestScreen` has a replays section. `TestState` fills the list from `ReplayHistory.Entries`: one row (`ReplayRow`) per entry with its local date and time, score, move count and finished flag (`ReplayRowFormat`), a Play button and a Copy button. Below the list is a field to paste a replay code with its own Play button. `ReplayPaste.Check` decodes the text and compares the replay's config fingerprint with the default game mode's. `TestState` shows the decode error, or the config warning (Play still works), in the screen's message label. Pasted Play is disabled until the code decodes (`ReplayPasteResult.CanPlay`). All strings are in `TestTexts`.
+- **Replay watch** (`ReplayState`, screen `ReplayScreen`; entered from the test screen, Back returns there). It creates the `Game` prefab and a `GameController` with the replay's seed and the default game mode, blocks drag input (`GameView.SetInputBlocked`) and plays the opening deal. It runs each command through `GameController.ExecuteCommand`, the same path as a player move, so the playback is the same. `ReplayStepper` (pure, tested) decides when the next command runs: auto-play waits for the previous playback to end, then `ReplayScreen.StepDelay` (scaled by the playback speed); Step runs the next command at once, also while paused. The speed button cycles `ReplayScreen.SpeedPresets` and sets `EventPlayer.Speed`. The HUD settings button is hidden (`GameHud.HideSettings`). "Move N / total" counts place commands; at an end-game command it shows the game-ended text. A failed command stops the watch with "Replay diverged at move N". After the last command and its playback, the screen shows the final score and whether it matches the recording (`GameReplay.MatchesEnd`). A banner shows the config warning if the fingerprint differs. The watch records no high score and no history entry, and it has no game-over screen. `ReplayScreen` raises `TickEvent` each frame because states have no update loop.
+- **When it saves.** `GameState` records once per game: when the game ends, or in `Exit` if the game was left first (Restart, Quit, debug restart).
