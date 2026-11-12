@@ -19,6 +19,8 @@ namespace Squarely.Editor
         private const float HapticWidth = 70f;
         private const float PlayWidth = 28f;
 
+        private static readonly Color OddRowTint = new Color(0f, 0f, 0f, 0.18f);
+
         [SerializeField] private SoundBank _bank;
         [SerializeField] private CueSequence _sequence;
         [SerializeField] private int _level;
@@ -109,21 +111,29 @@ namespace Squarely.Editor
             {
                 _scroll = scroll.scrollPosition;
 
+                int rowIndex = 0;
+
                 foreach (SoundCue cue in _bank.Cues)
                 {
-                    if (cue != null)
-                        DrawRow(cue);
+                    if (cue == null)
+                        continue;
+
+                    DrawRow(cue, rowIndex % 2 == 1);
+                    rowIndex++;
                 }
             }
         }
 
-        private void DrawRow(SoundCue cue)
+        private void DrawRow(SoundCue cue, bool isTinted)
         {
             SerializedObject so = SerializedFor(cue);
             so.Update();
 
-            using (new EditorGUILayout.HorizontalScope())
+            using (var row = new EditorGUILayout.HorizontalScope())
             {
+                if (isTinted && Event.current.type == EventType.Repaint)
+                    EditorGUI.DrawRect(row.rect, OddRowTint);
+
                 bool isSelected = EditorGUILayout.Toggle(_selected.Contains(cue), GUILayout.Width(18f));
                 SetSelected(cue, isSelected);
 
