@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DragFeel
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.DragFeel
   _maxAngle: 12
-  _degreesPerSpeed: 1
+  _degreesPerSpeed: 2
   _springFrequency: 3
   _dampingRatio: 0.65
   _velocitySmoothing: 0.05
