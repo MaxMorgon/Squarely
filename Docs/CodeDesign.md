@@ -102,6 +102,7 @@ Assembly `Squarely.Presentation`. Status: views, drag input and event playback a
 GameController.cs  Plain C#: runs one game, owns the sim, passes commands to it, plays their events, raises GameEndEvent and MoveExecutedEvent
 GameView.cs        MonoBehaviour on the Game prefab: builds and sets the views, owns the EventPlayer and registers all its handlers, gizmos
 GameSetup.cs       What a game starts with: config and seed
+GameFeel.cs        Tunables for the game screen (game end hold, `Config/Feel/GameFeel.asset`)
 ExecutedMove.cs    A move the game executed: sim before it, events, drop point
 AssemblyInfo.cs    InternalsVisibleTo for tests
 Config/            SimConfigAsset (SimConfig as an editable asset)
@@ -111,7 +112,7 @@ Board/             BoardSpace (cells <-> board local space), LayerView, BoardBac
 Camera/            CameraFit (pure fit math), CameraFrame, CameraFitter (keeps the camera framed on board and hand)
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
 Input/             PieceDragController, IPiecePlacer (what drag input needs from the game), DragSwing (tilt spring), DragFeel (its tunables: lift and tilt, `Config/Feel/DragFeel.asset`)
-Screens/           MenuScreen, GameOverScreen, TestScreen (with ReplayRow), ReplayScreen, SettingsPanel, ConfirmDialog (report the player's choices as C# events)
+Screens/           MenuScreen, GameOverScreen, TestScreen (with ReplayRow), ReplayScreen, ReplayFeel (its tunables, `Config/Feel/ReplayFeel.asset`), SettingsPanel, ConfirmDialog (report the player's choices as C# events)
 Replay/            IClipboard, SystemClipboard, ReplayCopier (replay code to the clipboard)
 Hud/               GameHud (settings button, "new record" celebration), ScoreView (score, combo); both on the GameHud prefab
 Texts/             TextsConfig and per-screen groups (MenuTexts, GameHudTexts, GameOverTexts, SettingsTexts, ConfirmTexts, TestTexts, ReplayTexts)

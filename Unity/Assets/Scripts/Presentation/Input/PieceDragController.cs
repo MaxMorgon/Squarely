@@ -16,7 +16,7 @@ namespace Squarely.Presentation
         [Tooltip("Sorting order of the dragged piece, above everything on the board.")]
         [SerializeField] private int _draggedSortingOrder = 100;
 
-        [Tooltip("Tunables for the lift and tilt of the dragged piece. Leave empty for no lift and no tilt.")]
+        [Tooltip("Tunables for the lift and tilt of the dragged piece. Required. Set Max Angle to 0 for no tilt.")]
         [SerializeField] private DragFeel _dragFeel;
 
         private Camera _camera;
@@ -126,7 +126,7 @@ namespace Squarely.Presentation
             _ghost.SetShape(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Ghost);
             _ghost.gameObject.SetActive(false);
 
-            _swing = _dragFeel != null ? _dragFeel.CreateSwing() : null;
+            _swing = _dragFeel.CreateSwing();
             _lastPointerX = world.x;
 
             _sound?.PlayHook(hooks => hooks.PiecePickUp);
@@ -135,7 +135,7 @@ namespace Squarely.Presentation
 
         private void UpdateDrag(Vector3 world)
         {
-            _dragTarget = world + Vector3.up * (_dragFeel != null ? _dragFeel.LiftOffset : 0f);
+            _dragTarget = world + Vector3.up * _dragFeel.LiftOffset;
             MoveDraggedView(world, world.x - _lastPointerX);
             _lastPointerX = world.x;
 
@@ -167,12 +167,9 @@ namespace Squarely.Presentation
             _dragged.transform.position = _dragTarget;
 
             // The tilt is visual only: placement never reads it.
-            if (_swing != null)
-            {
-                float angle = _swing.Step(pointerDeltaX, Time.deltaTime);
-                Quaternion tilt = Quaternion.Euler(0f, 0f, angle);
-                _dragged.transform.SetPositionAndRotation(pointer + tilt * (_dragTarget - pointer), tilt);
-            }
+            float angle = _swing.Step(pointerDeltaX, Time.deltaTime);
+            Quaternion tilt = Quaternion.Euler(0f, 0f, angle);
+            _dragged.transform.SetPositionAndRotation(pointer + tilt * (_dragTarget - pointer), tilt);
         }
 
         private void CancelDrag()
