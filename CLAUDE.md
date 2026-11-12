@@ -53,6 +53,10 @@ Custom commands are `[CliCommand]` static methods in `Unity/Assets/Editor/Cli/` 
 
 After you change Sim or Sim.Tests code, run `dotnet test Squarely.sln -v q` once at the end of the task, not after each edit. It must pass before the work is done. Skip it for doc-only or Unity-only changes. The CLI cannot verify Unity-side changes: say so, and ask the user to check in the editor.
 
+Builds (needs the platform module; output in `Builds/<Target>-<Config>/`, gitignored). Menu `Squarely/Build/...` or the CLI command `build player <store|studio> <android|webgl>` (`BuildTool`, `Unity/Assets/Editor/`). Agents never run a player build.
+
+**Build configs.** Store has no dev tools: the code is compiled out. Studio is a normal (non-development) build with the scripting define `SQUARELY_DEV_TOOLS`: dev tools are compiled in (debug overlay, replays on game over, Test mode, start-in-test). Gate all dev-only code with `#if UNITY_EDITOR || SQUARELY_DEV_TOOLS`, never `DEVELOPMENT_BUILD`. In such builds the "Dev tools" setting (`DevToolsPreference`, on by default) turns the tools on and off at run time.
+
 Headless checks (no editor open, e.g. a worktree slot; CI runs the Sim part on every PR):
 
 ```sh

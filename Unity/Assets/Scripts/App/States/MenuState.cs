@@ -5,7 +5,8 @@ namespace Squarely.App
 {
     /// <summary>
     /// Shows the main menu and the high score. Play starts the default game; Settings opens the settings panel.
-    /// In editor and development builds, Test opens the test screen; other builds hide it.
+    /// In the editor and in builds with dev tools, Test opens the test screen while the "Dev tools" setting is on.
+    /// Otherwise the button is hidden. The button follows the setting at once.
     /// </summary>
     public sealed class MenuState : IAppState
     {
@@ -29,11 +30,11 @@ namespace Squarely.App
             _screen.SetHighScore(_context.HighScore.Best);
             _screen.PlayRequestEvent += OnPlayRequested;
             _screen.SettingsRequestEvent += OnSettingsRequested;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _screen.TestRequestEvent += OnTestRequested;
-#else
-            _screen.HideTestButton();
+            _context.DevTools.ChangeEvent += OnDevToolsChanged;
 #endif
+            UpdateTestButton();
         }
 
         public void Exit()
@@ -42,8 +43,9 @@ namespace Squarely.App
 
             _screen.PlayRequestEvent -= OnPlayRequested;
             _screen.SettingsRequestEvent -= OnSettingsRequested;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _screen.TestRequestEvent -= OnTestRequested;
+            _context.DevTools.ChangeEvent -= OnDevToolsChanged;
 #endif
             Object.Destroy(_screen.gameObject);
         }
@@ -53,12 +55,25 @@ namespace Squarely.App
             _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, null, _context.HighScore, () => new MenuState(_context, _stateMachine)));
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         private void OnTestRequested()
         {
             _stateMachine.ChangeState(new TestState(_context, _stateMachine));
         }
+
+        private void OnDevToolsChanged(bool isOn)
+        {
+            UpdateTestButton();
+        }
 #endif
+
+        private void UpdateTestButton()
+        {
+            if (_context.DevTools.IsActive)
+                _screen.ShowTestButton();
+            else
+                _screen.HideTestButton();
+        }
 
         #region Settings
 
@@ -71,6 +86,7 @@ namespace Squarely.App
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
             _settings.SfxChangeEvent += _context.SetSfx;
             _settings.MusicChangeEvent += _context.SetMusic;
+            _settings.DevToolsChangeEvent += _context.SetDevTools;
         }
 
         private void OnSettingsCloseRequested()
@@ -86,6 +102,7 @@ namespace Squarely.App
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
             _settings.SfxChangeEvent -= _context.SetSfx;
             _settings.MusicChangeEvent -= _context.SetMusic;
+            _settings.DevToolsChangeEvent -= _context.SetDevTools;
             _context.DestroyPanel(_settings);
             _settings = null;
         }

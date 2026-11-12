@@ -19,5 +19,8 @@ namespace Squarely.Presentation
 
         public string Sfx = "Sound effects";
         public string Music = "Music";
+
+        /// <summary>The dev tools toggle. Shown only in builds with dev tools.</summary>
+        public string DevTools = "Dev tools";
     }
 }

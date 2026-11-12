@@ -6,8 +6,8 @@ namespace Squarely.App
 {
     /// <summary>
     /// The app's entry point and the only object in the scene that starts anything.
-    /// Builds the app context from its serialized setup and opens the menu, or in editor and development builds
-    /// the test screen if "start in test screen" is on.
+    /// Builds the app context from its serialized setup and opens the menu, or in the editor and in builds with dev tools
+    /// the test screen if "start in test screen" and dev tools are both on.
     /// </summary>
     public sealed class AppRoot : MonoBehaviour
     {
@@ -43,10 +43,11 @@ namespace Squarely.App
             var seedSource = new SeedSource(new System.Random());
             var testSeed = new TestSeed(store, seedSource);
             var startInTest = new StartInTest(store);
+            var devTools = new DevToolsPreference(store);
             var soundPreferences = new SoundPreferences(store, new SoundSettings(_mixer));
             _soundPlayer.SetHaptics(new NoHaptics());
             var music = new MusicDirector(_musicPlayer, _soundPlayer.Hooks);
-            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, testSeed, startInTest,
+            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, testSeed, startInTest, devTools,
                 _soundPlayer, music, soundPreferences);
 
             _stateMachine = new AppStateMachine();
@@ -57,8 +58,8 @@ namespace Squarely.App
 
         private IAppState CreateFirstState(AppContext context)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (context.StartInTest.IsOn)
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            if (context.DevTools.IsActive && context.StartInTest.IsOn)
                 return new TestState(context, _stateMachine);
 #endif
 

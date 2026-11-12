@@ -32,11 +32,18 @@ namespace Squarely.Presentation
         [SerializeField] private Toggle _musicToggle;
         [SerializeField] private TMP_Text _musicLabel;
 
+        [Tooltip("Hidden until SetDevTools runs, so builds without dev tools never show it.")]
+        [SerializeField] private Toggle _devToolsToggle;
+        [SerializeField] private TMP_Text _devToolsLabel;
+
         /// <summary>The player turned sound effects on (true) or off (false).</summary>
         public event Action<bool> SfxChangeEvent;
 
         /// <summary>The player turned music on (true) or off (false).</summary>
         public event Action<bool> MusicChangeEvent;
+
+        /// <summary>The player turned dev tools on (true) or off (false).</summary>
+        public event Action<bool> DevToolsChangeEvent;
 
         /// <summary>The player asked to close the panel.</summary>
         public event Action CloseRequestEvent;
@@ -56,6 +63,7 @@ namespace Squarely.Presentation
             _quitButton.onClick.AddListener(() => QuitRequestEvent?.Invoke());
             _sfxToggle.onValueChanged.AddListener(isOn => SfxChangeEvent?.Invoke(isOn));
             _musicToggle.onValueChanged.AddListener(isOn => MusicChangeEvent?.Invoke(isOn));
+            _devToolsToggle.onValueChanged.AddListener(isOn => DevToolsChangeEvent?.Invoke(isOn));
         }
 
         #endregion
@@ -67,6 +75,13 @@ namespace Squarely.Presentation
             _musicToggle.SetIsOnWithoutNotify(musicOn);
         }
 
+        /// <summary>Shows the dev tools toggle with the given state, without raising the change event. The toggle is hidden until this runs.</summary>
+        public void SetDevTools(bool isOn)
+        {
+            _devToolsToggle.gameObject.SetActive(true);
+            _devToolsToggle.SetIsOnWithoutNotify(isOn);
+        }
+
         /// <param name="isInGame">True over a game: shows Restart and Quit, and the close button reads Resume.</param>
         public void Initialize(SettingsTexts texts, bool isInGame)
         {
@@ -76,6 +91,9 @@ namespace Squarely.Presentation
             _quitLabel.text = texts.Quit;
             _sfxLabel.text = texts.Sfx;
             _musicLabel.text = texts.Music;
+            _devToolsLabel.text = texts.DevTools;
+
+            _devToolsToggle.gameObject.SetActive(false);
 
             _restartButton.gameObject.SetActive(isInGame);
             _quitButton.gameObject.SetActive(isInGame);

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 #endif
@@ -43,7 +43,7 @@ namespace Squarely.Presentation
 
         [SerializeField] private TMP_Text _driftLabel;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         private const string ExpandedToggleText = "×";
         private const string CollapsedToggleText = "DBG";
         private const string CopiedText = "Copied";

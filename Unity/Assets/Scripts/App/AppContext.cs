@@ -42,8 +42,11 @@ namespace Squarely.App
         /// <summary>The seed the test screen plays.</summary>
         public TestSeed TestSeed { get; }
 
-        /// <summary>Whether the app opens the test screen at start. Editor and development builds only.</summary>
+        /// <summary>Whether the app opens the test screen at start. Ignored when dev tools are off.</summary>
         public StartInTest StartInTest { get; }
+
+        /// <summary>The "Dev tools" setting. Dev tools run only in builds that have them, and while this is on.</summary>
+        public DevToolsPreference DevTools { get; }
 
         /// <summary>Plays sound cues. Lives in the scene, so it survives screen changes.</summary>
         public SoundPlayer Sound { get; }
@@ -56,7 +59,7 @@ namespace Squarely.App
 
         public AppContext(AppScreenPrefabs screenPrefabs, Transform screenRoot, Camera camera, SimConfig defaultConfig, TextsConfig texts,
             HighScore highScore, ReplayHistory replayHistory, ReplayCopier replayCopier, SeedSource seedSource, TestSeed testSeed, StartInTest startInTest,
-            SoundPlayer sound, MusicDirector music, SoundPreferences soundPrefs)
+            DevToolsPreference devTools, SoundPlayer sound, MusicDirector music, SoundPreferences soundPrefs)
         {
             ScreenPrefabs = screenPrefabs;
             ScreenRoot = screenRoot;
@@ -69,6 +72,7 @@ namespace Squarely.App
             SeedSource = seedSource;
             TestSeed = testSeed;
             StartInTest = startInTest;
+            DevTools = devTools;
             Sound = sound;
             Music = music;
             SoundPrefs = soundPrefs;
@@ -92,6 +96,10 @@ namespace Squarely.App
             SettingsPanel panel = CreatePanel(ScreenPrefabs.Settings);
             panel.Initialize(Texts.Settings, isInGame);
             panel.SetSound(SoundPrefs.SfxOn, SoundPrefs.MusicOn);
+
+            if (DevToolsPreference.IsCompiledIn)
+                panel.SetDevTools(DevTools.IsOn);
+
             return panel;
         }
 
@@ -121,6 +129,13 @@ namespace Squarely.App
         public void SetMusic(bool isOn)
         {
             SoundPrefs.SetMusic(isOn);
+            PlayHook(hooks => isOn ? hooks.ToggleOn : hooks.ToggleOff);
+        }
+
+        /// <summary>Turns dev tools on or off, saves it and plays the toggle sound.</summary>
+        public void SetDevTools(bool isOn)
+        {
+            DevTools.Set(isOn);
             PlayHook(hooks => isOn ? hooks.ToggleOn : hooks.ToggleOff);
         }
 

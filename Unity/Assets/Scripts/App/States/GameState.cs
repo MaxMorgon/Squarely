@@ -15,7 +15,7 @@ namespace Squarely.App
     /// is placed (the panel closes for the question), and abandon the game without recording the high score.
     /// The game is paused while the panel or the question is open.
     /// Every game is saved in the replay history when it ends, or when the player leaves it after placing a piece.
-    /// In editor and development builds, it also runs the game's debug tools; the debug overlay's restart restarts at once.
+    /// In the editor and in builds with dev tools, it also runs the game's debug tools while the "Dev tools" setting is on (it follows the setting at once); the debug overlay's restart restarts at once.
     /// </summary>
     public sealed class GameState : IAppState
     {
@@ -28,7 +28,7 @@ namespace Squarely.App
 
         private GameView _view;
         private GameController _game;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         private GameDebugTools _debugTools;
 #endif
         private NewRecordCheck _newRecordCheck;
@@ -66,10 +66,13 @@ namespace Squarely.App
             _view.Hud.SettingsRequestEvent += OnSettingsRequested;
             _view.Hud.Score.ScoreChangeEvent += OnScoreChanged;
             _game.GameEndEvent += OnGameEnded;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _debugTools = new GameDebugTools(_game, _view, _context.ReplayCopier);
             _debugTools.RestartRequestEvent += OnRestartRequested;
-            _debugTools.Start();
+            _context.DevTools.ChangeEvent += OnDevToolsChanged;
+
+            if (_context.DevTools.IsOn)
+                _debugTools.Start();
 #endif
             _game.StartGame();
         }
@@ -88,8 +91,9 @@ namespace Squarely.App
             _view.Hud.SettingsRequestEvent -= OnSettingsRequested;
             _view.Hud.Score.ScoreChangeEvent -= OnScoreChanged;
             _game.GameEndEvent -= OnGameEnded;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _debugTools.RestartRequestEvent -= OnRestartRequested;
+            _context.DevTools.ChangeEvent -= OnDevToolsChanged;
             _debugTools.Stop();
 #endif
             // A game left before it ended is saved here, if the player placed a piece.
@@ -110,6 +114,16 @@ namespace Squarely.App
                 _view.Hud.CelebrateNewRecord();
             }
         }
+
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+        private void OnDevToolsChanged(bool isOn)
+        {
+            if (isOn)
+                _debugTools.Start();
+            else
+                _debugTools.Stop();
+        }
+#endif
 
         private void OnRestartRequested()
         {
@@ -137,8 +151,9 @@ namespace Squarely.App
             bool isNewRecord = RecordHighScore(finalScore);
             PlayGameOverJingle(resolution.Outcome, isNewRecord);
             RecordReplay();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            _gameOver.SetReplay(_context.ReplayCopier,_game.BuildReplay());
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            if (_context.DevTools.IsOn)
+                _gameOver.SetReplay(_context.ReplayCopier, _game.BuildReplay());
 #endif
         }
 
@@ -188,6 +203,7 @@ namespace Squarely.App
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
             _settings.SfxChangeEvent += _context.SetSfx;
             _settings.MusicChangeEvent += _context.SetMusic;
+            _settings.DevToolsChangeEvent += _context.SetDevTools;
             _settings.RestartRequestEvent += OnSettingsRestartRequested;
             _settings.QuitRequestEvent += OnSettingsQuitRequested;
             UpdatePause();
@@ -278,6 +294,7 @@ namespace Squarely.App
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
             _settings.SfxChangeEvent -= _context.SetSfx;
             _settings.MusicChangeEvent -= _context.SetMusic;
+            _settings.DevToolsChangeEvent -= _context.SetDevTools;
             _settings.RestartRequestEvent -= OnSettingsRestartRequested;
             _settings.QuitRequestEvent -= OnSettingsQuitRequested;
             _context.DestroyPanel(_settings);
