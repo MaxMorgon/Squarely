@@ -13,6 +13,9 @@ namespace Squarely.Presentation
         ClearCount,
 
         /// <summary>The combo after the command.</summary>
-        ComboLevel
+        ComboLevel,
+
+        /// <summary>The combo that the command lost: the combo before it if the combo dropped to 0, else 0.</summary>
+        ComboLost
     }
 }

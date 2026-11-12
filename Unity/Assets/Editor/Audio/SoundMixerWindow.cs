@@ -22,9 +22,11 @@ namespace Squarely.Editor
         [SerializeField] private SoundBank _bank;
         [SerializeField] private CueSequence _sequence;
         [SerializeField] private int _level;
+        [SerializeField] private int _countFrom;
         [SerializeField] private int _count;
         [SerializeField] private int _clearCount = 1;
         [SerializeField] private int _comboLevel;
+        [SerializeField] private int _comboLost;
 
         private readonly HashSet<SoundCue> _selected = new HashSet<SoundCue>();
         private readonly Dictionary<SoundCue, SerializedObject> _serialized = new Dictionary<SoundCue, SerializedObject>();
@@ -148,14 +150,16 @@ namespace Squarely.Editor
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Play event", EditorStyles.boldLabel);
             _sequence = (CueSequence)EditorGUILayout.ObjectField("Cue Sequence", _sequence, typeof(CueSequence), false);
+            _countFrom = EditorGUILayout.IntField(new GUIContent("Count from", "Start value of the count. Used for the ticks of a count-up."), _countFrom);
             _count = EditorGUILayout.IntField(new GUIContent("Count", "End value of the count. Level source Count."), _count);
             _clearCount = EditorGUILayout.IntField(new GUIContent("Clear count", "Matches cleared by the command."), _clearCount);
             _comboLevel = EditorGUILayout.IntField(new GUIContent("Combo level", "Combo after the command."), _comboLevel);
+            _comboLost = EditorGUILayout.IntField(new GUIContent("Combo lost", "Combo that the command lost. Level source Combo Lost."), _comboLost);
 
             using (new EditorGUI.DisabledScope(_sequence == null))
             {
                 if (GUILayout.Button("Play event sounds"))
-                    _preview.PlaySequence(_sequence, new SoundLevelInput(_count, _clearCount, _comboLevel));
+                    _preview.PlaySequence(_sequence, new SoundLevelInput(_count, _clearCount, _comboLevel, _comboLost, _countFrom));
             }
         }
 

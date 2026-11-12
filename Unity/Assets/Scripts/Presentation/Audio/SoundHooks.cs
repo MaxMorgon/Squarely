@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// The sounds that no sim event drives (input, UI) and the music setup. A cue left empty plays no sound.
+    /// The sounds that no sim event drives (input, UI, game end, records). A cue left empty plays no sound.
     /// </summary>
     [CreateAssetMenu(menuName = "Squarely/Sound Hooks", fileName = "SoundHooks")]
     public sealed class SoundHooks : ScriptableObject
@@ -44,23 +44,6 @@ namespace Squarely.Presentation
         [Tooltip("The game-over screen shows a new record.")]
         [SerializeField] private SoundCue _newRecord;
 
-        [Header("Music")]
-        [Tooltip("Plays in the menu and on the test screen.")]
-        [SerializeField] private AudioClip _menuMusic;
-
-        [Tooltip("Plays in a game and in a replay.")]
-        [SerializeField] private AudioClip _gameMusic;
-
-        [Tooltip("Seconds to crossfade between tracks, and to bring the music back up for a new game.")]
-        [SerializeField] private float _crossfadeSeconds = 1f;
-
-        [Tooltip("Music volume at game over, from 0 to 1. The track keeps playing.")]
-        [Range(0f, 1f)]
-        [SerializeField] private float _gameOverMusicVolume = 0.3f;
-
-        [Tooltip("Seconds to fade the music down at game over.")]
-        [SerializeField] private float _gameOverFadeSeconds = 1.5f;
-
         public SoundCue PiecePickUp => _piecePickUp;
 
         public SoundCue PieceReturn => _pieceReturn;
@@ -84,15 +67,5 @@ namespace Squarely.Presentation
         public SoundCue NewBest => _newBest;
 
         public SoundCue NewRecord => _newRecord;
-
-        public AudioClip MenuMusic => _menuMusic;
-
-        public AudioClip GameMusic => _gameMusic;
-
-        public float CrossfadeSeconds => _crossfadeSeconds;
-
-        public float GameOverMusicVolume => _gameOverMusicVolume;
-
-        public float GameOverFadeSeconds => _gameOverFadeSeconds;
     }
 }

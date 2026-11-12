@@ -12,11 +12,19 @@ namespace Squarely.Presentation
 
         public int ComboLevel { get; }
 
-        public SoundLevelInput(int count, int clearCount, int comboLevel)
+        /// <summary>The combo that the command ended, or 0 if the combo did not drop to 0.</summary>
+        public int ComboLostLevel { get; }
+
+        /// <summary>The start value of the target's count.</summary>
+        public int CountFrom { get; }
+
+        public SoundLevelInput(int count, int clearCount, int comboLevel, int comboLostLevel = 0, int countFrom = 0)
         {
             Count = count;
             ClearCount = clearCount;
             ComboLevel = comboLevel;
+            ComboLostLevel = comboLostLevel;
+            CountFrom = countFrom;
         }
 
         /// <summary>Reads the numbers from a target's count and the events of the command.</summary>
@@ -24,16 +32,25 @@ namespace Squarely.Presentation
         {
             int clearCount = 0;
             int comboLevel = 0;
+            int comboLostLevel = 0;
 
             foreach (ISimEvent simEvent in events)
             {
                 if (simEvent is PatternsClearedEvent cleared)
+                {
                     clearCount += cleared.Matches.Count;
+                }
                 else if (simEvent is ComboChangedEvent combo)
+                {
                     comboLevel = combo.Current;
+                    comboLostLevel = combo.Current == 0 ? combo.Previous : 0;
+                }
             }
 
-            return new SoundLevelInput(target.HasCount ? target.CountTo : 0, clearCount, comboLevel);
+            int count = target.HasCount ? target.CountTo : 0;
+            int countFrom = target.HasCount ? target.CountFrom : 0;
+
+            return new SoundLevelInput(count, clearCount, comboLevel, comboLostLevel, countFrom);
         }
 
         /// <summary>The level a source gives.</summary>
@@ -47,6 +64,8 @@ namespace Squarely.Presentation
                     return ClearCount;
                 case SoundLevelSource.ComboLevel:
                     return ComboLevel;
+                case SoundLevelSource.ComboLost:
+                    return ComboLostLevel;
                 default:
                     return 0;
             }
