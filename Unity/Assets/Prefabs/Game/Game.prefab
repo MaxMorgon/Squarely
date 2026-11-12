@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.PieceDragController
   _liftOffset: 2
   _draggedSortingOrder: 100
+  _dragFeel: {fileID: 11400000, guid: b8919694b26d37e4d911e1510654b18a, type: 2}
 --- !u!1 &1817497623172953299
 GameObject:
   m_ObjectHideFlags: 0
