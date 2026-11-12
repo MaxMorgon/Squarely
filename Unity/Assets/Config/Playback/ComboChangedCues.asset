@@ -64,7 +64,7 @@ MonoBehaviour:
         _levelSource: 3
         _levelRange:
           _hasMin: 1
-          _minLevel: 1
+          _minLevel: 2
           _hasMax: 0
           _maxLevel: 0
     - rid: 5611427147086561284

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameWon
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.SoundCue
   _clips:
-  - {fileID: 8300000, guid: 7b352a30f1314a14a943ab0d1fb92e58, type: 3}
+  - {fileID: 8300000, guid: 6cd20d1f3528ca94e92b9c0f0921b737, type: 3}
   _volume: 0.8
   _pitchMin: 1
   _pitchMax: 1
