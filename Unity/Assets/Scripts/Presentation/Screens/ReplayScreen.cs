@@ -14,7 +14,7 @@ namespace Squarely.Presentation
     public sealed class ReplayScreen : MonoBehaviour
     {
         [Tooltip("The playback speeds the speed dropdown offers, in order.")]
-        [SerializeField] private float[] _speedPresets = { 0.5f, 1f, 2f, 4f };
+        [SerializeField] private float[] _speedPresets = { 4f, 2f, 1f, 0.5f };
 
         [Tooltip("Seconds auto-play waits, at speed 1, between the end of a move's playback and the next move.")]
         [SerializeField] private float _stepDelay = 0.4f;

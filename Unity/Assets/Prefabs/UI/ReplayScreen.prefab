@@ -2841,10 +2841,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ReplayScreen
   _speedPresets:
-  - 0.5
-  - 1
-  - 2
   - 4
+  - 2
+  - 1
+  - 0.5
   _stepDelay: 0.4
   _progressLabel: {fileID: 5833910249308743072}
   _playPauseButton: {fileID: 2799821187713650999}
