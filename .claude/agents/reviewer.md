@@ -16,7 +16,7 @@ You review one pull request (or, in [audit mode](#audit-mode), the whole codebas
 
 **Scope**
 - The change does what the brief asks and nothing more. Flag extra features, drive-by refactors and edits to files another workstream owns.
-- `TODO.txt` and `Docs/DevLog.md` change only if the brief says so.
+- PRs do not contain `TODO.txt` or `DevLog.md`. They are in the private `Notes/` repo.
 
 **Architecture**
 - Sim (`Sim/`) never references `UnityEngine`, stays deterministic (no `System.Random`, wall clock, outcome-changing unordered iteration, floats in game logic) and C# 9 / netstandard2.1.
