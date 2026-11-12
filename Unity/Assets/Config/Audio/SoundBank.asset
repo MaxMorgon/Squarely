@@ -32,6 +32,3 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7cf98df24ef04e449899d87e3cae5e64, type: 2}
   - {fileID: 11400000, guid: 3e8aa6f3ec08dc043bd9a7ca03c586cc, type: 2}
   - {fileID: 11400000, guid: 3dd9f6e74558fb244935836d4b273df8, type: 2}
-  _music:
-  - {fileID: 8300000, guid: 126142422afdf4646aff21004f47512a, type: 3}
-  - {fileID: 8300000, guid: dd411abd9800f4444b7fb2192ee7f34c, type: 3}
