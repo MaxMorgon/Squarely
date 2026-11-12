@@ -11,7 +11,7 @@ namespace Squarely.Presentation
     /// <summary>
     /// Editor and development builds only: a small panel for tuning playback. Replays the last move (also with R),
     /// restarts the game, sets the playback speed (back to 1x each play session) and shows the last drift check.
-    /// A small toggle button (or the backquote key) collapses it.
+    /// It starts collapsed in every game. A small toggle button (or the backquote key) expands it.
     /// Not game UI. In other builds the component is never created and does nothing.
     /// </summary>
     public sealed class PlaybackDebugOverlay : MonoBehaviour
@@ -41,27 +41,27 @@ namespace Squarely.Presentation
         private const string ExpandedToggleText = "×";
         private const string CollapsedToggleText = "DBG";
 
-        // Static, so the chosen speed and the collapsed state carry over to the next game of the same play session.
+        // Static, so the chosen speed carries over to the next game of the same play session.
         private static float s_speed = 1f;
-        private static bool s_isExpanded = true;
+        private bool _isExpanded;
 
         private readonly List<Button> _speedButtons = new List<Button>();
 
-        private GameController _game;
+        private GameDebugTools _debug;
         private EventPlayer _player;
 
-        public void Initialize(GameController game, EventPlayer player)
+        public void Initialize(GameDebugTools debug, EventPlayer player)
         {
-            _game = game;
+            _debug = debug;
             _player = player;
             _player.Speed = s_speed;
 
             _toggleButton.onClick.AddListener(ToggleExpanded);
-            _replayButton.onClick.AddListener(_game.ReplayLastMove);
-            _restartButton.onClick.AddListener(_game.RequestRestart);
+            _replayButton.onClick.AddListener(_debug.ReplayLastMove);
+            _restartButton.onClick.AddListener(_debug.RequestRestart);
             CreateSpeedButtons();
 
-            SetExpanded(s_isExpanded);
+            SetExpanded(false);
             SetSpeed(s_speed);
             Refresh();
         }
@@ -77,13 +77,13 @@ namespace Squarely.Presentation
 
         private void Update()
         {
-            if (_game == null)
+            if (_debug == null)
                 return;
 
             Keyboard keyboard = Keyboard.current;
 
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame)
-                _game.ReplayLastMove();
+                _debug.ReplayLastMove();
 
             if (keyboard != null && keyboard.backquoteKey.wasPressedThisFrame)
                 ToggleExpanded();
@@ -110,12 +110,12 @@ namespace Squarely.Presentation
 
         private void ToggleExpanded()
         {
-            SetExpanded(!s_isExpanded);
+            SetExpanded(!_isExpanded);
         }
 
         private void SetExpanded(bool isExpanded)
         {
-            s_isExpanded = isExpanded;
+            _isExpanded = isExpanded;
             _panel.SetActive(isExpanded);
             _toggleLabel.text = isExpanded ? ExpandedToggleText : CollapsedToggleText;
         }
@@ -136,7 +136,7 @@ namespace Squarely.Presentation
         /// <summary>Sets what changes without the overlay's input: whether replay is possible, and the drift result.</summary>
         private void Refresh()
         {
-            _replayButton.interactable = _game.CanReplayLastMove;
+            _replayButton.interactable = _debug.CanReplayLastMove;
 
             string driftText = DriftText();
 
@@ -146,7 +146,7 @@ namespace Squarely.Presentation
 
         private string DriftText()
         {
-            ViewDrift drift = _game.LastDrift;
+            ViewDrift drift = _debug.LastDrift;
 
             if (drift == null)
                 return "Drift check: not run yet";

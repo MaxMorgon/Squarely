@@ -21,10 +21,6 @@ MonoBehaviour:
     ResolutionRuleIds:
     - no_moves_left
     Pieces:
-    - Id: dot
-      Pattern: '#'
-      Weight: 1
-      CellTypeId: block
     - Id: line2_h
       Pattern: '##'
       Weight: 1
@@ -169,6 +165,8 @@ MonoBehaviour:
       Pattern: .#/##/#.
       Weight: 1
       CellTypeId: block
+    Dealing:
+      GuaranteeHelpfulPiece: 1
     Clearing:
       ClearRows: 1
       ClearColumns: 1

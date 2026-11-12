@@ -5,7 +5,8 @@ namespace Squarely.App
 {
     /// <summary>
     /// The app's entry point and the only object in the scene that starts anything.
-    /// Builds the app context from its serialized setup and opens the menu.
+    /// Builds the app context from its serialized setup and opens the menu, or in editor and development builds
+    /// the test screen if "start in test screen" is on.
     /// </summary>
     public sealed class AppRoot : MonoBehaviour
     {
@@ -14,14 +15,11 @@ namespace Squarely.App
         [Tooltip("The camera that renders the game.")]
         [SerializeField] private Camera _camera;
 
-        [Tooltip("The game mode started from the menu. Edits apply live, also in play mode. Board and hand size changes apply from the next game.")]
+        [Tooltip("The game mode started from the menu. Edits, also in play mode, apply from the next game.")]
         [SerializeField] private SimConfigAsset _defaultMode;
 
         [Tooltip("Every text the screens show.")]
         [SerializeField] private TextsConfig _texts;
-
-        [Tooltip("0 picks a new seed for every game.")]
-        [SerializeField] private int _seed;
 
         private AppStateMachine _stateMachine;
 
@@ -29,14 +27,27 @@ namespace Squarely.App
 
         private void Start()
         {
-            ulong? seed = _seed != 0 ? (ulong)_seed : (ulong?)null;
-            var defaultGameSetup = new GameSetup(_defaultMode.Config, seed);
-            var context = new AppContext(_screenPrefabs, transform, _camera, defaultGameSetup, _texts);
+            var store = new PlayerPrefsStore();
+            var highScore = new HighScore(store);
+            var seedSource = new SeedSource(new System.Random());
+            var testSeed = new TestSeed(store, seedSource);
+            var startInTest = new StartInTest(store);
+            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, seedSource, testSeed, startInTest);
 
             _stateMachine = new AppStateMachine();
-            _stateMachine.ChangeState(new MenuState(context, _stateMachine));
+            _stateMachine.ChangeState(CreateFirstState(context));
         }
 
         #endregion
+
+        private IAppState CreateFirstState(AppContext context)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            if (context.StartInTest.IsOn)
+                return new TestState(context, _stateMachine);
+#endif
+
+            return new MenuState(context, _stateMachine);
+        }
     }
 }

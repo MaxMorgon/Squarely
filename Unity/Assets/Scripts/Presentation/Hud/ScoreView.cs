@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -26,15 +27,25 @@ namespace Squarely.Presentation
 
         public Transform ComboLabel => _comboLabel.transform;
 
+        /// <summary>The score the label shows changed, also at each step of a count-up. Gives the new score.</summary>
+        public event Action<int> ScoreChangeEvent;
+
+        /// <summary>Starts at a score of 0 and no combo.</summary>
         public void Initialize(GameHudTexts texts)
         {
             _texts = texts;
+            SetScore(0);
+            SetCombo(0);
         }
 
         public void SetScore(int score)
         {
+            bool isChanged = score != Score;
             Score = score;
             _scoreLabel.text = score.ToString();
+
+            if (isChanged)
+                ScoreChangeEvent?.Invoke(score);
         }
 
         public void SetCombo(int combo)

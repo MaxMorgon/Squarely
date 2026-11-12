@@ -23,7 +23,7 @@ namespace Squarely.Simulation
         {
             var factory = new RuleFactory();
 
-            factory.RegisterDealer(RuleIds.WeightedRandomDealer, config => new WeightedRandomDealer(config.Pieces));
+            factory.RegisterDealer(RuleIds.WeightedRandomDealer, config => new WeightedRandomDealer(config.Pieces, config.Dealing));
             factory.RegisterScoringRule(RuleIds.DefaultScoring, config => new DefaultScoringRule(config.Scoring));
             factory.RegisterResolutionRule(RuleIds.NoMovesLeft, config => new NoMovesLeftRule());
 

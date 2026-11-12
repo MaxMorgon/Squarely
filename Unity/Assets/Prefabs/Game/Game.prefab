@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1049162298317069756}
   - component: {fileID: 4383475621636752744}
-  - component: {fileID: 5603471323647095273}
+  - component: {fileID: 8255627761394363729}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -175,6 +175,8 @@ MonoBehaviour:
   _cellTheme: {fileID: 11400000, guid: 01c6dba172a1cc1479f056b3e00c5b84, type: 2}
   _cues:
     _piecePlaced: {fileID: 11400000, guid: 489af28855fe7264f8b2126203c97294, type: 2}
+    _placementWave: {fileID: 11400000, guid: 950ee1a89a99f944e95a60042314545d, type: 2}
+    _clearWave: {fileID: 11400000, guid: 46cae284d55e2b941828a1cf9a0e951a, type: 2}
     _patternsCleared: {fileID: 11400000, guid: d1f96c37c211527419d350954c0ec810, type: 2}
     _scoreChanged: {fileID: 11400000, guid: 7cd9e331bfba0f54bb77a647bca3ca7b, type: 2}
     _comboChanged: {fileID: 11400000, guid: 9680da25b76212a49bd900678a73d8fe, type: 2}
@@ -185,12 +187,12 @@ MonoBehaviour:
   _layerView: {fileID: 5484632676734727322}
   _handView: {fileID: 7933357361827940875}
   _dragController: {fileID: 4369012219398867860}
-  _scoreView: {fileID: 6014766823206318982}
+  _hud: {fileID: 8155254064865488058}
   _hudCanvas: {fileID: 1678054714628243423}
-  _cameraFitter: {fileID: 5603471323647095273}
+  _cameraFitter: {fileID: 8255627761394363729}
   _debugOverlayPrefab: {fileID: 8464684377744441409, guid: 2e41f80957b12954daf9828120cc23f1, type: 3}
   _gizmoPreviewConfig: {fileID: 11400000, guid: bbabd39d8dadbd14e894501e1bdc6a16, type: 2}
---- !u!114 &5603471323647095273
+--- !u!114 &8255627761394363729
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -203,7 +205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CameraFitter
   _margin: 0.4
-  _topBand: {fileID: 6858761984746706799}
+  _topBand: {fileID: 5466916705541318402}
 --- !u!1 &4627409397428881836
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,6 +308,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameHud
       objectReference: {fileID: 0}
+    - target: {fileID: 7823355184408921185, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -275
+      objectReference: {fileID: 0}
+    - target: {fileID: 8020851218268626091, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4281588223
+      objectReference: {fileID: 0}
+    - target: {fileID: 8020851218268626091, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 9217318995935163581, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -401,19 +415,19 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 9217318995935163581, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
   m_PrefabInstance: {fileID: 5615935221429261460}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6014766823206318982 stripped
+--- !u!224 &5466916705541318402 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 446327585590555542, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
+  m_PrefabInstance: {fileID: 5615935221429261460}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8155254064865488058 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2204355726739056402, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4378210261685467182, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
   m_PrefabInstance: {fileID: 5615935221429261460}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc1ab6f9013ef1e4f92ef39492fb18ca, type: 3}
+  m_Script: {fileID: 11500000, guid: db5a0ceb1491b524286e93384d00dd4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ScoreView
---- !u!224 &6858761984746706799 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1351353648371893243, guid: 7e85335d3b1b92e4e87140247de8abe1, type: 3}
-  m_PrefabInstance: {fileID: 5615935221429261460}
-  m_PrefabAsset: {fileID: 0}
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.GameHud

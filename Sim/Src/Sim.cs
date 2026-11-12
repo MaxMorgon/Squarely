@@ -44,16 +44,27 @@ namespace Squarely.Simulation
 
         public bool IsResolved => Resolution != null;
 
+        /// <summary>
+        /// What happened when the game was created, in order: a <see cref="PieceDealtEvent"/> per piece of the opening hand,
+        /// then a <see cref="GameResolvedEvent"/> if the game resolves on its first deal. A clone has the same opening events.
+        /// </summary>
+        public IReadOnlyList<ISimEvent> OpeningEvents { get; }
+
         /// <summary>Mutable board for tests and in-assembly code only.</summary>
         internal Board EditableBoard => _board;
 
         #endregion
 
+        /// <summary>A new game with the built-in rules. See <see cref="Sim(SimConfig, ulong, RuleFactory)"/>.</summary>
         public Sim(SimConfig config, ulong seed)
             : this(config, seed, RuleFactory.CreateDefault())
         {
         }
 
+        /// <summary>
+        /// A new game, dealt and ready to play. The sim keeps its own copy of the config:
+        /// later edits to <paramref name="config"/> don't affect it.
+        /// </summary>
         /// <param name="rules">Creates the dealer, scoring and resolution rules named in the config.</param>
         public Sim(SimConfig config, ulong seed, RuleFactory rules)
         {
@@ -63,6 +74,7 @@ namespace Squarely.Simulation
             if (rules == null)
                 throw new ArgumentNullException(nameof(rules));
 
+            config = config.Clone();
             config.Validate();
 
             Seed = seed;
@@ -75,13 +87,15 @@ namespace Squarely.Simulation
             _scoringRule = rules.CreateScoringRule(config);
             _resolutionRules = rules.CreateResolutionRules(config);
 
-            // The opening hand is part of the initial state; the view reads it directly.
-            DealNewHand(new List<ISimEvent>());
-            CheckResolution(new List<ISimEvent>());
+            var openingEvents = new List<ISimEvent>();
+            DealNewHand(openingEvents);
+            CheckResolution(openingEvents);
+            OpeningEvents = openingEvents;
         }
 
         /// <summary>
-        /// Copies all mutable state from the source. Rules and patterns are shared: rules are stateless and patterns are immutable.
+        /// Copies all mutable state from the source. Rules and patterns are shared: rules are stateless, patterns are immutable,
+        /// and the config the rules were built from is the source's own copy, which nothing edits.
         /// </summary>
         private Sim(Sim source)
         {
@@ -99,6 +113,7 @@ namespace Squarely.Simulation
             Score = source.Score;
             Combo = source.Combo;
             Resolution = source.Resolution;
+            OpeningEvents = source.OpeningEvents;
         }
 
         public CommandResult Execute(ISimCommand command)
@@ -230,9 +245,13 @@ namespace Squarely.Simulation
         /// <summary>Deals a piece into every slot of the empty hand.</summary>
         private void DealNewHand(List<ISimEvent> events)
         {
-            for (int slot = 0; slot < _hand.Size; slot++)
+            IReadOnlyList<PieceShape> shapes = _dealer.DealHand(this, _random);
+
+            if (shapes.Count != _hand.Size)
+                throw new InvalidOperationException($"Dealer dealt {shapes.Count} pieces for a hand of {_hand.Size}.");
+
+            foreach (PieceShape shape in shapes)
             {
-                PieceShape shape = _dealer.Deal(this, _random);
                 var piece = new PieceInstance(PiecesDealt + 1, shape);
                 PiecesDealt++;
 

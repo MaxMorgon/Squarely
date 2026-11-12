@@ -32,5 +32,11 @@ namespace Squarely.Simulation
             Pattern = pattern;
             Weight = weight;
         }
+
+        /// <summary>An independent copy: edits to either one don't affect the other.</summary>
+        internal PieceDefinition Clone()
+        {
+            return (PieceDefinition)MemberwiseClone();
+        }
     }
 }
