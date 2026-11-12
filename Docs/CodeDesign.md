@@ -18,10 +18,11 @@ Sim.cs          The session: owns state, runs the turn flow
 AssemblyInfo.cs InternalsVisibleTo for tests
 Core/           GridPos, Grid<T>, Cell, PieceShape, PieceInstance, Board, Hand, read-only interfaces
 Patterns/       BoardPattern, PatternCell, PatternMatch, ClearedMatch, PatternMatcher, cell conditions
-Commands/       ISimCommand, PlacePieceCommand, CommandResult
+Commands/       ISimCommand, PlacePieceCommand, EndGameCommand, CommandResult
+Replay/         GameReplay, ReplayRecorder, ReplayRunner, ReplayRunResult, ReplayCodec, command codecs
 Rules/          IPieceDealer, IScoringRule, ScoreResult, defaults, RuleFactory, RuleIds
 Resolution/     IResolutionRule, GameResolution, GameOutcome, NoMovesLeftRule
-Config/         SimConfig, DealingConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
+Config/         ConfigFingerprint, SimConfig, DealingConfig, ClearingConfig, ScoringConfig, PieceDefinition, BoardPatternDefinition, DefaultSimConfig
 Events/         ISimEvent + one file per event
 Random/         DeterministicRandom
 ```
@@ -52,6 +53,17 @@ Random/         DeterministicRandom
 - `ISimCommand.Execute(Sim)` returns `CommandResult { Success, FailureReason, Events }`.
 - Commands are plain data (e.g. `PlacePieceCommand { PieceInstanceId, Origin }`). A command list plus a seed is a full replay.
 - A failed command changes no state and has no events.
+
+- `EndGameCommand` (no fields) ends the game as a loss with the `NoMovesLeftRule` resolution (`Lost`, `no_moves_left`) and emits `GameResolvedEvent`. It fails if the game is already resolved.
+
+## Replays
+
+A replay is the seed, the config fingerprint, the successful commands in order, and the score and resolved flag after the last one (`GameReplay`). It can be of a half-finished game.
+
+- **Fingerprint.** `ConfigFingerprint.Compute(SimConfig)` is a 64-bit FNV-1a hash over a fixed byte layout of every config field that changes play. `Sim.ConfigFingerprint` has it for the running sim. New config field: add it to `Compute`. A guard test changes each field in turn and fails if the value does not change. A pinned-value test fails if the layout changes.
+- **Recording.** `ReplayRecorder(sim)` wraps `Execute`. It keeps only successful commands. `Build()` gives the replay so far.
+- **Code.** `ReplayCodec.Encode/Decode`: `"SQ1."` + base64url of varint bytes. A registry (`CommandCodecRegistry`, `ICommandCodec` with a unique tag) maps command types to tags. New command type: write a codec and register it in `CreateDefault`. `Decode` never throws: `ReplayDecodeResult` has a `ReplayDecodeFailure` (wrong prefix, unknown version, corrupt data, unknown command tag).
+- **Running.** `ReplayRunner.Run(replay, config)` runs all commands and reports fingerprint match, first failed index and end-state match. It runs on a fingerprint mismatch. `ReplayRunner.CreateSim(replay, config)` gives a sim at the start for step-by-step playback with `Sim.Execute`.
 
 ## Turn flow — `PlacePieceCommand`
 
