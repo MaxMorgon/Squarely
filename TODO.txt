@@ -46,21 +46,4 @@ Open questions
 CLAUDE: WHAT I NEED FROM YOU  (Claude edits only below this line)
 ==================================================================
 
-Test (branch refactor/audit-28 = PRs #29 + #30 + #31)
-- [ ] Settings in game: animations freeze, drag is blocked; Close resumes
-- [ ] Make a move that ends the game, open Settings at once: game over waits until you close it
-- [ ] Place a piece, Restart or Quit: the confirm replaces the panel; No goes back to the running game
-- [ ] Best score 0 or none: no in-game "New record!"; game over still shows "New high score!"
-- [ ] Test screen, high score 1 or more: "New record!" pops in and stays (also under game over)
-- [ ] Debug overlay is closed at each game start; replay, restart and drift check still work
-- [ ] Console logs the seed; type it in the test screen: the same game plays
-
-Questions
-1. Detached-HEAD rule for agents (stops your checkout getting out of sync again)? I recommend yes.
-2. Hide the "DBG" button at game start too, or only close the panel (now)?
-3. Menu-game seeds are below 10^9, so you can type them in the test screen. OK?
-4. Pause stops playback and drag, but not the HUD record-label animation or free-running particles. OK?
-
-Then
-- Say "go": I merge #29, #30, #31 in that order.
-- Optional: `git stash drop` (the stash is stale code, not yours).
+Nothing waiting on you right now.
