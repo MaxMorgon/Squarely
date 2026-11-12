@@ -13,12 +13,18 @@ namespace Squarely.Presentation
         [Tooltip("Where the level comes from. A higher level raises the pitch by the cue's pitch step.")]
         [SerializeField] private SoundLevelSource _levelSource = SoundLevelSource.None;
 
+        [Tooltip("The step plays only when the level is in this range. No limit set: it always plays.")]
+        [SerializeField] private SoundLevelRange _levelRange = new SoundLevelRange();
+
         public override Awaitable Play(CueTarget target, PlaybackContext context)
         {
             if (_cue != null && context.Views.Sound != null && !context.IsStopped)
             {
                 var input = SoundLevelInput.From(target, context.Events);
-                context.Views.Sound.Play(_cue, input.Select(_levelSource));
+                int level = input.Select(_levelSource);
+
+                if (_levelRange.Contains(level))
+                    context.Views.Sound.Play(_cue, level);
             }
 
             return Completed();
@@ -30,8 +36,13 @@ namespace Squarely.Presentation
 
         public override void CollectSounds(float startSeconds, SoundLevelInput input, List<ScheduledSound> sounds)
         {
-            if (_cue != null)
-                sounds.Add(new ScheduledSound(startSeconds, _cue, input.Select(_levelSource)));
+            if (_cue == null)
+                return;
+
+            int level = input.Select(_levelSource);
+
+            if (_levelRange.Contains(level))
+                sounds.Add(new ScheduledSound(startSeconds, _cue, level));
         }
     }
 }
