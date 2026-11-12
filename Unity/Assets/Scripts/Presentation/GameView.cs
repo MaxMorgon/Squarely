@@ -39,8 +39,8 @@ namespace Squarely.Presentation
         [Tooltip("Edit time only: the game mode whose board and hand size the gizmos preview.")]
         [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
 
-        [Tooltip("Seconds the game waits, after the last animation and celebration ended, before it reports the game's end.")]
-        [SerializeField] private float _gameEndHold = 0.5f;
+        [Tooltip("Tunables for the pace of the game view (the hold before the game's end is reported).")]
+        [SerializeField] private GameFeel _feel;
 
         private SimConfig _config;
         private Camera _camera;
@@ -135,7 +135,7 @@ namespace Squarely.Presentation
             Player.AddHandler(new PieceDealtHandler(_cues.PieceDealt));
             Player.AddHandler(new GameResolvedHandler(OnGameResolved));
 
-            _gameEndGate = new GameEndGate(_gameEndHold);
+            _gameEndGate = new GameEndGate(_feel.GameEndHold);
             Player.PlaybackEndEvent += _gameEndGate.SetPlaybackEnded;
         }
 

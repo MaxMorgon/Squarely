@@ -2892,12 +2892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29d3f273f36ceb241a78dbb4ad7e2f2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.ReplayScreen
-  _speedPresets:
-  - 4
-  - 2
-  - 1
-  - 0.5
-  _stepDelay: 0.4
+  _feel: {fileID: 11400000, guid: cb2ba9bc990f67745ac9bef52c8de059, type: 2}
   _progressLabel: {fileID: 5833910249308743072}
   _playPauseButton: {fileID: 2799821187713650999}
   _playPauseLabel: {fileID: 2588171721095428991}

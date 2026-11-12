@@ -13,11 +13,8 @@ namespace Squarely.Presentation
     /// </summary>
     public sealed class ReplayScreen : MonoBehaviour
     {
-        [Tooltip("The playback speeds the speed dropdown offers, in order.")]
-        [SerializeField] private float[] _speedPresets = { 4f, 2f, 1f, 0.5f };
-
-        [Tooltip("Seconds auto-play waits, at speed 1, between the end of a move's playback and the next move.")]
-        [SerializeField] private float _stepDelay = 0.4f;
+        [Tooltip("Speed choices and auto-play pace.")]
+        [SerializeField] private ReplayFeel _feel;
 
         [SerializeField] private TMP_Text _progressLabel;
 
@@ -40,7 +37,7 @@ namespace Squarely.Presentation
         private ReplayTexts _texts;
 
         /// <summary>Seconds auto-play waits between a move's playback and the next move, at speed 1.</summary>
-        public float StepDelay => _stepDelay;
+        public float StepDelay => _feel.StepDelay;
 
         /// <summary>The player pressed Play or Pause.</summary>
         public event Action PlayPauseRequestEvent;
@@ -64,7 +61,7 @@ namespace Squarely.Presentation
             _playPauseButton.onClick.AddListener(() => PlayPauseRequestEvent?.Invoke());
             _stepButton.onClick.AddListener(() => StepRequestEvent?.Invoke());
             _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
-            _speedDropdown.onValueChanged.AddListener(index => SpeedSelectEvent?.Invoke(_speedPresets[index]));
+            _speedDropdown.onValueChanged.AddListener(index => SpeedSelectEvent?.Invoke(_feel.SpeedPresets[index]));
             _backButton.onClick.AddListener(() => BackRequestEvent?.Invoke());
         }
 
@@ -105,9 +102,9 @@ namespace Squarely.Presentation
         {
             int nearest = 0;
 
-            for (int i = 1; i < _speedPresets.Length; i++)
+            for (int i = 1; i < _feel.SpeedPresets.Length; i++)
             {
-                if (Mathf.Abs(_speedPresets[i] - speed) < Mathf.Abs(_speedPresets[nearest] - speed))
+                if (Mathf.Abs(_feel.SpeedPresets[i] - speed) < Mathf.Abs(_feel.SpeedPresets[nearest] - speed))
                     nearest = i;
             }
 
@@ -118,7 +115,7 @@ namespace Squarely.Presentation
         {
             List<string> options = new List<string>();
 
-            foreach (float speed in _speedPresets)
+            foreach (float speed in _feel.SpeedPresets)
                 options.Add(string.Format(_texts.SpeedFormat, speed));
 
             _speedDropdown.ClearOptions();
