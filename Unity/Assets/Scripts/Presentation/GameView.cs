@@ -39,21 +39,40 @@ namespace Squarely.Presentation
         [Tooltip("Edit time only: the game mode whose board and hand size the gizmos preview.")]
         [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
 
+        [Tooltip("Seconds the game waits, after the last animation and celebration ended, before it reports the game's end.")]
+        [SerializeField] private float _gameEndHold = 0.5f;
+
         private SimConfig _config;
         private Camera _camera;
         private BoardSpace _boardSpace;
         private int _handSize;
+        private GameEndGate _gameEndGate;
+        private GameResolvedEvent _resolved;
 
         /// <summary>Plays sim events on the views. Exists after <see cref="Initialize"/>.</summary>
         public EventPlayer Player { get; private set; }
 
-        /// <summary>Playback reached the game's resolution. Raised again if a replay of the resolving move reaches it again.</summary>
+        /// <summary>
+        /// The game resolved and everything finished: the playback that holds the resolution ended, the "new record"
+        /// celebration ended, and the hold time passed. Raised once.
+        /// </summary>
         public event Action<GameResolvedEvent> GameResolveEvent;
 
         /// <summary>The in-game HUD: the score, the settings button and the "new record" celebration.</summary>
         public GameHud Hud => _hud;
 
         #region Unity
+
+        private void Update()
+        {
+            if (_gameEndGate == null)
+                return;
+
+            float deltaTime = Player.IsPaused ? 0f : Time.deltaTime * Player.Speed;
+
+            if (_gameEndGate.Advance(deltaTime, _hud.IsCelebrating))
+                GameResolveEvent?.Invoke(_resolved);
+        }
 
         private void OnDrawGizmos()
         {
@@ -111,6 +130,9 @@ namespace Squarely.Presentation
             Player.AddHandler(new ComboChangedHandler(_cues.ComboChanged));
             Player.AddHandler(new PieceDealtHandler(_cues.PieceDealt));
             Player.AddHandler(new GameResolvedHandler(OnGameResolved));
+
+            _gameEndGate = new GameEndGate(_gameEndHold);
+            Player.PlaybackEndEvent += _gameEndGate.SetPlaybackEnded;
         }
 
         /// <summary>
@@ -170,7 +192,8 @@ namespace Squarely.Presentation
 
         private void OnGameResolved(GameResolvedEvent resolved)
         {
-            GameResolveEvent?.Invoke(resolved);
+            _resolved = resolved;
+            _gameEndGate.SetResolved();
         }
 
         /// <summary>The world area the board and the hand's slots cover, for a game mode's board and hand size.</summary>

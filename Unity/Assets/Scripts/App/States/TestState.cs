@@ -7,7 +7,7 @@ namespace Squarely.App
     /// The test screen, for replaying the same game: a seed field that keeps the last seed played, Randomize,
     /// a high score field (0 each time the screen opens), the "start in test screen" toggle, Play and Back.
     /// Play starts the default game mode with exactly that seed and saves it; the game plays against the field's
-    /// high score and never saves its high score on the device. Back returns to the menu.
+    /// high score and never saves its high score on the device. Back returns to the menu. The game it starts returns here when the player quits or leaves the game over screen.
     /// Play is unavailable while a field holds no valid value. The toggle is saved as soon as it changes.
     /// </summary>
     public sealed class TestState : IAppState
@@ -98,7 +98,7 @@ namespace Squarely.App
 
             _context.TestSeed.Save(_seed.Value);
             HighScore highScore = TestHighScore.Create(_highScore.Value);
-            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, _seed.Value, highScore));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, _seed.Value, highScore, () => new TestState(_context, _stateMachine)));
         }
 
         private void OnBackRequested()
