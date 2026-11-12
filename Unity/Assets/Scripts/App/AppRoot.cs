@@ -23,10 +23,13 @@ namespace Squarely.App
         [SerializeField] private TextsConfig _texts;
 
         [Header("Audio")]
-        [Tooltip("Plays the sounds. Lives in the scene, so it survives screen changes. Its Sound Hooks hold the UI cues and the music.")]
+        [Tooltip("Plays the sounds. Lives in the scene, so it survives screen changes. Its Sound Hooks hold the UI cues.")]
         [SerializeField] private SoundPlayer _soundPlayer;
 
         [SerializeField] private MusicPlayer _musicPlayer;
+
+        [Tooltip("The menu and game tracks and the fade values.")]
+        [SerializeField] private MusicSetup _musicSetup;
 
         [Tooltip("The mixer with the exposed parameters SfxVolume and MusicVolume.")]
         [SerializeField] private AudioMixer _mixer;
@@ -48,7 +51,7 @@ namespace Squarely.App
             var devTools = new DevToolsPreference(store);
             var soundPreferences = new SoundPreferences(store, new SoundSettings(_mixer));
             _soundPlayer.SetHaptics(new NoHaptics());
-            var music = new MusicDirector(_musicPlayer, _soundPlayer.Hooks);
+            var music = new MusicDirector(_musicPlayer, _musicSetup);
             var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource,
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
                 testSeed, startInTest,

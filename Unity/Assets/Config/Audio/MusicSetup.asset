@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 469d2864385b60f40b53dbf34271f657, type: 3}
+  m_Name: MusicSetup
+  m_EditorClassIdentifier: Squarely.App::Squarely.App.MusicSetup
+  _menuMusic: {fileID: 8300000, guid: 126142422afdf4646aff21004f47512a, type: 3}
+  _gameMusic: {fileID: 8300000, guid: dd411abd9800f4444b7fb2192ee7f34c, type: 3}
+  _crossfadeSeconds: 0.3
+  _gameOverMusicVolume: 0.3
+  _gameOverFadeSeconds: 1.5

@@ -436,6 +436,7 @@ MonoBehaviour:
   _texts: {fileID: 11400000, guid: 540f510a9c0c91c41ad825e8c6eb039f, type: 2}
   _soundPlayer: {fileID: 736408676}
   _musicPlayer: {fileID: 736408674}
+  _musicSetup: {fileID: 11400000, guid: f4764d87a15a791468d025066749acc2, type: 2}
   _mixer: {fileID: 24100000, guid: 8024f1b0558382a42935019f2fb64f96, type: 2}
 --- !u!4 &1923862125
 Transform:

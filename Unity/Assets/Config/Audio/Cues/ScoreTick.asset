@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.SoundCue
   _clips:
   - {fileID: 8300000, guid: d37aed8db2ae85c43bc1a5c37ec6ed39, type: 3}
-  _volume: 0.25
+  _volume: 0.42
   _pitchMin: 0.95
   _pitchMax: 1.05
   _pitchStepSemitones: 0

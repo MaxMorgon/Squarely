@@ -25,7 +25,6 @@ MonoBehaviour:
       data:
         _steps:
         - rid: 5611427121247551490
-        - rid: 5611427121247551491
     - rid: 5611427121247551490
       type: {class: AnimateCells, ns: Squarely.Presentation, asm: Squarely.Presentation}
       data:
@@ -95,11 +94,6 @@ MonoBehaviour:
           m_ColorSpace: -1
           m_NumColorKeys: 3
           m_NumAlphaKeys: 3
-    - rid: 5611427121247551491
-      type: {class: SpawnParticles, ns: Squarely.Presentation, asm: Squarely.Presentation}
-      data:
-        _prefab: {fileID: 0}
-        _lifetime: 2
     - rid: 5611427147086561280
       type: {class: PlaySound, ns: Squarely.Presentation, asm: Squarely.Presentation}
       data:
