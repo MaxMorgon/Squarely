@@ -50,5 +50,16 @@ namespace Squarely.App
             TestSeed = testSeed;
             StartInTest = startInTest;
         }
+
+        /// <summary>
+        /// Creates a screen from the prefab under <see cref="ScreenRoot"/>, with its canvas set to render
+        /// through <see cref="Camera"/>. The prefab needs a Canvas on the same object.
+        /// </summary>
+        public T CreateScreen<T>(T prefab) where T : Component
+        {
+            T screen = Object.Instantiate(prefab, ScreenRoot);
+            screen.GetComponent<Canvas>().worldCamera = Camera;
+            return screen;
+        }
     }
 }

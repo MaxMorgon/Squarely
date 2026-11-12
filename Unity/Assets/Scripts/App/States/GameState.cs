@@ -115,8 +115,7 @@ namespace Squarely.App
             // The game is over: the settings panel has nothing left to resume, restart or quit.
             CloseSettings();
 
-            _gameOver = Object.Instantiate(_context.ScreenPrefabs.GameOver, _context.ScreenRoot);
-            _gameOver.GetComponent<Canvas>().worldCamera = _context.Camera;
+            _gameOver = _context.CreateScreen(_context.ScreenPrefabs.GameOver);
             _gameOver.Initialize(_context.Texts.GameOver);
             _gameOver.RestartRequestEvent += OnRestartRequested;
             _gameOver.MenuRequestEvent += OnMenuRequested;
@@ -139,8 +138,7 @@ namespace Squarely.App
             if (_settings != null || _gameOver != null)
                 return;
 
-            _settings = Object.Instantiate(_context.ScreenPrefabs.Settings, _context.ScreenRoot);
-            _settings.GetComponent<Canvas>().worldCamera = _context.Camera;
+            _settings = _context.CreateScreen(_context.ScreenPrefabs.Settings);
             _settings.Initialize(_context.Texts.Settings, true);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
             _settings.RestartRequestEvent += OnSettingsRestartRequested;
@@ -180,8 +178,7 @@ namespace Squarely.App
             CloseSettingsPanel();
 
             _confirmedAction = action;
-            _confirm = Object.Instantiate(_context.ScreenPrefabs.Confirm, _context.ScreenRoot);
-            _confirm.GetComponent<Canvas>().worldCamera = _context.Camera;
+            _confirm = _context.CreateScreen(_context.ScreenPrefabs.Confirm);
             _confirm.Initialize(_context.Texts.Confirm);
             _confirm.ConfirmRequestEvent += OnConfirmRequested;
             _confirm.CancelRequestEvent += OnCancelRequested;

@@ -23,8 +23,7 @@ namespace Squarely.App
 
         public void Enter()
         {
-            _screen = Object.Instantiate(_context.ScreenPrefabs.Menu, _context.ScreenRoot);
-            _screen.GetComponent<Canvas>().worldCamera = _context.Camera;
+            _screen = _context.CreateScreen(_context.ScreenPrefabs.Menu);
             _screen.Initialize(_context.Texts.Menu);
             _screen.SetHighScore(_context.HighScore.Best);
             _screen.PlayRequestEvent += OnPlayRequested;
@@ -67,8 +66,7 @@ namespace Squarely.App
             if (_settings != null)
                 return;
 
-            _settings = Object.Instantiate(_context.ScreenPrefabs.Settings, _context.ScreenRoot);
-            _settings.GetComponent<Canvas>().worldCamera = _context.Camera;
+            _settings = _context.CreateScreen(_context.ScreenPrefabs.Settings);
             _settings.Initialize(_context.Texts.Settings, false);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
         }
