@@ -17,6 +17,7 @@ unity command recompile                  # then poll: unity command recompile_st
 unity command console status             # compile errors, console counts
 unity command test run --mode EditMode   # long output: read the Summary only
 unity command scene reopen-main          # reload Main.unity after a branch switch
+unity command build player <store|studio> <android|webgl>   # needs the platform module; output in Builds/<Target>-<Config>/
 ```
 
 ## Prepare a PR for testing
