@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c90b701dd1617468a1815f4bfd85ac, type: 3}
+  m_Name: GameLost
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.SoundCue
+  _clips:
+  - {fileID: 8300000, guid: 6cd20d1f3528ca94e92b9c0f0921b737, type: 3}
+  _volume: 0.8
+  _pitchMin: 1
+  _pitchMax: 1
+  _pitchStepSemitones: 0
+  _maxLevel: 8
+  _cooldown: 0
+  _maxVoices: 4
+  _mixerGroup: {fileID: -4900977086377114943, guid: 8024f1b0558382a42935019f2fb64f96, type: 2}
+  _haptic: 0
