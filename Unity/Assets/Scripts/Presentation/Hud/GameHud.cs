@@ -23,7 +23,15 @@ namespace Squarely.Presentation
         [Tooltip("Plays when the score goes above the best score. Hang the celebration (animation, particles, sound) here.")]
         [SerializeField] private UnityEvent _newRecordCelebration = new UnityEvent();
 
+        [Tooltip("Seconds the celebration runs. Set it to the celebration's length: the game-over screen waits this long after the celebration starts.")]
+        [SerializeField] private float _newRecordDuration = 1f;
+
+        private float _celebrationTimeLeft;
+
         public ScoreView Score => _score;
+
+        /// <summary>Whether the "new record" celebration is still playing.</summary>
+        public bool IsCelebrating => _celebrationTimeLeft > 0f;
 
         /// <summary>The player asked for the settings panel.</summary>
         public event Action SettingsRequestEvent;
@@ -33,6 +41,12 @@ namespace Squarely.Presentation
         private void Awake()
         {
             _settingsButton.onClick.AddListener(() => SettingsRequestEvent?.Invoke());
+        }
+
+        private void Update()
+        {
+            if (_celebrationTimeLeft > 0f)
+                _celebrationTimeLeft -= Time.deltaTime;
         }
 
         #endregion
@@ -47,6 +61,7 @@ namespace Squarely.Presentation
         /// <summary>Plays the "new record" celebration.</summary>
         public void CelebrateNewRecord()
         {
+            _celebrationTimeLeft = _newRecordDuration;
             _newRecordCelebration.Invoke();
         }
     }

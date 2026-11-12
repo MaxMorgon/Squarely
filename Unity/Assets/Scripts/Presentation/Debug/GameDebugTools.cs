@@ -23,6 +23,9 @@ namespace Squarely.Presentation
         /// <summary>Whether there is a move to replay.</summary>
         public bool CanReplayLastMove => _lastMove != null;
 
+        /// <summary>Whether the game is still running, so it can be ended.</summary>
+        public bool CanEndGame => !_game.IsResolved;
+
         /// <summary>The overlay asked for a fresh game. The owner restarts it.</summary>
         public event Action RestartRequestEvent;
 
@@ -61,6 +64,12 @@ namespace Squarely.Presentation
             Sim before = _lastMove.SimBefore;
             _view.SetState(before.Board, before.Hand, before.Score, before.Combo);
             _view.Player.Play(_lastMove.Events, _lastMove.DropPoint);
+        }
+
+        /// <summary>Ends the game at once as a loss. Does nothing once the game is resolved.</summary>
+        public void EndGame()
+        {
+            _game.EndGame();
         }
 
         /// <summary>Asks the owner for a fresh game, see <see cref="RestartRequestEvent"/>.</summary>

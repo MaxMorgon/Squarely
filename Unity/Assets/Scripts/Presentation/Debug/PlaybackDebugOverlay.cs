@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// Editor and development builds only: a small panel for tuning playback. Replays the last move (also with R),
+    /// Editor and development builds only: a small panel for tuning playback. Replays the last move (also with R), ends the game at once (also with E),
     /// restarts the game, sets the playback speed (back to 1x each play session) and shows the last drift check.
     /// It starts collapsed in every game. A small toggle button (or the backquote key) expands it.
     /// Not game UI. In other builds the component is never created and does nothing.
@@ -31,6 +31,7 @@ namespace Squarely.Presentation
 
         [SerializeField] private Button _replayButton;
         [SerializeField] private Button _restartButton;
+        [SerializeField] private Button _endGameButton;
 
         [Tooltip("Inactive template, copied once per speed preset into its parent.")]
         [SerializeField] private Button _speedButtonTemplate;
@@ -59,6 +60,7 @@ namespace Squarely.Presentation
             _toggleButton.onClick.AddListener(ToggleExpanded);
             _replayButton.onClick.AddListener(_debug.ReplayLastMove);
             _restartButton.onClick.AddListener(_debug.RequestRestart);
+            _endGameButton.onClick.AddListener(_debug.EndGame);
             CreateSpeedButtons();
 
             SetExpanded(false);
@@ -84,6 +86,9 @@ namespace Squarely.Presentation
 
             if (keyboard != null && keyboard.rKey.wasPressedThisFrame)
                 _debug.ReplayLastMove();
+
+            if (keyboard != null && keyboard.eKey.wasPressedThisFrame)
+                _debug.EndGame();
 
             if (keyboard != null && keyboard.backquoteKey.wasPressedThisFrame)
                 ToggleExpanded();
@@ -137,6 +142,7 @@ namespace Squarely.Presentation
         private void Refresh()
         {
             _replayButton.interactable = _debug.CanReplayLastMove;
+            _endGameButton.interactable = _debug.CanEndGame;
 
             string driftText = DriftText();
 

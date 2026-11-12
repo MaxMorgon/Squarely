@@ -64,24 +64,45 @@ namespace Squarely.Presentation
         /// <param name="dropPoint">Where the pointer dropped the piece, in board cell coordinates (<see cref="BoardSpace.CellCoordinates"/>), or null without a pointer.</param>
         public void Place(int pieceInstanceId, GridPos origin, Vector2? dropPoint)
         {
+            if (!Execute(new PlacePieceCommand(pieceInstanceId, origin), dropPoint))
+                return;
+
+            HasPlacedPiece = true;
+        }
+
+        /// <summary>
+        /// Ends the game at once as a loss, like when no piece fits, and plays the events like a move's.
+        /// Does nothing if the game is resolved.
+        /// </summary>
+        public void EndGame()
+        {
+            if (IsResolved)
+                return;
+
+            Execute(new EndGameCommand(), null);
+        }
+
+        /// <summary>Executes the command and plays its events. Returns whether it succeeded.</summary>
+        private bool Execute(ISimCommand command, Vector2? dropPoint)
+        {
             // Snap before executing, so the playback that ends here is checked against the state it led to.
             _view.Player.Snap();
 
             // The copy is only needed by subscribers of MoveExecutedEvent.
             Sim before = MoveExecutedEvent != null ? _sim.Clone() : null;
 
-            CommandResult result = _sim.Execute(new PlacePieceCommand(pieceInstanceId, origin));
+            CommandResult result = _sim.Execute(command);
 
             if (!result.Success)
             {
-                Debug.LogWarning($"Placement failed: {result.FailureReason}");
-                return;
+                Debug.LogWarning($"{command} failed: {result.FailureReason}");
+                return false;
             }
 
-            HasPlacedPiece = true;
             MoveExecutedEvent?.Invoke(new ExecutedMove(before, result.Events, dropPoint));
 
             _view.Player.Play(result.Events, dropPoint);
+            return true;
         }
 
         #endregion
