@@ -104,6 +104,7 @@ Playback/          EventPlayer, PlaybackContext, PlaybackViews, CueSequence, Cue
   Handlers/        ISimEventHandler, SimEventHandler<T>, one handler per event type
   Steps/           CueStep and step types, CellOrder/CellOrdering (stagger order), CueStepPickerAttribute
   Drift/           ShownState, ViewDrift (debug check of views against the sim)
+Audio/             SoundCue, SoundBank, SoundPlayer, MusicPlayer, SoundSettings, IHaptics (see "Audio")
 Debug/             GameDebugTools (replay, drift check, restart relay), PlaybackDebugOverlay (uGUI panel, prefab in `Prefabs/Debug/`); editor and development builds only; not game UI
 ```
 
@@ -173,6 +174,18 @@ The player can act during playback. A new command **snaps** everything still pen
 - Transient things have an empty or trivial `Snap`: particles and sounds already playing finish on their own. A detached view that has not animated goes back to the pool.
 - **Open: effect handles.** Effects that one step starts and a later step stops (or that outlive their sequence) need a handle. Ownership, lifetime, what `Snap` does to them and how steps refer to them need a design pass before any step uses them.
 - So there is one rule and no per-step modes: board views are correct at once, and effects already playing finish on their own.
+
+### Audio
+
+Folder `Audio/`. Sound is data-driven and plays through Unity mixer groups.
+
+- **`SoundCue`** (ScriptableObject) is one sound: clips (one picked at random per play), volume, pitch variation range, pitch step (semitones per level, with a max level), cooldown, max voices, mixer group and `HapticKind`. `SoundBank` lists all cues and music tracks.
+- **`SoundPlayer`** (MonoBehaviour) plays cues on a pool of audio sources. `Play(cue, level)` applies the cue's settings, skips a play inside the cooldown or over the voice limit (`SoundGate`), and sends the haptic to an `IHaptics` (`NoHaptics` by default; no real vibration yet). Pitch math is in `SoundPitch`.
+- **`MusicPlayer`** (MonoBehaviour) plays one looping track and crossfades with two sources. `FadeTo` changes the volume of all music while the track keeps playing. Fades use `VolumeFade`.
+- **`SoundSettings`** applies the SFX and music toggles to the exposed mixer parameters `SfxVolume` and `MusicVolume` (0 dB on, -80 dB off). It does not save them: App does.
+- **`PlaySound`** is a `CueStep`. It plays its cue on `PlaybackViews.Sound` (null: no sound) and does nothing on `Snap`. Its level comes from a `SoundLevelSource`: None, Count (the target's count end), ClearCount (matches cleared by the command) or ComboLevel (combo after the command). `SoundLevelInput` reads these from the target and `PlaybackContext.Events`.
+- **Timing for previews.** `CueStep.PlannedSeconds` and `CueStep.CollectSounds` give the time of each step and the sounds it starts. `SoundSchedule.Build` lists the sounds of a sequence from them. A step that takes time overrides `PlannedSeconds`. `AnimateCells` does not count its stagger, as that depends on the cell count.
+- **Sound Mixer window** (`Window > Squarely > Sound Mixer`, `Editor/Audio/`) edits the cues of a bank, plays one or many at once, and plays the sounds of a `CueSequence` with `SoundSchedule` timing. It uses hidden temporary audio sources, so it works in Edit mode and Play mode.
 
 ## App flow (Unity)
 
