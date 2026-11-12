@@ -59,8 +59,6 @@ namespace Squarely.Presentation
             _dragged.gameObject.AddComponent<SortingGroup>().sortingOrder = _draggedSortingOrder;
 
             _ghost = CreatePieceView("Ghost", boardRoot);
-
-            _swing = _dragFeel != null ? _dragFeel.CreateSwing() : null;
         }
 
         #region Unity
@@ -127,7 +125,7 @@ namespace Squarely.Presentation
             _ghost.SetShape(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Ghost);
             _ghost.gameObject.SetActive(false);
 
-            _swing?.Reset();
+            _swing = _dragFeel != null ? _dragFeel.CreateSwing() : null;
             _lastPointerX = world.x;
 
             UpdateDrag(world);
