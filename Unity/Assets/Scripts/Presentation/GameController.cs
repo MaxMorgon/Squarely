@@ -84,6 +84,18 @@ namespace Squarely.Presentation
             Execute(new EndGameCommand(), null);
         }
 
+        /// <summary>
+        /// Executes the command like a move and plays its events. Whatever is still playing from the previous move snaps to its end first.
+        /// Returns whether it succeeded. A failed command changes nothing.
+        /// </summary>
+        public bool ExecuteCommand(ISimCommand command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            return Execute(command, null);
+        }
+
         /// <summary>Executes the command and plays its events. Returns whether it succeeded.</summary>
         private bool Execute(ISimCommand command, Vector2? dropPoint)
         {
