@@ -32,10 +32,7 @@ CLAUDE: WHAT I NEED FROM YOU  (Claude edits only below this line)
 ==================================================================
 
 Test: batch PR #36 (branch batch/replays-and-feel). Still open:
-Drag swing
-- The tilt now turns around the finger, not the piece center. Drop still lands where the ghost showed.
 Replays
-- New Restart button: the watch starts again from the beginning (paused, speed x1).
 - Speed is now a dropdown (x0.5/x1/x2/x4).
   I built Restart and the dropdown in ReplayScreen.prefab with a script. Check the look and fit of the bottom bar.
   The dropdown list uses default TMP styling.
