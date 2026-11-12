@@ -10,10 +10,9 @@ namespace Squarely.Presentation
     public sealed class GameController : IPiecePlacer
     {
         private readonly GameView _view;
-        private readonly GameSetup _setup;
+        private readonly Sim _sim;
+        private readonly ReplayRecorder _recorder;
 
-        private Sim _sim;
-        private ReplayRecorder _recorder;
         private bool _gameEndRaised;
 
         public bool IsResolved => _sim.IsResolved;
@@ -30,14 +29,19 @@ namespace Squarely.Presentation
         /// <summary>A move was executed, before its events play. Raised only for moves that succeed.</summary>
         public event Action<ExecutedMove> MoveExecutedEvent;
 
+        /// <summary>Creates the game in its state before the deal is played. Its state can be read at once.</summary>
         /// <param name="view">The game's view. Its owner initializes it, with this controller as its placer, before <see cref="StartGame"/>.</param>
         public GameController(GameView view, GameSetup setup)
         {
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
 
+            if (setup == null)
+                throw new ArgumentNullException(nameof(setup));
+
             _view = view;
-            _setup = setup ?? throw new ArgumentNullException(nameof(setup));
+            _sim = new Sim(setup.Config, setup.Seed);
+            _recorder = new ReplayRecorder(_sim);
         }
 
         #region Commands
@@ -49,8 +53,6 @@ namespace Squarely.Presentation
         public void StartGame()
         {
             _view.GameResolveEvent += OnGameResolved;
-            _sim = new Sim(_setup.Config, _setup.Seed);
-            _recorder = new ReplayRecorder(_sim);
 
             // The views start empty, as the board and hand are before the deal.
             _view.Player.Play(_sim.OpeningEvents);
