@@ -14,6 +14,7 @@ namespace Squarely.Presentation
     {
         private readonly GameController _game;
         private readonly GameView _view;
+        private readonly ReplayCopier _copier;
 
         private ExecutedMove _lastMove;
 
@@ -23,15 +24,20 @@ namespace Squarely.Presentation
         /// <summary>Whether there is a move to replay.</summary>
         public bool CanReplayLastMove => _lastMove != null;
 
+        /// <summary>Whether the game is still running, so it can be ended.</summary>
+        public bool CanEndGame => !_game.IsResolved;
+
         /// <summary>The overlay asked for a fresh game. The owner restarts it.</summary>
         public event Action RestartRequestEvent;
 
         /// <param name="game">The game to watch.</param>
         /// <param name="view">The game's initialized view.</param>
-        public GameDebugTools(GameController game, GameView view)
+        /// <param name="copier">Copies replay codes to the clipboard.</param>
+        public GameDebugTools(GameController game, GameView view, ReplayCopier copier)
         {
             _game = game ?? throw new ArgumentNullException(nameof(game));
             _view = view != null ? view : throw new ArgumentNullException(nameof(view));
+            _copier = copier ?? throw new ArgumentNullException(nameof(copier));
         }
 
         /// <summary>Creates the debug overlay (collapsed) and starts watching the game. Call once, before the game starts.</summary>
@@ -61,6 +67,18 @@ namespace Squarely.Presentation
             Sim before = _lastMove.SimBefore;
             _view.SetState(before.Board, before.Hand, before.Score, before.Combo);
             _view.Player.Play(_lastMove.Events, _lastMove.DropPoint);
+        }
+
+        /// <summary>Ends the game at once as a loss. Does nothing once the game is resolved.</summary>
+        public void EndGame()
+        {
+            _game.EndGame();
+        }
+
+        /// <summary>Copies the code of the game so far to the clipboard, finished or not.</summary>
+        public void CopyReplay()
+        {
+            _copier.Copy(_game.BuildReplay());
         }
 
         /// <summary>Asks the owner for a fresh game, see <see cref="RestartRequestEvent"/>.</summary>

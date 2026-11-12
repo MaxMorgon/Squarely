@@ -10,9 +10,9 @@ namespace Squarely.Presentation
     public sealed class GameController : IPiecePlacer
     {
         private readonly GameView _view;
-        private readonly GameSetup _setup;
+        private readonly Sim _sim;
+        private readonly ReplayRecorder _recorder;
 
-        private Sim _sim;
         private bool _gameEndRaised;
 
         public bool IsResolved => _sim.IsResolved;
@@ -21,22 +21,27 @@ namespace Squarely.Presentation
         public bool HasPlacedPiece { get; private set; }
 
         /// <summary>
-        /// The game resolved: raised once, when playback reaches the resolution (of a move, or of the opening deal
-        /// if the game resolves on its first deal). Gives the resolution and the final score.
+        /// The game ended: raised once, after the view reports the resolution (playback, the new record
+        /// celebration and the hold time are done). Also for a game that resolves on its first deal. Gives the resolution and the final score.
         /// </summary>
         public event Action<GameResolution, int> GameEndEvent;
 
         /// <summary>A move was executed, before its events play. Raised only for moves that succeed.</summary>
         public event Action<ExecutedMove> MoveExecutedEvent;
 
+        /// <summary>Creates the game in its state before the deal is played. Its state can be read at once.</summary>
         /// <param name="view">The game's view. Its owner initializes it, with this controller as its placer, before <see cref="StartGame"/>.</param>
         public GameController(GameView view, GameSetup setup)
         {
             if (view == null)
                 throw new ArgumentNullException(nameof(view));
 
+            if (setup == null)
+                throw new ArgumentNullException(nameof(setup));
+
             _view = view;
-            _setup = setup ?? throw new ArgumentNullException(nameof(setup));
+            _sim = new Sim(setup.Config, setup.Seed);
+            _recorder = new ReplayRecorder(_sim);
         }
 
         #region Commands
@@ -48,7 +53,6 @@ namespace Squarely.Presentation
         public void StartGame()
         {
             _view.GameResolveEvent += OnGameResolved;
-            _sim = new Sim(_setup.Config, _setup.Seed);
 
             // The views start empty, as the board and hand are before the deal.
             _view.Player.Play(_sim.OpeningEvents);
@@ -64,27 +68,66 @@ namespace Squarely.Presentation
         /// <param name="dropPoint">Where the pointer dropped the piece, in board cell coordinates (<see cref="BoardSpace.CellCoordinates"/>), or null without a pointer.</param>
         public void Place(int pieceInstanceId, GridPos origin, Vector2? dropPoint)
         {
+            if (!Execute(new PlacePieceCommand(pieceInstanceId, origin), dropPoint))
+                return;
+
+            HasPlacedPiece = true;
+        }
+
+        /// <summary>
+        /// Ends the game at once as a loss, like when no piece fits, and plays the events like a move's.
+        /// Does nothing if the game is resolved.
+        /// </summary>
+        public void EndGame()
+        {
+            if (IsResolved)
+                return;
+
+            Execute(new EndGameCommand(), null);
+        }
+
+        /// <summary>
+        /// Executes the command like a move and plays its events. Whatever is still playing from the previous move snaps to its end first.
+        /// Returns whether it succeeded. A failed command changes nothing.
+        /// </summary>
+        public bool ExecuteCommand(ISimCommand command)
+        {
+            if (command == null)
+                throw new ArgumentNullException(nameof(command));
+
+            return Execute(command, null);
+        }
+
+        /// <summary>Executes the command and plays its events. Returns whether it succeeded.</summary>
+        private bool Execute(ISimCommand command, Vector2? dropPoint)
+        {
             // Snap before executing, so the playback that ends here is checked against the state it led to.
             _view.Player.Snap();
 
             // The copy is only needed by subscribers of MoveExecutedEvent.
             Sim before = MoveExecutedEvent != null ? _sim.Clone() : null;
 
-            CommandResult result = _sim.Execute(new PlacePieceCommand(pieceInstanceId, origin));
+            CommandResult result = _recorder.Execute(command);
 
             if (!result.Success)
             {
-                Debug.LogWarning($"Placement failed: {result.FailureReason}");
-                return;
+                Debug.LogWarning($"{command} failed: {result.FailureReason}");
+                return false;
             }
 
-            HasPlacedPiece = true;
             MoveExecutedEvent?.Invoke(new ExecutedMove(before, result.Events, dropPoint));
 
             _view.Player.Play(result.Events, dropPoint);
+            return true;
         }
 
         #endregion
+
+        /// <summary>The replay of the game so far: every command that succeeded. Fine for a half-finished game. Call after <see cref="StartGame"/>.</summary>
+        public GameReplay BuildReplay()
+        {
+            return _recorder.Build();
+        }
 
         /// <summary>A copy of the game's sim in its current state. Changing the copy does not change the game.</summary>
         public Sim CopySim()

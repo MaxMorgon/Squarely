@@ -29,10 +29,11 @@ namespace Squarely.App
         {
             var store = new PlayerPrefsStore();
             var highScore = new HighScore(store);
+            var replayHistory = new ReplayHistory(store, () => System.DateTime.UtcNow);
             var seedSource = new SeedSource(new System.Random());
             var testSeed = new TestSeed(store, seedSource);
             var startInTest = new StartInTest(store);
-            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, seedSource, testSeed, startInTest);
+            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, testSeed, startInTest);
 
             _stateMachine = new AppStateMachine();
             _stateMachine.ChangeState(CreateFirstState(context));

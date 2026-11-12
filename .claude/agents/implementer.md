@@ -118,6 +118,8 @@ Check each comment against the code, the rules and the PR's purpose, as if someo
 
 Keep replies short. Reply only after the fix is pushed, so the sha exists on GitHub.
 
+**Task PRs in a batch:** do not reply on GitHub and do not resolve threads. Put each reply in your report to the main session.
+
 ```sh
 gh api repos/MaxMorgon/Squarely/pulls/<n>/comments/<comment databaseId>/replies -f body='**[Claude]** ...'
 gh api graphql -f id=<thread id> -f query='mutation($id:ID!){resolveReviewThread(input:{threadId:$id}){thread{isResolved}}}'

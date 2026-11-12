@@ -49,7 +49,7 @@ namespace Squarely.App
 
         private void OnPlayRequested()
         {
-            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, null, _context.HighScore));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, null, _context.HighScore, () => new MenuState(_context, _stateMachine)));
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD

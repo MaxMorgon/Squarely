@@ -913,6 +913,7 @@ MonoBehaviour:
           m_StringArgument: Celebrate
           m_BoolArgument: 0
         m_CallState: 2
+  _newRecordClip: {fileID: 7400000, guid: a8fd22d4e637c5744a5b68839e11925a, type: 2}
 --- !u!224 &9217318995935163581 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6982809586462479234, guid: 3cdb78125574fee4c984cae2aa2ec629, type: 3}

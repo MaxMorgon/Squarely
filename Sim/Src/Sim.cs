@@ -21,6 +21,9 @@ namespace Squarely.Simulation
 
         public ulong Seed { get; }
 
+        /// <summary>The <see cref="Simulation.ConfigFingerprint"/> of the config this sim runs.</summary>
+        public ulong ConfigFingerprint { get; }
+
         /// <summary>Current RNG state, for snapshots. The RNG itself is not exposed, so nothing outside can advance it.</summary>
         public ulong RandomState => _random.State;
 
@@ -78,6 +81,7 @@ namespace Squarely.Simulation
             config.Validate();
 
             Seed = seed;
+            ConfigFingerprint = Simulation.ConfigFingerprint.Compute(config);
             _random = new DeterministicRandom(seed);
             _board = new Board(config.BoardWidth, config.BoardHeight);
             _hand = new Hand(config.HandSize);
@@ -100,6 +104,7 @@ namespace Squarely.Simulation
         private Sim(Sim source)
         {
             Seed = source.Seed;
+            ConfigFingerprint = source.ConfigFingerprint;
             _random = source._random.Clone();
             _board = source._board.Clone();
             _hand = source._hand.Clone();
@@ -174,6 +179,17 @@ namespace Squarely.Simulation
                 DealNewHand(events);
 
             CheckResolution(events);
+
+            return CommandResult.Succeeded(events);
+        }
+
+        internal CommandResult EndGame()
+        {
+            if (IsResolved)
+                return CommandResult.Failed("The game is already resolved.");
+
+            var events = new List<ISimEvent>();
+            Resolve(NoMovesLeftRule.CreateResolution(), events);
 
             return CommandResult.Succeeded(events);
         }
@@ -269,10 +285,15 @@ namespace Squarely.Simulation
                 if (resolution == null)
                     continue;
 
-                Resolution = resolution;
-                events.Add(new GameResolvedEvent(resolution, Score));
+                Resolve(resolution, events);
                 return;
             }
+        }
+
+        private void Resolve(GameResolution resolution, List<ISimEvent> events)
+        {
+            Resolution = resolution;
+            events.Add(new GameResolvedEvent(resolution, Score));
         }
 
         #endregion

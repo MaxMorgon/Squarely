@@ -16,6 +16,7 @@ namespace Squarely.App
         [SerializeField] private SettingsPanel _settings;
         [SerializeField] private ConfirmDialog _confirm;
         [SerializeField] private TestScreen _test;
+        [SerializeField] private ReplayScreen _replay;
 
         public MenuScreen Menu => _menu;
 
@@ -30,5 +31,8 @@ namespace Squarely.App
         public ConfirmDialog Confirm => _confirm;
 
         public TestScreen Test => _test;
+
+        /// <summary>The replay watch screen, shown over the game view.</summary>
+        public ReplayScreen Replay => _replay;
     }
 }
