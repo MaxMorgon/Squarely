@@ -108,7 +108,7 @@ Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Camera/            CameraFit (pure fit math), CameraFrame, CameraFitter (keeps the camera framed on board and hand)
 Pieces/            PieceView (hand, dragged piece, ghost), HandView
-Input/             PieceDragController, IPiecePlacer (what drag input needs from the game)
+Input/             PieceDragController, IPiecePlacer (what drag input needs from the game), DragSwing (tilt spring), DragFeel (its tunables, `Config/Feel/DragFeel.asset`)
 Screens/           MenuScreen, GameOverScreen, TestScreen, SettingsPanel, ConfirmDialog (report the player's choices as C# events)
 Hud/               GameHud (settings button, "new record" celebration), ScoreView (score, combo); both on the GameHud prefab
 Texts/             TextsConfig and per-screen groups (MenuTexts, GameHudTexts, GameOverTexts, SettingsTexts, ConfirmTexts, TestTexts)
