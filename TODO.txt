@@ -17,6 +17,7 @@ Unique completion patterns
 Meta features
 Levels
 Monetization features (undo, continue, revive)
+A game config id in the replay, to replay in the correct mode.
 Live Ops
 - Remote config
 - Tune scoring + combos
@@ -30,25 +31,15 @@ Live Ops
 CLAUDE: WHAT I NEED FROM YOU  (Claude edits only below this line)
 ==================================================================
 
-Test: batch PR #36 (branch batch/replays-and-feel). New commits after your feedback:
+Test: batch PR #36 (branch batch/replays-and-feel). Still open:
 Drag swing
 - The tilt now turns around the finger, not the piece center. Drop still lands where the ghost showed.
 Replays
-- Test screen: the row and pasted-code buttons say "Load".
-- The watch starts paused. Press Play to start.
 - New Restart button: the watch starts again from the beginning (paused, speed x1).
 - Speed is now a dropdown (x0.5/x1/x2/x4).
   I built Restart and the dropdown in ReplayScreen.prefab with a script. Check the look and fit of the bottom bar.
   The dropdown list uses default TMP styling.
-
-Answer: GitHub thread replies
-- I wrote the rule into implementer.md.
-- GitHub lets you reply to your own comments. Common causes of a blocked reply:
-  an unsubmitted review of yours (replies go into it until you submit), or a closed PR from a merged stack.
-  Tell me the PR and what you saw if it happens again.
-
-Noted for later
-- A game config id in the replay, to replay in the correct mode.
+When these pass, say "merge" and I merge PR #36.
 
 Sound (branch feature/sound, no PR yet)
 - Phases 1-2 are pushed: sound core, Sound Mixer window, CC0 placeholder audio, CREDITS.md.
