@@ -89,7 +89,7 @@ Unity plays the returned events in order, so the view never diffs state.
 ## Testing
 
 - `Board`, `Grid`, `Hand`, `PieceShape`, `PatternMatcher`, scoring, `SimConfig` (including its copy), `ConfigFingerprint`, `EndGameCommand`, `WeightedRandomDealer` and the RNG have unit tests.
-- Replay tests cover `GameReplay`, `ReplayCodec` (round trip and every decode failure) and `ReplayRunner`.
+- Replay tests cover `GameReplay`, `ReplayCodec` (round trip and every decode failure), `ReplayRecorder` and `ReplayRunner`.
 - `Sim` tests use `ScriptedDealer` for exact scenarios (registered through `RuleFactory` like any dealer). `Preview` has its own tests (it equals `Execute` and leaves the state alone).
 - Determinism test: the same seed and commands give identical results.
 

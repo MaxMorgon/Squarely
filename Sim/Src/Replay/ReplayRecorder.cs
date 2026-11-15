@@ -13,7 +13,7 @@ namespace Squarely.Simulation
         private Sim _sim;
         private readonly List<ISimCommand> _commands = new List<ISimCommand>();
 
-        public int CommandCount => _commands.Count;
+        internal int CommandCount => _commands.Count;
 
         public ReplayRecorder(Sim sim)
         {
