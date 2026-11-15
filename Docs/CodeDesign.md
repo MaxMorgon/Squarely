@@ -95,7 +95,7 @@ Unity plays the returned events in order, so the view never diffs state.
 
 ## Presentation (Unity)
 
-Assembly `Squarely.Presentation`. Status: views, drag input and event playback are done. Feedback (hover and preview states driven by `Sim.Preview`) is next. Unity shows sim state and sends commands. It never decides game rules.
+Assembly `Squarely.Presentation`. Status: views, drag input with a landing ghost (checked with `Sim.Preview`) and event playback are done. A clear preview (the lines a drop would clear) is next. Unity shows sim state and sends commands. It never decides game rules.
 
 ### Folder layout (`Unity/Assets/Scripts/Presentation/`)
 
