@@ -43,6 +43,17 @@ Squarely.Presentation  Views, input, event playback, sound, debug tools
 Squarely.Simulation    Rules, dealing, scoring, replays. No Unity.
 ```
 
+## Tools
+
+> **Replay GIF:** coming soon.
+
+- **Replays.** Open a past game from the replay history and watch the sim play it again, move by move.
+- **Sound mixer.** An editor window to balance the sounds. It has one row per sound cue, with volume, pitch, haptics and a play button. It also previews a full cue sequence with its real timing, in Edit mode and in Play mode.
+
+  > **Sound mixer screenshot:** coming soon.
+
+- **Dev tools only where you need them.** Studio builds include the dev tools. A "Dev tools" setting turns them on and off during a test. Store builds compile them out, so a release build has no debug code.
+
 ## Run it
 
 Requirements: Unity 6.3 (`6000.3.26f1`) and the .NET 8 SDK.
