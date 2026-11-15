@@ -13,7 +13,7 @@ description: Run a task unattended later. Keeps the PC awake, waits until other 
 
 ## 2. Keep awake
 
-Run `powershell -File Tools/keep-awake.ps1 -Hours 8` in the background. It ends by itself after the time limit. If the session stops early (usage limit), the PC still sleeps later.
+Run `powershell -File Notes/Tools/keep-awake.ps1 -Hours 8` in the background. It ends by itself after the time limit. If the session stops early (usage limit), the PC still sleeps later. These scripts exist only in the main checkout (private `Notes/` repo).
 
 ## 3. Wait
 
@@ -32,7 +32,7 @@ Run `powershell -File Tools/keep-awake.ps1 -Hours 8` in the background. It ends 
 1. Delete the plan file when all phases are done.
 2. Stop the keep-awake process.
 3. Send a push notification: the result, and that the PC goes to sleep.
-4. Run `powershell -File Tools/sleep-pc.ps1`.
+4. Run `powershell -File Notes/Tools/sleep-pc.ps1`.
 
 ## Resume
 
