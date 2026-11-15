@@ -7,7 +7,7 @@ description: How the main session runs Squarely agents (implementer, wirer, revi
 
 ## Slots and branches
 
-- Implementation agents work in the permanent slots `A:\WORK\Squarely-worktrees\agent-1` and `agent-2` (warm `Unity/Library`). Never use the Agent tool's `isolation: "worktree"`.
+- Implementation agents work in the permanent slots `../Squarely-worktrees/agent-1` and `agent-2` (siblings of the main checkout) (warm `Unity/Library`). Never use the Agent tool's `isolation: "worktree"`.
 - New branch: `git switch -c <branch> origin/<base>`. Existing PR branch: detached HEAD only (`git switch --detach origin/<branch>`, push with `HEAD:refs/heads/<branch>`). Worktrees share branch refs.
 - At the end the slot is clean and detached.
 - Agents never run `unity command` (a hook blocks it). Two agents never touch the same scene or prefab.
