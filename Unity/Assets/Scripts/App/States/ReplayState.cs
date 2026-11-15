@@ -1,5 +1,6 @@
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 using System;
+using System.Collections.Generic;
 using Squarely.Presentation;
 using Squarely.Simulation;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace Squarely.App
     /// Watches a recorded game on a game view, with no player input. Starts a game with the replay's seed and the
     /// default game mode, then runs the replay's commands one by one through the game controller, so the
     /// playback is the same as in a game. Auto-play runs the next command a short delay after the previous playback ended.
-    /// It starts paused. Play/Pause, Step, Restart and the speed dropdown control it. A banner warns if the replay was recorded with a different game config.
+    /// It starts paused. Play/Pause, Step back, Step forward, Restart and the speed dropdown control it. Step back undoes the last command at once, with no animation, and pauses auto-play. It also works after the replay is over, and then lets the replay run again. A banner warns if the replay was recorded with a different game config.
     /// If a command fails, it stops and says where. At the end it shows the final score and whether the end state matches the recording.
     /// It never records a high score or a history entry and has no game-over screen. Back enters the back target.
     /// </summary>
@@ -28,6 +29,9 @@ namespace Squarely.App
         private ReplayStepper _stepper;
         private bool _isOver;
         private int _movesShown;
+
+        // The sim before each executed command: _snapshots[i] is the state Step back to command i goes to.
+        private readonly List<Sim> _snapshots = new List<Sim>();
 
         /// <param name="createBackState">Creates the state Back enters.</param>
         public ReplayState(AppContext context, AppStateMachine stateMachine, GameReplay replay, Func<IAppState> createBackState)
@@ -57,9 +61,11 @@ namespace Squarely.App
             _stepper.SetPaused(true);
             _screen.SetPlaying(false);
             UpdateProgress();
+            UpdateStepBack();
 
             _screen.PlayPauseRequestEvent += OnPlayPauseRequested;
-            _screen.StepRequestEvent += OnStepRequested;
+            _screen.StepBackRequestEvent += OnStepBackRequested;
+            _screen.StepForwardRequestEvent += OnStepForwardRequested;
             _screen.RestartRequestEvent += OnRestartRequested;
             _screen.SpeedSelectEvent += OnSpeedSelected;
             _screen.BackRequestEvent += OnBackRequested;
@@ -71,7 +77,8 @@ namespace Squarely.App
         public void Exit()
         {
             _screen.PlayPauseRequestEvent -= OnPlayPauseRequested;
-            _screen.StepRequestEvent -= OnStepRequested;
+            _screen.StepBackRequestEvent -= OnStepBackRequested;
+            _screen.StepForwardRequestEvent -= OnStepForwardRequested;
             _screen.RestartRequestEvent -= OnRestartRequested;
             _screen.SpeedSelectEvent -= OnSpeedSelected;
             _screen.BackRequestEvent -= OnBackRequested;
@@ -102,7 +109,28 @@ namespace Squarely.App
             _screen.SetPlaying(!_stepper.IsPaused);
         }
 
-        private void OnStepRequested()
+        private void OnStepBackRequested()
+        {
+            if (!_stepper.StepBack())
+                return;
+
+            int index = _stepper.Executed;
+            _game.RestoreSim(_snapshots[index], index);
+            _snapshots.RemoveRange(index, _snapshots.Count - index);
+
+            if (_replay.Commands[index] is PlacePieceCommand)
+                _movesShown--;
+
+            // Stepping back from the end brings the replay to life again.
+            _isOver = false;
+            _screen.SetStatus(null);
+            _screen.SetControlsEnabled(true);
+            _screen.SetPlaying(false);
+            UpdateProgress();
+            UpdateStepBack();
+        }
+
+        private void OnStepForwardRequested()
         {
             if (!_isOver && _stepper.HasNext)
                 ExecuteNext();
@@ -129,6 +157,7 @@ namespace Squarely.App
         {
             int index = _stepper.Executed;
             ISimCommand command = _replay.Commands[index];
+            Sim before = _game.CopySim();
 
             if (!_game.ExecuteCommand(command))
             {
@@ -137,12 +166,14 @@ namespace Squarely.App
                 return;
             }
 
+            _snapshots.Add(before);
             _stepper.MarkExecuted();
 
             if (command is PlacePieceCommand)
                 _movesShown++;
 
             UpdateProgress(command is EndGameCommand);
+            UpdateStepBack();
         }
 
         private void ShowResult()
@@ -163,6 +194,11 @@ namespace Squarely.App
             _screen.SetPlaying(false);
             _screen.SetControlsEnabled(false);
             _screen.SetStatus(status);
+        }
+
+        private void UpdateStepBack()
+        {
+            _screen.SetStepBackEnabled(_stepper.CanStepBack);
         }
 
         private void UpdateProgress(bool isGameEnded = false)

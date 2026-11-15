@@ -10,7 +10,7 @@ namespace Squarely.Presentation
     public sealed class GameController : IPiecePlacer
     {
         private readonly GameView _view;
-        private readonly Sim _sim;
+        private Sim _sim;
         private readonly ReplayRecorder _recorder;
 
         private bool _gameEndRaised;
@@ -140,6 +140,25 @@ namespace Squarely.Presentation
         public Sim CopySim()
         {
             return _sim.Clone();
+        }
+#endif
+
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+        /// <summary>
+        /// Sets the game back to a snapshot at once, with no animation: whatever is playing snaps to its end,
+        /// then the views show the snapshot. The game goes on from the snapshot. The snapshot stays unchanged.
+        /// </summary>
+        /// <param name="snapshot">A copy of the sim from <see cref="CopySim"/>, taken after <paramref name="commandCount"/> successful commands.</param>
+        /// <param name="commandCount">How many commands the snapshot has run. The replay of the game keeps only these.</param>
+        public void RestoreSim(Sim snapshot, int commandCount)
+        {
+            if (snapshot == null)
+                throw new ArgumentNullException(nameof(snapshot));
+
+            _view.Player.Snap();
+            _sim = snapshot.Clone();
+            _recorder.Restore(_sim, commandCount);
+            _view.SetState(_sim.Board, _sim.Hand, _sim.Score, _sim.Combo);
         }
 #endif
 

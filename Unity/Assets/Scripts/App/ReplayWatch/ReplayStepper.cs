@@ -5,7 +5,7 @@ namespace Squarely.App
 {
     /// <summary>
     /// Decides when a replay watch runs its next command. In auto-play, the next command is due once the
-    /// playback of the previous one has ended and the delay has passed. A step runs the next command at any time.
+    /// playback of the previous one has ended and the delay has passed. A step runs the next command at any time; a step back undoes the last one and pauses auto-play.
     /// Counts the commands run. Time is the caller's: scale it by the playback speed before you pass it.
     /// </summary>
     public sealed class ReplayStepper
@@ -66,6 +66,24 @@ namespace Squarely.App
         {
             Executed++;
             _waited = 0f;
+        }
+
+        /// <summary>Whether a command ran that a step back can undo.</summary>
+        public bool CanStepBack => Executed > 0;
+
+        /// <summary>
+        /// Counts the last executed command as not run, pauses auto-play and lifts a stop, so the command can run again.
+        /// Returns false, and changes nothing, if no command ran.
+        /// </summary>
+        public bool StepBack()
+        {
+            if (!CanStepBack)
+                return false;
+
+            Executed--;
+            _isStopped = false;
+            SetPaused(true);
+            return true;
         }
 
         /// <summary>Ends the replay early, for a command that failed. No next command is due after it.</summary>

@@ -9,7 +9,12 @@ namespace Squarely.Presentation
     {
         public string Play = "Play";
         public string Pause = "Pause";
-        public string Step = "Step";
+        [Tooltip("Undoes the last command. The font has no arrow glyphs, so plain characters.")]
+        public string StepBack = "<";
+
+        [Tooltip("Runs the next command.")]
+        public string StepForward = ">";
+
         public string Back = "Back";
         public string Restart = "Restart";
 

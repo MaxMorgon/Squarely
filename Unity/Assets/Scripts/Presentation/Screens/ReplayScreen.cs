@@ -8,7 +8,7 @@ namespace Squarely.Presentation
 {
     /// <summary>
     /// The replay watch screen, shown over the game view: the move counter, a Play/Pause button, Restart,
-    /// Step, a speed dropdown, Back, a warning banner and the status or result text.
+    /// Step back, Step forward, a speed dropdown, Back, a warning banner and the status or result text.
     /// Reports the player's choices; whoever owns it decides what happens next.
     /// </summary>
     public sealed class ReplayScreen : MonoBehaviour
@@ -20,8 +20,10 @@ namespace Squarely.Presentation
 
         [SerializeField] private Button _playPauseButton;
         [SerializeField] private TMP_Text _playPauseLabel;
-        [SerializeField] private Button _stepButton;
-        [SerializeField] private TMP_Text _stepLabel;
+        [SerializeField] private Button _stepBackButton;
+        [SerializeField] private TMP_Text _stepBackLabel;
+        [SerializeField] private Button _stepForwardButton;
+        [SerializeField] private TMP_Text _stepForwardLabel;
         [SerializeField] private Button _restartButton;
         [SerializeField] private TMP_Text _restartLabel;
         [SerializeField] private TMP_Dropdown _speedDropdown;
@@ -42,8 +44,11 @@ namespace Squarely.Presentation
         /// <summary>The player pressed Play or Pause.</summary>
         public event Action PlayPauseRequestEvent;
 
+        /// <summary>The player asked to undo the last command.</summary>
+        public event Action StepBackRequestEvent;
+
         /// <summary>The player asked to run the next command.</summary>
-        public event Action StepRequestEvent;
+        public event Action StepForwardRequestEvent;
 
         /// <summary>The player asked to watch the replay again from the start.</summary>
         public event Action RestartRequestEvent;
@@ -59,7 +64,8 @@ namespace Squarely.Presentation
         private void Awake()
         {
             _playPauseButton.onClick.AddListener(() => PlayPauseRequestEvent?.Invoke());
-            _stepButton.onClick.AddListener(() => StepRequestEvent?.Invoke());
+            _stepBackButton.onClick.AddListener(() => StepBackRequestEvent?.Invoke());
+            _stepForwardButton.onClick.AddListener(() => StepForwardRequestEvent?.Invoke());
             _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
             _speedDropdown.onValueChanged.AddListener(index => SpeedSelectEvent?.Invoke(_feel.SpeedPresets[index]));
             _backButton.onClick.AddListener(() => BackRequestEvent?.Invoke());
@@ -70,7 +76,8 @@ namespace Squarely.Presentation
         public void Initialize(ReplayTexts texts)
         {
             _texts = texts;
-            _stepLabel.text = texts.Step;
+            _stepBackLabel.text = texts.StepBack;
+            _stepForwardLabel.text = texts.StepForward;
             _backLabel.text = texts.Back;
             _restartLabel.text = texts.Restart;
             SetSpeedOptions();
@@ -136,11 +143,17 @@ namespace Squarely.Presentation
             _statusLabel.gameObject.SetActive(!string.IsNullOrEmpty(text));
         }
 
-        /// <summary>Sets whether Play/Pause and Step can be pressed. They cannot once the replay is over.</summary>
+        /// <summary>Sets whether Play/Pause and Step forward can be pressed. They cannot once the replay is over.</summary>
         public void SetControlsEnabled(bool isEnabled)
         {
             _playPauseButton.interactable = isEnabled;
-            _stepButton.interactable = isEnabled;
+            _stepForwardButton.interactable = isEnabled;
+        }
+
+        /// <summary>Sets whether Step back can be pressed. Separate from the other controls: it works once the replay is over.</summary>
+        public void SetStepBackEnabled(bool isEnabled)
+        {
+            _stepBackButton.interactable = isEnabled;
         }
     }
 }
