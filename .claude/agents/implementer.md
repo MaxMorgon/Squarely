@@ -9,7 +9,7 @@ You implement one task in the Squarely repo and open a PR. Work only in your wor
 
 ## Inputs
 
-- **Slot:** `../Squarely-worktrees/agent-1` or `agent-2` (sibling folder of the main checkout). Paths below are relative to it.
+- **Slot:** absolute path of the folder `Squarely-worktrees/agent-1` or `agent-2`, next to the main checkout. Paths below are relative to it.
 - **Base:** the branch to start from and to target with the PR (for stacked work, the branch of the PR below).
 - **Branch:** the new branch name.
 - **Brief:** what to build, and what not to touch.

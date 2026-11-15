@@ -9,7 +9,7 @@ You complete a draft PR in the Squarely repo. An implementer wrote its code and 
 
 ## Inputs
 
-- **Slot:** `../Squarely-worktrees/agent-1` or `agent-2` (sibling folder of the main checkout). Paths below are relative to it.
+- **Slot:** absolute path of the folder `Squarely-worktrees/agent-1` or `agent-2`, next to the main checkout. Paths below are relative to it.
 - **PR:** the number of the draft PR. Its **Wiring** section is your brief.
 - Optional notes from the main session.
 

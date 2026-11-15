@@ -16,9 +16,9 @@ Project (the Squarely repo):
 - `Notes/TODO.txt` (the user's own list; read only).
 - History: `git log --oneline -30`, `gh pr list --state all --limit 10`, and one or two PR bodies and review threads, to see how briefs, AI reviews and merges flow.
 
-User level (`C:\Users\User\.claude`):
+User level (`~/.claude`):
 - `CLAUDE.md` if present, `settings.json`, `agents/`, `skills/` (skip `skills/synced/`: stock Anthropic skills; only note they exist), enabled plugins.
-- Memory: `projects/a--WORK-Squarely/memory/` (`MEMORY.md` and the files it lists). These are the user's standing preferences and corrections.
+- Memory: `projects/<encoded repo path>/memory/` (`MEMORY.md` and the files it lists). These are the user's standing preferences and corrections.
 - Do not read session transcripts unless asked for a deep dig. Then sample only the latest one or two.
 
 ## What to judge
