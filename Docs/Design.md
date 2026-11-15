@@ -50,6 +50,10 @@ New content and features must be cheap to ship:
 - Undo / continue / revive in v1?
 - Game modes: endless only at first, or also level/objective modes?
 
+## Game mode ideas
+
+- **Picture puzzle.** The board shows an image in the background. The player gets a fixed set of pieces (about 6 to 10). The player places them to complete the image. A short, hand-made level.
+
 ## Roadmap (rough)
 
 1. Sim: board, pieces, placement, line clears, scoring, game over, fully tested.
