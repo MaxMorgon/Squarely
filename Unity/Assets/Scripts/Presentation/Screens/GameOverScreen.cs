@@ -22,7 +22,7 @@ namespace Squarely.Presentation
         [Tooltip("Shown instead of the high score when this game set a new one.")]
         [SerializeField] private TMP_Text _newHighScoreLabel;
 
-        [Tooltip("Plays when this game set a new high score. Hang the celebration (animation, particles, sound) here.")]
+        [Tooltip("Plays when this game set a new high score. Hang the celebration (animation, particles) here. No sound: GameState plays it.")]
         [SerializeField] private UnityEvent _newHighScoreCelebration = new UnityEvent();
 
         [SerializeField] private Button _restartButton;
@@ -37,14 +37,13 @@ namespace Squarely.Presentation
         [Tooltip("Inactive by default. Shows briefly after a copy.")]
         [SerializeField] private TMP_Text _copiedLabel;
 
+
         private GameOverTexts _texts;
+        private FlashLabel _copied;
 
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
-        private const float CopiedSeconds = 1.5f;
-
         private ReplayCopier _copier;
         private GameReplay _replay;
-        private float _hideCopiedTime;
 #endif
 
         /// <summary>The player asked to play again with the same setup.</summary>
@@ -64,14 +63,13 @@ namespace Squarely.Presentation
             _copyReplayButton.onClick.AddListener(CopyReplay);
 #endif
             _copyReplayButton.gameObject.SetActive(false);
-            _copiedLabel.gameObject.SetActive(false);
+            _copied = new FlashLabel(_copiedLabel);
         }
 
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         private void Update()
         {
-            if (_copiedLabel.gameObject.activeSelf && Time.unscaledTime >= _hideCopiedTime)
-                _copiedLabel.gameObject.SetActive(false);
+            _copied.Tick(Time.unscaledTime);
         }
 #endif
 
@@ -126,9 +124,7 @@ namespace Squarely.Presentation
                 return;
 
             _copier.Copy(_replay);
-            _copiedLabel.text = _texts.ReplayCopied;
-            _copiedLabel.gameObject.SetActive(true);
-            _hideCopiedTime = Time.unscaledTime + CopiedSeconds;
+            _copied.Flash(_texts.ReplayCopied, Time.unscaledTime);
         }
 #endif
 

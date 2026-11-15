@@ -28,7 +28,6 @@ namespace Squarely.App
         private ReplayScreen _screen;
         private ReplayStepper _stepper;
         private bool _isOver;
-        private int _movesShown;
 
         // The sim before each executed command: _snapshots[i] is the state Step back to command i goes to.
         private readonly List<Sim> _snapshots = new List<Sim>();
@@ -145,12 +144,6 @@ namespace Squarely.App
 
             _game.RestoreSim(_snapshots[count], count);
 
-            for (int i = count; i < _snapshots.Count; i++)
-            {
-                if (_replay.Commands[i] is PlacePieceCommand)
-                    _movesShown--;
-            }
-
             _snapshots.RemoveRange(count, _snapshots.Count - count);
 
             // Stepping back from the end brings the replay to life again.
@@ -196,9 +189,6 @@ namespace Squarely.App
             _snapshots.Add(before);
             _stepper.MarkExecuted();
 
-            if (command is PlacePieceCommand)
-                _movesShown++;
-
             UpdateProgress(command is EndGameCommand);
             UpdateBackControls();
         }
@@ -233,7 +223,7 @@ namespace Squarely.App
             if (isGameEnded)
                 _screen.SetGameEnded();
             else
-                _screen.SetProgress(_movesShown, _replay.MoveCount);
+                _screen.SetProgress(_replay.CountMoves(_stepper.Executed), _replay.MoveCount);
         }
     }
 }

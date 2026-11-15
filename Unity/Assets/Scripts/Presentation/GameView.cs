@@ -33,7 +33,7 @@ namespace Squarely.Presentation
 
         [SerializeField] private CameraFitter _cameraFitter;
 
-        [Tooltip("Editor and development builds only: the playback debug panel created for each game.")]
+        [Tooltip("Editor and dev-tools builds only (SQUARELY_DEV_TOOLS): the playback debug panel created for each game.")]
         [SerializeField] private PlaybackDebugOverlay _debugOverlayPrefab;
 
         [Tooltip("Edit time only: the game mode whose board and hand size the gizmos preview.")]

@@ -6,12 +6,13 @@ using UnityEngine.UI;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// Asks the player to confirm an action, with Yes and No. It blocks input to what is under it.
-    /// Reports the answer; whoever owns it does the action or not.
+    /// Asks the player to confirm an action, with a title, an optional message, and Yes and No.
+    /// It blocks input to what is under it. Reports the answer; whoever owns it does the action or not.
     /// </summary>
     public sealed class ConfirmDialog : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _questionLabel;
+        [SerializeField] private TMP_Text _titleLabel;
+        [SerializeField] private TMP_Text _messageLabel;
         [SerializeField] private Button _yesButton;
         [SerializeField] private TMP_Text _yesLabel;
         [SerializeField] private Button _noButton;
@@ -33,18 +34,16 @@ namespace Squarely.Presentation
 
         #endregion
 
-        /// <param name="question">The question to show instead of the default one.</param>
-        public void Initialize(ConfirmTexts texts, string question)
+        /// <param name="message">The smaller text under the title. Null or empty hides it.</param>
+        public void Initialize(ConfirmTexts texts, string message)
         {
-            Initialize(texts);
-            _questionLabel.text = question;
-        }
-
-        public void Initialize(ConfirmTexts texts)
-        {
-            _questionLabel.text = texts.Question;
+            _titleLabel.text = texts.Title;
             _yesLabel.text = texts.Yes;
             _noLabel.text = texts.No;
+
+            bool hasMessage = !string.IsNullOrEmpty(message);
+            _messageLabel.text = hasMessage ? message : string.Empty;
+            _messageLabel.gameObject.SetActive(hasMessage);
         }
     }
 }

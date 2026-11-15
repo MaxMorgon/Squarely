@@ -36,5 +36,25 @@ namespace Squarely.Simulation.Tests
             Assert.That(replay.Commands.Count, Is.EqualTo(7));
             Assert.That(replay.MoveCount, Is.EqualTo(6));
         }
+
+        [Test]
+        public void CountMoves_CountsPlaceCommandsInThePrefixOnly()
+        {
+            GameReplay replay = ReplayTestHelpers.RecordGame(DefaultSimConfig.Create(), 11, maxMoves: 6, endWithEndGame: true);
+
+            Assert.That(replay.CountMoves(0), Is.EqualTo(0));
+            Assert.That(replay.CountMoves(3), Is.EqualTo(3));
+            Assert.That(replay.CountMoves(7), Is.EqualTo(6));
+            Assert.That(replay.CountMoves(7), Is.EqualTo(replay.MoveCount));
+        }
+
+        [Test]
+        public void CountMoves_CountOutOfRange_Throws()
+        {
+            GameReplay replay = ReplayTestHelpers.RecordGame(DefaultSimConfig.Create(), 11, maxMoves: 3);
+
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => replay.CountMoves(-1));
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => replay.CountMoves(replay.Commands.Count + 1));
+        }
     }
 }
