@@ -17,13 +17,16 @@ namespace Squarely.App
         private MenuScreen _screen;
         private SettingsPanel _settings;
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
-        private ConfirmDialog _confirm;
+        private ConfirmPrompt _confirm;
 #endif
 
         public MenuState(AppContext context, AppStateMachine stateMachine)
         {
             _context = context;
             _stateMachine = stateMachine;
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            _confirm = new ConfirmPrompt(context.Screens, context.Texts.Confirm);
+#endif
         }
 
         public void Enter()
@@ -44,7 +47,7 @@ namespace Squarely.App
         public void Exit()
         {
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
-            CloseConfirm();
+            _confirm.Close();
 #endif
             CloseSettings();
 
@@ -94,34 +97,19 @@ namespace Squarely.App
 
         private void OnResetProgressRequested()
         {
-            if (_confirm != null)
+            if (_confirm.IsOpen)
                 return;
 
             // The question shows over the menu, not over the settings panel.
             CloseSettings();
 
-            _confirm = _context.Screens.CreatePanel(_context.Screens.Prefabs.Confirm);
-            _confirm.Initialize(_context.Texts.Confirm, _context.Texts.Confirm.ResetProgressQuestion);
-            _confirm.ConfirmRequestEvent += OnResetProgressConfirmed;
-            _confirm.CancelRequestEvent += CloseConfirm;
+            _confirm.Show(_context.Texts.Confirm.ResetProgressQuestion, OnResetProgressConfirmed);
         }
 
         private void OnResetProgressConfirmed()
         {
-            CloseConfirm();
             _context.Services.Progress.Reset();
             _screen.SetHighScore(_context.Services.HighScore.Best);
-        }
-
-        private void CloseConfirm()
-        {
-            if (_confirm == null)
-                return;
-
-            _confirm.ConfirmRequestEvent -= OnResetProgressConfirmed;
-            _confirm.CancelRequestEvent -= CloseConfirm;
-            _context.Screens.DestroyPanel(_confirm);
-            _confirm = null;
         }
 #endif
 

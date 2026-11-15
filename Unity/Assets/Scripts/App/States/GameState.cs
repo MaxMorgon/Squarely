@@ -35,8 +35,7 @@ namespace Squarely.App
         private NewRecordCheck _newRecordCheck;
         private GameOverScreen _gameOver;
         private SettingsPanel _settings;
-        private ConfirmDialog _confirm;
-        private Action _confirmedAction;
+        private readonly ConfirmPrompt _confirm;
         private bool _replayRecorded;
 
         /// <param name="seed">The seed of the game, or null for a new seed from the context's seed source. Restart does the same again.</param>
@@ -52,6 +51,7 @@ namespace Squarely.App
             _highScore = highScore;
             _createBackState = createBackState ?? throw new ArgumentNullException(nameof(createBackState));
             _isTest = isTest;
+            _confirm = new ConfirmPrompt(context.Screens, context.Texts.Confirm);
         }
 
         public void Enter()
@@ -231,56 +231,27 @@ namespace Squarely.App
                 return;
             }
 
-            if (_confirm != null)
+            if (_confirm.IsOpen)
                 return;
 
             // The question replaces the panel; No goes back to the game, not to the panel.
             CloseSettingsPanel();
 
-            _confirmedAction = action;
-            _confirm = _context.Screens.CreatePanel(_context.Screens.Prefabs.Confirm);
-            _confirm.Initialize(_context.Texts.Confirm);
-            _confirm.ConfirmRequestEvent += OnConfirmRequested;
-            _confirm.CancelRequestEvent += OnCancelRequested;
+            _confirm.Show(null, action, UpdatePause);
             UpdatePause();
-        }
-
-        private void OnConfirmRequested()
-        {
-            Action action = _confirmedAction;
-            CloseConfirm();
-            action();
-        }
-
-        private void OnCancelRequested()
-        {
-            CloseConfirm();
-            UpdatePause();
-        }
-
-        private void CloseConfirm()
-        {
-            if (_confirm == null)
-                return;
-
-            _confirm.ConfirmRequestEvent -= OnConfirmRequested;
-            _confirm.CancelRequestEvent -= OnCancelRequested;
-            _context.Screens.DestroyPanel(_confirm);
-            _confirm = null;
-            _confirmedAction = null;
         }
 
         /// <summary>Closes the settings panel and its confirm dialog, if open, and resumes the game.</summary>
         private void CloseSettings()
         {
-            CloseConfirm();
+            _confirm.Close();
             CloseSettingsPanel();
             UpdatePause();
         }
 
         private void UpdatePause()
         {
-            _view.SetPaused(_settings != null || _confirm != null);
+            _view.SetPaused(_settings != null || _confirm.IsOpen);
         }
 
         private void CloseSettingsPanel()
