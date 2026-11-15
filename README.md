@@ -6,7 +6,7 @@ A Unity/C# puzzle game, built with AI agents. The first version took about a wee
 
 <img src="ReadMeMedia/Gameplay.gif" alt="Gameplay: placing pieces and clearing lines" width="300">
 
-> **Play in the browser:** coming soon.
+> **Play in the browser:** [iddocodes.itch.io/squarely](https://iddocodes.itch.io/squarely)
 
 The game: place three pieces at a time on an 8×8 board. Full rows and columns clear. Clears on consecutive moves build a combo. The rules follow the genre (1010!, Block Blast). The code and UI are original. The art is placeholder for now.
 
@@ -54,7 +54,7 @@ Squarely.Simulation    Rules, dealing, scoring, replays. No Unity.
 
   <img src="ReadMeMedia/SoundMixer.png" alt="Sound mixer editor window" width="700">
 
-- **Dev tools only where you need them.** Studio builds include the dev tools. A "Dev tools" setting turns them on and off during a test. Store builds compile them out, so a release build has no debug code.
+- **Dev tools only where you need them.** Studio builds include the dev tools. A "Dev tools" setting turns them on and off during a test. Store builds compile them out, so a release build has no debug code. The [browser build](https://iddocodes.itch.io/squarely) is a studio build with the dev tools on. Turn them off in Settings to see the game as a player would.
 
 ## Run it
 
