@@ -147,6 +147,41 @@ namespace Squarely.Presentation.Tests
         }
 
         [Test]
+        public void PlaySnapped_HandlesEveryEventWithoutPlayingSteps_AndEndsOnce()
+        {
+            var firstStep = new FakeStep(false);
+            var secondStep = new FakeStep(true);
+            var first = new FakeEvent(true, firstStep);
+            var second = new FakeEvent(true, secondStep);
+
+            _player.PlaySnapped(new ISimEvent[] { first, second });
+
+            Assert.That(first.HandleCount, Is.EqualTo(1));
+            Assert.That(second.HandleCount, Is.EqualTo(1));
+            Assert.That(firstStep.PlayCount, Is.EqualTo(0));
+            Assert.That(secondStep.PlayCount, Is.EqualTo(0));
+            Assert.That(firstStep.SnapCount, Is.EqualTo(1));
+            Assert.That(secondStep.SnapCount, Is.EqualTo(1));
+            Assert.That(_endCount, Is.EqualTo(1));
+            Assert.That(_player.IsPlaying, Is.False);
+        }
+
+        [Test]
+        public void PlaySnapped_WhilePlaying_SnapsPendingPlaybackFirst()
+        {
+            var running = new FakeStep(false);
+            var next = new FakeStep(true);
+            _player.Play(new ISimEvent[] { new FakeEvent(true, running) });
+
+            _player.PlaySnapped(new ISimEvent[] { new FakeEvent(true, next) });
+
+            Assert.That(running.SnapCount, Is.EqualTo(1));
+            Assert.That(next.PlayCount, Is.EqualTo(0));
+            Assert.That(next.SnapCount, Is.EqualTo(1));
+            Assert.That(_endCount, Is.EqualTo(2));
+        }
+
+        [Test]
         public void Play_EventWithoutHandler_IsSkipped()
         {
             var step = new FakeStep(true);

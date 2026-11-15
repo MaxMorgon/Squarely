@@ -1,10 +1,11 @@
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 using System;
 
 namespace Squarely.App
 {
     /// <summary>
     /// Decides when a replay watch runs its next command. In auto-play, the next command is due once the
-    /// playback of the previous one has ended and the delay has passed. A step runs the next command at any time.
+    /// playback of the previous one has ended and the delay has passed. A step runs the next command at any time; a step back undoes commands down to a count and pauses auto-play. A jump to the end is the caller's loop: run commands while <see cref="HasNext"/>.
     /// Counts the commands run. Time is the caller's: scale it by the playback speed before you pass it.
     /// </summary>
     public sealed class ReplayStepper
@@ -24,6 +25,9 @@ namespace Squarely.App
 
         /// <summary>Whether a next command can run: some are left and the replay did not stop.</summary>
         public bool HasNext => !_isStopped && Executed < Total;
+
+        /// <summary>Whether a command ran that a step back can undo.</summary>
+        public bool CanStepBack => Executed > 0;
 
         /// <param name="delay">Seconds between the end of a command's playback and the next command in auto-play.</param>
         public ReplayStepper(int total, float delay)
@@ -67,6 +71,21 @@ namespace Squarely.App
             _waited = 0f;
         }
 
+        /// <summary>
+        /// Counts the commands after the first <paramref name="count"/> as not run, pauses auto-play and lifts a stop, so they can run again.
+        /// Returns false, and changes nothing, if <paramref name="count"/> is not below <see cref="Executed"/> or is negative.
+        /// </summary>
+        public bool StepBackTo(int count)
+        {
+            if (count < 0 || count >= Executed)
+                return false;
+
+            Executed = count;
+            _isStopped = false;
+            SetPaused(true);
+            return true;
+        }
+
         /// <summary>Ends the replay early, for a command that failed. No next command is due after it.</summary>
         public void Stop()
         {
@@ -74,3 +93,4 @@ namespace Squarely.App
         }
     }
 }
+#endif

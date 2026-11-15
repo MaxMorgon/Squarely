@@ -101,5 +101,130 @@ namespace Squarely.App.Tests
             Assert.That(stepper.HasNext, Is.False);
             Assert.That(stepper.Tick(5f, false), Is.False);
         }
+
+        [Test]
+        public void CanStepBack_False_AtTheStart()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+
+            Assert.That(stepper.CanStepBack, Is.False);
+            Assert.That(stepper.StepBackTo(stepper.Executed - 1), Is.False);
+            Assert.That(stepper.Executed, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void StepBack_UncountsTheLastCommand()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+            stepper.MarkExecuted();
+            stepper.MarkExecuted();
+
+            bool didStepBack = stepper.StepBackTo(stepper.Executed - 1);
+
+            Assert.That(didStepBack, Is.True);
+            Assert.That(stepper.Executed, Is.EqualTo(1));
+            Assert.That(stepper.CanStepBack, Is.True);
+        }
+
+        [Test]
+        public void StepBack_PausesAutoPlay()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+            stepper.MarkExecuted();
+
+            stepper.StepBackTo(stepper.Executed - 1);
+
+            Assert.That(stepper.IsPaused, Is.True);
+            Assert.That(stepper.Tick(5f, false), Is.False);
+        }
+
+        [Test]
+        public void StepBack_AfterAllExecuted_HasNextAgain()
+        {
+            var stepper = new ReplayStepper(2, Delay);
+            stepper.MarkExecuted();
+            stepper.MarkExecuted();
+
+            stepper.StepBackTo(stepper.Executed - 1);
+
+            Assert.That(stepper.HasNext, Is.True);
+        }
+
+        [Test]
+        public void StepBack_AfterStop_LiftsTheStop()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+            stepper.MarkExecuted();
+            stepper.Stop();
+
+            stepper.StepBackTo(stepper.Executed - 1);
+
+            Assert.That(stepper.HasNext, Is.True);
+        }
+
+        [Test]
+        public void StepBack_ThenMarkExecuted_CountsAgain()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+            stepper.MarkExecuted();
+            stepper.StepBackTo(stepper.Executed - 1);
+
+            stepper.MarkExecuted();
+
+            Assert.That(stepper.Executed, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void StepBackTo_Zero_UncountsAll_PausesAndLiftsStop()
+        {
+            var stepper = new ReplayStepper(5, Delay);
+            stepper.MarkExecuted();
+            stepper.MarkExecuted();
+            stepper.MarkExecuted();
+            stepper.Stop();
+
+            bool didStepBack = stepper.StepBackTo(0);
+
+            Assert.That(didStepBack, Is.True);
+            Assert.That(stepper.Executed, Is.EqualTo(0));
+            Assert.That(stepper.CanStepBack, Is.False);
+            Assert.That(stepper.IsPaused, Is.True);
+            Assert.That(stepper.HasNext, Is.True);
+        }
+
+        [Test]
+        public void StepBackTo_KeepsTheFirstCommands()
+        {
+            var stepper = new ReplayStepper(5, Delay);
+            for (int i = 0; i < 4; i++)
+                stepper.MarkExecuted();
+
+            Assert.That(stepper.StepBackTo(2), Is.True);
+            Assert.That(stepper.Executed, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void StepBackTo_OutOfRange_ChangesNothing()
+        {
+            var stepper = new ReplayStepper(5, Delay);
+            stepper.MarkExecuted();
+
+            Assert.That(stepper.StepBackTo(1), Is.False);
+            Assert.That(stepper.StepBackTo(-1), Is.False);
+            Assert.That(stepper.Executed, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void MarkExecuted_UntilNoNext_KeepsStepBackEnabled()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+
+            while (stepper.HasNext)
+                stepper.MarkExecuted();
+
+            Assert.That(stepper.Executed, Is.EqualTo(3));
+            Assert.That(stepper.HasNext, Is.False);
+            Assert.That(stepper.CanStepBack, Is.True);
+        }
     }
 }

@@ -7,26 +7,27 @@ using UnityEngine.UI;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// The replay watch screen, shown over the game view: the move counter, a Play/Pause button, Restart,
-    /// Step, a speed dropdown, Back, a warning banner and the status or result text.
+    /// The replay watch screen, shown over the game view: the move counter, a Play/Pause button, Jump to start,
+    /// Step back, Step forward, Jump to end, a speed dropdown, Back, a warning banner and the status or result text.
     /// Reports the player's choices; whoever owns it decides what happens next.
     /// </summary>
     public sealed class ReplayScreen : MonoBehaviour
     {
-        [Tooltip("The playback speeds the speed dropdown offers, in order.")]
-        [SerializeField] private float[] _speedPresets = { 4f, 2f, 1f, 0.5f };
-
-        [Tooltip("Seconds auto-play waits, at speed 1, between the end of a move's playback and the next move.")]
-        [SerializeField] private float _stepDelay = 0.4f;
+        [Tooltip("Speed choices and auto-play pace.")]
+        [SerializeField] private ReplayFeel _feel;
 
         [SerializeField] private TMP_Text _progressLabel;
 
         [SerializeField] private Button _playPauseButton;
         [SerializeField] private TMP_Text _playPauseLabel;
-        [SerializeField] private Button _stepButton;
-        [SerializeField] private TMP_Text _stepLabel;
-        [SerializeField] private Button _restartButton;
-        [SerializeField] private TMP_Text _restartLabel;
+        [SerializeField] private Button _stepBackButton;
+        [SerializeField] private TMP_Text _stepBackLabel;
+        [SerializeField] private Button _stepForwardButton;
+        [SerializeField] private TMP_Text _stepForwardLabel;
+        [SerializeField] private Button _jumpStartButton;
+        [SerializeField] private TMP_Text _jumpStartLabel;
+        [SerializeField] private Button _jumpEndButton;
+        [SerializeField] private TMP_Text _jumpEndLabel;
         [SerializeField] private TMP_Dropdown _speedDropdown;
         [SerializeField] private Button _backButton;
         [SerializeField] private TMP_Text _backLabel;
@@ -40,16 +41,22 @@ namespace Squarely.Presentation
         private ReplayTexts _texts;
 
         /// <summary>Seconds auto-play waits between a move's playback and the next move, at speed 1.</summary>
-        public float StepDelay => _stepDelay;
+        public float StepDelay => _feel.StepDelay;
 
         /// <summary>The player pressed Play or Pause.</summary>
         public event Action PlayPauseRequestEvent;
 
-        /// <summary>The player asked to run the next command.</summary>
-        public event Action StepRequestEvent;
+        /// <summary>The player asked to undo the last command.</summary>
+        public event Action StepBackRequestEvent;
 
-        /// <summary>The player asked to watch the replay again from the start.</summary>
-        public event Action RestartRequestEvent;
+        /// <summary>The player asked to run the next command.</summary>
+        public event Action StepForwardRequestEvent;
+
+        /// <summary>The player asked to go back to the start, before any command.</summary>
+        public event Action JumpStartRequestEvent;
+
+        /// <summary>The player asked to run all remaining commands at once.</summary>
+        public event Action JumpEndRequestEvent;
 
         /// <summary>The player picked a playback speed. Gives the speed.</summary>
         public event Action<float> SpeedSelectEvent;
@@ -57,23 +64,17 @@ namespace Squarely.Presentation
         /// <summary>The player asked to go back.</summary>
         public event Action BackRequestEvent;
 
-        /// <summary>Every frame. Gives the frame time in seconds. Drives the replay's auto-play.</summary>
-        public event Action<float> TickEvent;
-
         #region Unity
 
         private void Awake()
         {
             _playPauseButton.onClick.AddListener(() => PlayPauseRequestEvent?.Invoke());
-            _stepButton.onClick.AddListener(() => StepRequestEvent?.Invoke());
-            _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
-            _speedDropdown.onValueChanged.AddListener(index => SpeedSelectEvent?.Invoke(_speedPresets[index]));
+            _stepBackButton.onClick.AddListener(() => StepBackRequestEvent?.Invoke());
+            _stepForwardButton.onClick.AddListener(() => StepForwardRequestEvent?.Invoke());
+            _jumpStartButton.onClick.AddListener(() => JumpStartRequestEvent?.Invoke());
+            _jumpEndButton.onClick.AddListener(() => JumpEndRequestEvent?.Invoke());
+            _speedDropdown.onValueChanged.AddListener(index => SpeedSelectEvent?.Invoke(_feel.SpeedPresets[index]));
             _backButton.onClick.AddListener(() => BackRequestEvent?.Invoke());
-        }
-
-        private void Update()
-        {
-            TickEvent?.Invoke(Time.deltaTime);
         }
 
         #endregion
@@ -81,9 +82,11 @@ namespace Squarely.Presentation
         public void Initialize(ReplayTexts texts)
         {
             _texts = texts;
-            _stepLabel.text = texts.Step;
+            _stepBackLabel.text = texts.StepBack;
+            _stepForwardLabel.text = texts.StepForward;
             _backLabel.text = texts.Back;
-            _restartLabel.text = texts.Restart;
+            _jumpStartLabel.text = texts.JumpStart;
+            _jumpEndLabel.text = texts.JumpEnd;
             SetSpeedOptions();
             SetPlaying(false);
             SetWarning(false);
@@ -113,9 +116,9 @@ namespace Squarely.Presentation
         {
             int nearest = 0;
 
-            for (int i = 1; i < _speedPresets.Length; i++)
+            for (int i = 1; i < _feel.SpeedPresets.Length; i++)
             {
-                if (Mathf.Abs(_speedPresets[i] - speed) < Mathf.Abs(_speedPresets[nearest] - speed))
+                if (Mathf.Abs(_feel.SpeedPresets[i] - speed) < Mathf.Abs(_feel.SpeedPresets[nearest] - speed))
                     nearest = i;
             }
 
@@ -126,7 +129,7 @@ namespace Squarely.Presentation
         {
             List<string> options = new List<string>();
 
-            foreach (float speed in _speedPresets)
+            foreach (float speed in _feel.SpeedPresets)
                 options.Add(string.Format(_texts.SpeedFormat, speed));
 
             _speedDropdown.ClearOptions();
@@ -147,11 +150,19 @@ namespace Squarely.Presentation
             _statusLabel.gameObject.SetActive(!string.IsNullOrEmpty(text));
         }
 
-        /// <summary>Sets whether Play/Pause and Step can be pressed. They cannot once the replay is over.</summary>
+        /// <summary>Sets whether Play/Pause, Step forward and Jump to end can be pressed. They cannot once the replay is over.</summary>
         public void SetControlsEnabled(bool isEnabled)
         {
             _playPauseButton.interactable = isEnabled;
-            _stepButton.interactable = isEnabled;
+            _stepForwardButton.interactable = isEnabled;
+            _jumpEndButton.interactable = isEnabled;
+        }
+
+        /// <summary>Sets whether Step back and Jump to start can be pressed. Separate from the other controls: it works once the replay is over.</summary>
+        public void SetBackControlsEnabled(bool isEnabled)
+        {
+            _stepBackButton.interactable = isEnabled;
+            _jumpStartButton.interactable = isEnabled;
         }
     }
 }

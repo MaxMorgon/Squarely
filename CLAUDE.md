@@ -57,6 +57,8 @@ Standard Microsoft C# naming and conventions, plus:
 - Every new file and folder under `Src/` or `Unity/Assets/` needs a `.meta`. Let Unity generate it. Never hand-write GUIDs.
 - Main checkout: use the Unity CLI (`unity-editor` skill). Worktree slots: `bash Tools/verify.sh <slot>` (no `unity command`).
 - The CLI cannot verify how a change looks or plays. Say so and ask the user to check in the editor.
+- Gate dev-only code with `#if UNITY_EDITOR || SQUARELY_DEV_TOOLS`, never `DEVELOPMENT_BUILD`. Store builds compile dev tools out. Studio builds compile them in, and the "Dev tools" setting (`DevToolsPreference`) turns them on and off.
+- Agents never run a player build.
 
 ## Working with the user
 

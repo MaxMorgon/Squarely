@@ -23,6 +23,33 @@ namespace Squarely.App.Tests
         }
 
         [Test]
+        public void Tick_RunsCurrentTickableState()
+        {
+            _machine.ChangeState(new FakeState("A", _log));
+
+            _machine.Tick(0.1f);
+
+            Assert.That(_log, Is.EqualTo(new[] { "A.Enter", "A.Tick" }));
+        }
+
+        [Test]
+        public void Tick_BeforeFirstChange_DoesNothing()
+        {
+            Assert.DoesNotThrow(() => _machine.Tick(0.1f));
+        }
+
+        [Test]
+        public void Tick_DuringTransition_DoesNothing()
+        {
+            var a = new FakeState("A", _log);
+            a.OnEnter = () => _machine.Tick(0.1f);
+
+            _machine.ChangeState(a);
+
+            Assert.That(_log, Is.EqualTo(new[] { "A.Enter" }));
+        }
+
+        [Test]
         public void ChangeState_First_EntersWithoutExit()
         {
             var a = new FakeState("A", _log);

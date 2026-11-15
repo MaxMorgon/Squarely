@@ -8,9 +8,9 @@ namespace Squarely.Presentation.Tests
         private const float Frame30 = 1f / 30f;
         private const float Frame120 = 1f / 120f;
 
-        private static DragSwing Create(float maxAngle = 12f, float smoothing = 0f)
+        private static DragSwing Create(float maxAngle = 12f, float smoothing = 0f, float scale = 1f)
         {
-            return new DragSwing(maxAngle, 1f, 3f, 0.65f, smoothing);
+            return new DragSwing(maxAngle, 1f, 3f, 0.65f, smoothing, scale);
         }
 
         private static void Run(DragSwing swing, float speed, float seconds, float frame)
@@ -108,6 +108,42 @@ namespace Squarely.Presentation.Tests
             Assert.That(swing.Angle, Is.EqualTo(0f));
             swing.Step(0f, Frame120);
             Assert.That(swing.Angle, Is.EqualTo(0f));
+        }
+
+        [Test]
+        public void Angle_ScaleHalf_HalvesTheTilt()
+        {
+            DragSwing full = Create();
+            DragSwing half = Create(scale: 0.5f);
+
+            Run(full, 5f, 1f, Frame120);
+            Run(half, 5f, 1f, Frame120);
+
+            Assert.That(half.Angle, Is.EqualTo(full.Angle * 0.5f).Within(0.0001f));
+        }
+
+        [Test]
+        public void Angle_ScaleMinusOne_FlipsTheDirection()
+        {
+            DragSwing swing = Create(scale: -1f);
+            Run(swing, 5f, 1f, Frame120);
+            Assert.That(swing.Angle, Is.LessThan(0f));
+        }
+
+        [Test]
+        public void Angle_ScaleZero_StaysLevel()
+        {
+            DragSwing swing = Create(scale: 0f);
+            Run(swing, 8f, 1f, Frame120);
+            Assert.That(swing.Angle, Is.EqualTo(0f));
+        }
+
+        [Test]
+        public void Angle_ScaleTwo_AppliesAfterTheMaxAngle()
+        {
+            DragSwing swing = Create(maxAngle: 10f, scale: 2f);
+            Run(swing, 50f, 1f, Frame120);
+            Assert.That(swing.Angle, Is.EqualTo(20f).Within(0.01f));
         }
     }
 }

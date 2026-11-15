@@ -8,9 +8,16 @@ namespace Squarely.Presentation
     [CreateAssetMenu(menuName = "Squarely/Drag Feel", fileName = "DragFeel")]
     public sealed class DragFeel : ScriptableObject
     {
+        [Header("Lift")]
+        [Tooltip("How far above the pointer the dragged piece floats, in world units.")]
+        [SerializeField, Min(0f)] private float _liftOffset = 2f;
+
         [Header("Swing")]
         [Tooltip("Largest tilt of the dragged piece, in degrees.")]
         [SerializeField, Range(0f, 45f)] private float _maxAngle = 12f;
+
+        [Tooltip("Multiplies the final tilt, after Max Angle. 1 keeps it, 0.5 halves it, 0 gives no tilt, a negative value flips the direction.")]
+        [SerializeField] private float _swingScale = 1f;
 
         [Tooltip("Target tilt in degrees for a pointer speed of one world unit per second.")]
         [SerializeField, Min(0f)] private float _degreesPerSpeed = 1f;
@@ -24,10 +31,13 @@ namespace Squarely.Presentation
         [Tooltip("Time constant in seconds for smoothing the pointer speed. 0 turns smoothing off.")]
         [SerializeField, Min(0f)] private float _velocitySmoothing = 0.05f;
 
+        /// <summary>How far above the pointer the dragged piece floats, in world units.</summary>
+        public float LiftOffset => _liftOffset;
+
         /// <summary>Creates a swing with the current values.</summary>
         public DragSwing CreateSwing()
         {
-            return new DragSwing(_maxAngle, _degreesPerSpeed, _springFrequency, _dampingRatio, _velocitySmoothing);
+            return new DragSwing(_maxAngle, _degreesPerSpeed, _springFrequency, _dampingRatio, _velocitySmoothing, _swingScale);
         }
     }
 }

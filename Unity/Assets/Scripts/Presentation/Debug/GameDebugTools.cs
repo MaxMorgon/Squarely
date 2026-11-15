@@ -1,12 +1,13 @@
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 using System;
 using Squarely.Simulation;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// Editor and development builds only: the debug tools of one game. Creates the playback debug overlay, replays
+    /// Editor and dev-tools builds only (`SQUARELY_DEV_TOOLS`): the debug tools of one game. Creates the playback debug overlay, replays
     /// the last move, checks the views against the sim when a playback ends, and relays the overlay's restart.
     /// Not game logic. The game works the same without it.
     /// </summary>
@@ -17,6 +18,7 @@ namespace Squarely.Presentation
         private readonly ReplayCopier _copier;
 
         private ExecutedMove _lastMove;
+        private PlaybackDebugOverlay _overlay;
 
         /// <summary>The result of the last drift check, or null before the first playback ended.</summary>
         public ViewDrift LastDrift { get; private set; }
@@ -40,19 +42,34 @@ namespace Squarely.Presentation
             _copier = copier ?? throw new ArgumentNullException(nameof(copier));
         }
 
-        /// <summary>Creates the debug overlay (collapsed) and starts watching the game. Call once, before the game starts.</summary>
+        /// <summary>
+        /// Creates the debug overlay (collapsed) and starts watching the game. Can run at any time in a game.
+        /// Does nothing if already started. Can start again after <see cref="Stop"/>.
+        /// </summary>
         public void Start()
         {
+            if (_overlay != null)
+                return;
+
             _game.MoveExecutedEvent += OnMoveExecuted;
             _view.Player.PlaybackEndEvent += OnPlaybackEnded;
-            _view.CreateDebugOverlay().Initialize(this, _view.Player);
+            _overlay = _view.CreateDebugOverlay();
+            _overlay.Initialize(this, _view.Player);
         }
 
-        /// <summary>Stops watching the game.</summary>
+        /// <summary>Stops watching the game, removes the overlay and sets the playback speed back to normal. Does nothing if not started.</summary>
         public void Stop()
         {
+            if (_overlay == null)
+                return;
+
             _game.MoveExecutedEvent -= OnMoveExecuted;
             _view.Player.PlaybackEndEvent -= OnPlaybackEnded;
+            _view.Player.Speed = 1f;
+            Object.Destroy(_overlay.gameObject);
+            _overlay = null;
+            _lastMove = null;
+            LastDrift = null;
         }
 
         #region Commands
