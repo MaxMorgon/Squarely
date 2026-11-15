@@ -20,7 +20,7 @@ namespace Squarely.Presentation
         [Tooltip("Shows the \"new record\" text. Hidden until the celebration shows it. Must not block input.")]
         [SerializeField] private TMP_Text _newRecordLabel;
 
-        [Tooltip("Plays when the score goes above the best score. Hang the celebration (animation, particles, sound) here.")]
+        [Tooltip("Plays when the score goes above the best score. Hang the celebration (animation, particles) here. No sound: GameState plays it.")]
         [SerializeField] private UnityEvent _newRecordCelebration = new UnityEvent();
 
         [Tooltip("The celebration animation. Its length is how long the game-over screen waits after the celebration starts. Empty means no wait.")]

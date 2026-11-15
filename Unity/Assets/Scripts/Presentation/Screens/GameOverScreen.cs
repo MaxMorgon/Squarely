@@ -22,7 +22,7 @@ namespace Squarely.Presentation
         [Tooltip("Shown instead of the high score when this game set a new one.")]
         [SerializeField] private TMP_Text _newHighScoreLabel;
 
-        [Tooltip("Plays when this game set a new high score. Hang the celebration (animation, particles, sound) here.")]
+        [Tooltip("Plays when this game set a new high score. Hang the celebration (animation, particles) here. No sound: GameState plays it.")]
         [SerializeField] private UnityEvent _newHighScoreCelebration = new UnityEvent();
 
         [SerializeField] private Button _restartButton;
