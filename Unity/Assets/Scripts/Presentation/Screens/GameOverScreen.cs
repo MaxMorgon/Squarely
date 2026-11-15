@@ -37,7 +37,6 @@ namespace Squarely.Presentation
         [Tooltip("Inactive by default. Shows briefly after a copy.")]
         [SerializeField] private TMP_Text _copiedLabel;
 
-        private const float CopiedSeconds = 1.5f;
 
         private GameOverTexts _texts;
         private FlashLabel _copied;
@@ -64,7 +63,7 @@ namespace Squarely.Presentation
             _copyReplayButton.onClick.AddListener(CopyReplay);
 #endif
             _copyReplayButton.gameObject.SetActive(false);
-            _copied = new FlashLabel(_copiedLabel, CopiedSeconds);
+            _copied = new FlashLabel(_copiedLabel);
         }
 
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
@@ -125,7 +124,7 @@ namespace Squarely.Presentation
                 return;
 
             _copier.Copy(_replay);
-            _copied.Show(_texts.ReplayCopied, Time.unscaledTime);
+            _copied.Flash(_texts.ReplayCopied, Time.unscaledTime);
         }
 #endif
 

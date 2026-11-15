@@ -32,7 +32,7 @@ namespace Squarely.App
         /// <param name="question">The question to show. Null shows the default question.</param>
         /// <param name="onConfirm">Runs when the player says yes.</param>
         /// <param name="onCancel">Runs when the player says no. May be null.</param>
-        public void Show(string question, Action onConfirm, Action onCancel = null)
+        public void Ask(string question, Action onConfirm, Action onCancel = null)
         {
             if (_dialog != null)
                 return;

@@ -27,7 +27,7 @@ namespace Squarely.Presentation.Tests
         {
             FlashLabel label = Create();
 
-            label.Show("Copied", 10f);
+            label.Flash("Copied", 10f);
 
             Assert.IsTrue(_visible);
             Assert.AreEqual("Copied", _text);
@@ -38,7 +38,7 @@ namespace Squarely.Presentation.Tests
         public void Tick_BeforeTheTimeIsUp_KeepsShowing()
         {
             FlashLabel label = Create(1.5f);
-            label.Show("Copied", 10f);
+            label.Flash("Copied", 10f);
 
             label.Tick(11.4f);
 
@@ -49,7 +49,7 @@ namespace Squarely.Presentation.Tests
         public void Tick_WhenTheTimeIsUp_Hides()
         {
             FlashLabel label = Create(1.5f);
-            label.Show("Copied", 10f);
+            label.Flash("Copied", 10f);
 
             label.Tick(11.5f);
 
@@ -61,8 +61,8 @@ namespace Squarely.Presentation.Tests
         public void Show_AgainBeforeTheTimeIsUp_RestartsTheTime()
         {
             FlashLabel label = Create(1.5f);
-            label.Show("Copied", 10f);
-            label.Show("Copied", 11f);
+            label.Flash("Copied", 10f);
+            label.Flash("Copied", 11f);
 
             label.Tick(12f);
 

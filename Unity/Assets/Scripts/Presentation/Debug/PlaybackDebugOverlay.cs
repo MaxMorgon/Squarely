@@ -47,7 +47,6 @@ namespace Squarely.Presentation
         private const string ExpandedToggleText = "×";
         private const string CollapsedToggleText = "DBG";
         private const string CopiedText = "Copied";
-        private const float CopiedSeconds = 1.5f;
 
         // Static, so the chosen speed carries over to the next game of the same play session.
         private static float s_speed = 1f;
@@ -70,7 +69,7 @@ namespace Squarely.Presentation
             _restartButton.onClick.AddListener(_debug.RequestRestart);
             _endGameButton.onClick.AddListener(_debug.EndGame);
             _copyReplayButton.onClick.AddListener(CopyReplay);
-            _copied = new FlashLabel(_copiedLabel, CopiedSeconds);
+            _copied = new FlashLabel(_copiedLabel);
             CreateSpeedButtons();
 
             SetExpanded(false);
@@ -116,7 +115,7 @@ namespace Squarely.Presentation
         private void CopyReplay()
         {
             _debug.CopyReplay();
-            _copied.Show(CopiedText, Time.unscaledTime);
+            _copied.Flash(CopiedText, Time.unscaledTime);
         }
 
         private void CreateSpeedButtons()

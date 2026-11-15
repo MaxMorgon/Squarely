@@ -15,7 +15,7 @@ namespace Squarely.Presentation
             public SoundCue Cue;
         }
 
-        [Tooltip("The sounds without a sim event: the UI cues.")]
+        [Tooltip("The sounds without a sim event: input, UI, game end, records.")]
         [SerializeField] private SoundHooks _hooks;
 
         private readonly List<Voice> _voices = new List<Voice>();

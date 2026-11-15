@@ -9,6 +9,8 @@ namespace Squarely.Presentation
     /// </summary>
     public sealed class FlashLabel
     {
+        private const float DefaultSeconds = 1.5f;
+
         private readonly Action<string> _setText;
         private readonly Action<bool> _setVisible;
         private readonly float _seconds;
@@ -19,8 +21,8 @@ namespace Squarely.Presentation
         public bool IsVisible { get; private set; }
 
         /// <param name="label">The label to show the message in. Its object is switched on and off.</param>
-        /// <param name="seconds">How long a message shows.</param>
-        public FlashLabel(TMP_Text label, float seconds)
+        /// <param name="seconds">How long a message shows. The default is 1.5 seconds.</param>
+        public FlashLabel(TMP_Text label, float seconds = DefaultSeconds)
             : this(text => label.text = text, visible => label.gameObject.SetActive(visible), seconds)
         {
         }
@@ -34,7 +36,7 @@ namespace Squarely.Presentation
         }
 
         /// <summary>Shows the message at once. It hides <c>seconds</c> after <paramref name="now"/>. A new message restarts the time.</summary>
-        public void Show(string text, float now)
+        public void Flash(string text, float now)
         {
             _setText(text);
             _setVisible(true);
