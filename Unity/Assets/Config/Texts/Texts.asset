@@ -16,7 +16,7 @@ MonoBehaviour:
     Title: Squarely
     Play: Play
     Settings: Settings
-    Test: Test
+    Test: Dev Tools
     HighScoreFormat: 'Best: {0}'
   _gameHud:
     ComboFormat: "Combo \xD7{0}"
