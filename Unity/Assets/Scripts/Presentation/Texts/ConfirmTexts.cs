@@ -13,10 +13,10 @@ namespace Squarely.Presentation
         public string No = "No";
 
         /// <summary>Shown under the title before Restart or Quit ends a game.</summary>
-        public string LeaveGameMessage = "This game ends. Its score is not saved.";
+        public string LeaveGameMessage = "Your score will not be saved.";
 
         /// <summary>Shown under the title before the player progress is reset.</summary>
         [FormerlySerializedAs("ResetProgressQuestion")]
-        public string ResetProgressMessage = "Your progress and best score are deleted.";
+        public string ResetProgressMessage = "Your best score will be deleted.";
     }
 }

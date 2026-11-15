@@ -46,8 +46,8 @@ MonoBehaviour:
     Title: Are you sure?
     Yes: Yes
     No: No
-    LeaveGameMessage: This game ends. Its score is not saved.
-    ResetProgressMessage: Your progress and best score are deleted.
+    LeaveGameMessage: Your score will not be saved.
+    ResetProgressMessage: Your best score will be deleted.
   _test:
     Title: Test
     Seed: Seed
