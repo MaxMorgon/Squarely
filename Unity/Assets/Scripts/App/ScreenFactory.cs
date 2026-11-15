@@ -61,9 +61,10 @@ namespace Squarely.App
         /// <summary>
         /// Creates the settings panel with its toggles set, and plays the panel-open sound.
         /// The sound effects, music and dev tools toggles save their setting and play the toggle sound.
+        /// The dev tools toggle shows only if <paramref name="showDevTools"/> is true and the build has dev tools.
         /// Destroy the panel with <see cref="DestroyPanel"/>.
         /// </summary>
-        public SettingsPanel CreateSettings(bool isInGame)
+        public SettingsPanel CreateSettings(bool isInGame, bool showDevTools)
         {
             SettingsPanel panel = CreatePanel(Prefabs.Settings);
             panel.Initialize(_texts.Settings, isInGame);
@@ -71,7 +72,7 @@ namespace Squarely.App
             panel.SfxChangeEvent += _audio.SetSfx;
             panel.MusicChangeEvent += _audio.SetMusic;
 
-            if (DevToolsPreference.IsCompiledIn)
+            if (showDevTools && DevToolsPreference.IsCompiledIn)
             {
                 panel.SetDevTools(_devTools.IsOn);
                 panel.DevToolsChangeEvent += OnDevToolsChanged;

@@ -13,7 +13,7 @@ namespace Squarely.App
     /// The back target is the state the game was started from (the menu or the test screen). Quit and the Menu button go there.
     /// The HUD's settings panel can resume, restart or quit at any time; restart and quit ask first once a piece
     /// is placed (the panel closes for the question), and abandon the game without recording the high score.
-    /// The game is paused while the panel or the question is open.
+    /// The game is paused while the panel or the question is open. A test game's panel has no "Dev tools" toggle.
     /// Every game is saved in the replay history when it ends, or when the player leaves it after placing a piece.
     /// In the editor and in builds with dev tools, it also runs the game's debug tools while the "Dev tools" setting is on (it follows the setting at once); the debug overlay's restart restarts at once.
     /// </summary>
@@ -25,6 +25,7 @@ namespace Squarely.App
         private readonly ulong? _seed;
         private readonly HighScore _highScore;
         private readonly Func<IAppState> _createBackState;
+        private readonly bool _isTest;
 
         private GameView _view;
         private GameController _game;
@@ -41,7 +42,8 @@ namespace Squarely.App
         /// <param name="seed">The seed of the game, or null for a new seed from the context's seed source. Restart does the same again.</param>
         /// <param name="highScore">The best score this game plays against and records to when it ends.</param>
         /// <param name="createBackState">Creates the state to go back to when the player quits or leaves the game over screen. Restart passes it on.</param>
-        public GameState(AppContext context, AppStateMachine stateMachine, SimConfig config, ulong? seed, HighScore highScore, Func<IAppState> createBackState)
+        /// <param name="isTest">True for a game started from the test screen. Its settings panel has no dev tools toggle. Restart passes it on.</param>
+        public GameState(AppContext context, AppStateMachine stateMachine, SimConfig config, ulong? seed, HighScore highScore, Func<IAppState> createBackState, bool isTest = false)
         {
             _context = context;
             _stateMachine = stateMachine;
@@ -49,6 +51,7 @@ namespace Squarely.App
             _seed = seed;
             _highScore = highScore;
             _createBackState = createBackState ?? throw new ArgumentNullException(nameof(createBackState));
+            _isTest = isTest;
         }
 
         public void Enter()
@@ -124,7 +127,7 @@ namespace Squarely.App
 
         private void OnRestartRequested()
         {
-            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _config, _seed, _highScore, _createBackState));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _config, _seed, _highScore, _createBackState, _isTest));
         }
 
         private void OnMenuRequested()
@@ -196,7 +199,7 @@ namespace Squarely.App
             if (_settings != null || _gameOver != null)
                 return;
 
-            _settings = _context.Screens.CreateSettings(true);
+            _settings = _context.Screens.CreateSettings(true, !_isTest);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
             _settings.RestartRequestEvent += OnSettingsRestartRequested;
             _settings.QuitRequestEvent += OnSettingsQuitRequested;

@@ -82,7 +82,7 @@ namespace Squarely.App
             if (_settings != null)
                 return;
 
-            _settings = _context.Screens.CreateSettings(false);
+            _settings = _context.Screens.CreateSettings(false, true);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
         }
 
