@@ -10,6 +10,9 @@ namespace Squarely.App
         /// <summary>The best score on this device.</summary>
         public HighScore HighScore { get; }
 
+        /// <summary>Everything the player earned. Reset clears it.</summary>
+        public PlayerProgress Progress { get; }
+
         /// <summary>The last games played on this device.</summary>
         public ReplayHistory ReplayHistory { get; }
 
@@ -30,7 +33,7 @@ namespace Squarely.App
         public StartInTest StartInTest { get; }
 #endif
 
-        public AppServices(HighScore highScore, ReplayHistory replayHistory, ReplayCopier replayCopier, SeedSource seedSource,
+        public AppServices(HighScore highScore, PlayerProgress progress, ReplayHistory replayHistory, ReplayCopier replayCopier, SeedSource seedSource,
             DevToolsPreference devTools
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             , TestSeed testSeed, StartInTest startInTest
@@ -38,6 +41,7 @@ namespace Squarely.App
             )
         {
             HighScore = highScore;
+            Progress = progress;
             ReplayHistory = replayHistory;
             ReplayCopier = replayCopier;
             SeedSource = seedSource;

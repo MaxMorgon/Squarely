@@ -52,7 +52,7 @@ namespace Squarely.App
             var soundPreferences = new SoundPreferences(store, new SoundSettings(_mixer));
             _soundPlayer.SetHaptics(new NoHaptics());
             var music = new MusicDirector(_musicPlayer, _musicSetup);
-            var services = new AppServices(highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, devTools
+            var services = new AppServices(highScore, new PlayerProgress(highScore), replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, devTools
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
                 , testSeed, startInTest
 #endif

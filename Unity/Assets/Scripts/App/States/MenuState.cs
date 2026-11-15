@@ -7,6 +7,7 @@ namespace Squarely.App
     /// Shows the main menu and the high score. Play starts the default game; Settings opens the settings panel.
     /// In the editor and in builds with dev tools, Test opens the test screen while the "Dev tools" setting is on.
     /// Otherwise the button is hidden. The button follows the setting at once.
+    /// The menu settings panel also has a Reset progress button, under the same conditions. It asks first, then clears the player progress and the best score shown.
     /// </summary>
     public sealed class MenuState : IAppState
     {
@@ -15,6 +16,9 @@ namespace Squarely.App
 
         private MenuScreen _screen;
         private SettingsPanel _settings;
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+        private ConfirmDialog _confirm;
+#endif
 
         public MenuState(AppContext context, AppStateMachine stateMachine)
         {
@@ -39,6 +43,9 @@ namespace Squarely.App
 
         public void Exit()
         {
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            CloseConfirm();
+#endif
             CloseSettings();
 
             _screen.PlayRequestEvent -= OnPlayRequested;
@@ -64,6 +71,7 @@ namespace Squarely.App
         private void OnDevToolsChanged(bool isOn)
         {
             UpdateTestButton();
+            UpdateResetProgressButton();
         }
 #endif
 
@@ -75,6 +83,47 @@ namespace Squarely.App
                 _screen.HideTestButton();
         }
 
+        #region Reset progress
+
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+        private void UpdateResetProgressButton()
+        {
+            if (_settings != null)
+                _settings.SetResetProgressVisible(_context.Services.DevTools.IsActive);
+        }
+
+        private void OnResetProgressRequested()
+        {
+            if (_confirm != null)
+                return;
+
+            _confirm = _context.Screens.CreatePanel(_context.Screens.Prefabs.Confirm);
+            _confirm.Initialize(_context.Texts.Confirm, _context.Texts.Confirm.ResetProgressQuestion);
+            _confirm.ConfirmRequestEvent += OnResetProgressConfirmed;
+            _confirm.CancelRequestEvent += CloseConfirm;
+        }
+
+        private void OnResetProgressConfirmed()
+        {
+            CloseConfirm();
+            _context.Services.Progress.Reset();
+            _screen.SetHighScore(_context.Services.HighScore.Best);
+        }
+
+        private void CloseConfirm()
+        {
+            if (_confirm == null)
+                return;
+
+            _confirm.ConfirmRequestEvent -= OnResetProgressConfirmed;
+            _confirm.CancelRequestEvent -= CloseConfirm;
+            _context.Screens.DestroyPanel(_confirm);
+            _confirm = null;
+        }
+#endif
+
+        #endregion
+
         #region Settings
 
         private void OnSettingsRequested()
@@ -84,6 +133,10 @@ namespace Squarely.App
 
             _settings = _context.Screens.CreateSettings(false, true);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            _settings.ResetProgressRequestEvent += OnResetProgressRequested;
+            UpdateResetProgressButton();
+#endif
         }
 
         private void OnSettingsCloseRequested()
@@ -97,6 +150,9 @@ namespace Squarely.App
                 return;
 
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            _settings.ResetProgressRequestEvent -= OnResetProgressRequested;
+#endif
             _context.Screens.DestroyPanel(_settings);
             _settings = null;
         }

@@ -32,6 +32,11 @@ namespace Squarely.App
             PlayerPrefs.SetString(key, value);
         }
 
+        public void DeleteKey(string key)
+        {
+            PlayerPrefs.DeleteKey(key);
+        }
+
         public void Save()
         {
             PlayerPrefs.Save();

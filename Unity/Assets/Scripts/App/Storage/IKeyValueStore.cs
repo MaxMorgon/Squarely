@@ -20,5 +20,8 @@ namespace Squarely.App
 
         /// <summary>Writes the values set so far to the device, so they survive the app being killed.</summary>
         void Save();
+
+        /// <summary>Removes the int or string under the key, if any. Does nothing when there is none.</summary>
+        void DeleteKey(string key);
     }
 }

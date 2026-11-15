@@ -8,6 +8,7 @@ namespace Squarely.Presentation
     /// <summary>
     /// The settings panel, shown over the menu or the game. It blocks input to what is under it.
     /// In the game it also has Restart and Quit, and its close button reads Resume.
+    /// With dev tools it can also show a Reset progress button (the menu owner decides).
     /// Reports the player's choices; whoever owns it decides what happens next.
     /// </summary>
     public sealed class SettingsPanel : MonoBehaviour
@@ -36,6 +37,10 @@ namespace Squarely.Presentation
         [SerializeField] private Toggle _devToolsToggle;
         [SerializeField] private TMP_Text _devToolsLabel;
 
+        [Tooltip("Dev tools only: hidden until SetResetProgressVisible(true) runs. Place it between the toggles and Close.")]
+        [SerializeField] private Button _resetProgressButton;
+        [SerializeField] private TMP_Text _resetProgressLabel;
+
         /// <summary>The player turned sound effects on (true) or off (false).</summary>
         public event Action<bool> SfxChangeEvent;
 
@@ -44,6 +49,11 @@ namespace Squarely.Presentation
 
         /// <summary>The player turned dev tools on (true) or off (false).</summary>
         public event Action<bool> DevToolsChangeEvent;
+
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+        /// <summary>The player asked to reset the progress. Dev tools only.</summary>
+        public event Action ResetProgressRequestEvent;
+#endif
 
         /// <summary>The player asked to close the panel.</summary>
         public event Action CloseRequestEvent;
@@ -64,6 +74,9 @@ namespace Squarely.Presentation
             _sfxToggle.onValueChanged.AddListener(isOn => SfxChangeEvent?.Invoke(isOn));
             _musicToggle.onValueChanged.AddListener(isOn => MusicChangeEvent?.Invoke(isOn));
             _devToolsToggle.onValueChanged.AddListener(isOn => DevToolsChangeEvent?.Invoke(isOn));
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            _resetProgressButton.onClick.AddListener(() => ResetProgressRequestEvent?.Invoke());
+#endif
         }
 
         #endregion
@@ -82,6 +95,14 @@ namespace Squarely.Presentation
             _devToolsToggle.SetIsOnWithoutNotify(isOn);
         }
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+        /// <summary>Shows or hides the reset progress button. It is hidden until this runs.</summary>
+        public void SetResetProgressVisible(bool isVisible)
+        {
+            _resetProgressButton.gameObject.SetActive(isVisible);
+        }
+#endif
+
         /// <param name="isInGame">True over a game: shows Restart and Quit, and the close button reads Resume.</param>
         public void Initialize(SettingsTexts texts, bool isInGame)
         {
@@ -92,8 +113,10 @@ namespace Squarely.Presentation
             _sfxLabel.text = texts.Sfx;
             _musicLabel.text = texts.Music;
             _devToolsLabel.text = texts.DevTools;
+            _resetProgressLabel.text = texts.ResetProgress;
 
             _devToolsToggle.gameObject.SetActive(false);
+            _resetProgressButton.gameObject.SetActive(false);
 
             _restartButton.gameObject.SetActive(isInGame);
             _quitButton.gameObject.SetActive(isInGame);
