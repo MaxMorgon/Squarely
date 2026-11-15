@@ -16,6 +16,9 @@ namespace Squarely.Presentation
         [Tooltip("Largest tilt of the dragged piece, in degrees.")]
         [SerializeField, Range(0f, 45f)] private float _maxAngle = 12f;
 
+        [Tooltip("Multiplies the final tilt, after Max Angle. 1 keeps it, 0.5 halves it, 0 gives no tilt, a negative value flips the direction.")]
+        [SerializeField] private float _swingScale = 1f;
+
         [Tooltip("Target tilt in degrees for a pointer speed of one world unit per second.")]
         [SerializeField, Min(0f)] private float _degreesPerSpeed = 1f;
 
@@ -34,7 +37,7 @@ namespace Squarely.Presentation
         /// <summary>Creates a swing with the current values.</summary>
         public DragSwing CreateSwing()
         {
-            return new DragSwing(_maxAngle, _degreesPerSpeed, _springFrequency, _dampingRatio, _velocitySmoothing);
+            return new DragSwing(_maxAngle, _degreesPerSpeed, _springFrequency, _dampingRatio, _velocitySmoothing, _swingScale);
         }
     }
 }

@@ -5,6 +5,7 @@ namespace Squarely.Presentation
     /// <summary>
     /// The tilt of a dragged piece. Follows the pointer's horizontal speed with a damped spring.
     /// Moving right gives a positive angle (the top leans left); moving left gives a negative angle.
+    /// The scale multiplies the final tilt, so the limit applies before it.
     /// </summary>
     public sealed class DragSwing
     {
@@ -17,30 +18,35 @@ namespace Squarely.Presentation
         private readonly float _dampingRatio;
         private readonly float _smoothingSeconds;
 
+        private readonly float _scale;
+
         private float _smoothedSpeed;
         private float _angleVelocity;
+        private float _angle;
 
-        /// <summary>The current tilt in degrees.</summary>
-        public float Angle { get; private set; }
+        /// <summary>The current tilt in degrees: the spring angle times the scale.</summary>
+        public float Angle => _angle * _scale;
 
         /// <param name="maxAngle">Largest tilt in degrees, in both directions.</param>
         /// <param name="degreesPerSpeed">Target tilt in degrees for a pointer speed of one world unit per second.</param>
         /// <param name="frequency">Spring frequency in hertz.</param>
         /// <param name="dampingRatio">0 never settles; 1 settles without overshoot.</param>
         /// <param name="smoothingSeconds">Time constant of the pointer speed smoothing. 0 turns smoothing off.</param>
-        public DragSwing(float maxAngle, float degreesPerSpeed, float frequency, float dampingRatio, float smoothingSeconds)
+        /// <param name="scale">Multiplies the final tilt, after the largest-tilt limit. Negative flips the direction; 0 means no tilt.</param>
+        public DragSwing(float maxAngle, float degreesPerSpeed, float frequency, float dampingRatio, float smoothingSeconds, float scale = 1f)
         {
             _maxAngle = Math.Max(0f, maxAngle);
             _degreesPerSpeed = degreesPerSpeed;
             _angularFrequency = 2f * (float)Math.PI * Math.Max(0f, frequency);
             _dampingRatio = Math.Max(0f, dampingRatio);
             _smoothingSeconds = Math.Max(0f, smoothingSeconds);
+            _scale = scale;
         }
 
         /// <summary>Sets the tilt to level and forgets the pointer speed.</summary>
         public void Reset()
         {
-            Angle = 0f;
+            _angle = 0f;
             _angleVelocity = 0f;
             _smoothedSpeed = 0f;
         }
@@ -72,15 +78,15 @@ namespace Squarely.Presentation
 
         private void Integrate(float target, float step)
         {
-            float acceleration = _angularFrequency * _angularFrequency * (target - Angle)
+            float acceleration = _angularFrequency * _angularFrequency * (target - _angle)
                 - 2f * _dampingRatio * _angularFrequency * _angleVelocity;
 
             _angleVelocity += acceleration * step;
-            Angle += _angleVelocity * step;
+            _angle += _angleVelocity * step;
 
-            if (Math.Abs(Angle) > _maxAngle)
+            if (Math.Abs(_angle) > _maxAngle)
             {
-                Angle = Clamp(Angle);
+                _angle = Clamp(_angle);
                 _angleVelocity = 0f;
             }
         }
