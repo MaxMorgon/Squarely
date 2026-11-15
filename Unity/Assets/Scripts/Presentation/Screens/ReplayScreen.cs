@@ -7,8 +7,8 @@ using UnityEngine.UI;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// The replay watch screen, shown over the game view: the move counter, a Play/Pause button, Restart,
-    /// Step back, Step forward, a speed dropdown, Back, a warning banner and the status or result text.
+    /// The replay watch screen, shown over the game view: the move counter, a Play/Pause button, Jump to start,
+    /// Step back, Step forward, Jump to end, a speed dropdown, Back, a warning banner and the status or result text.
     /// Reports the player's choices; whoever owns it decides what happens next.
     /// </summary>
     public sealed class ReplayScreen : MonoBehaviour
@@ -24,8 +24,10 @@ namespace Squarely.Presentation
         [SerializeField] private TMP_Text _stepBackLabel;
         [SerializeField] private Button _stepForwardButton;
         [SerializeField] private TMP_Text _stepForwardLabel;
-        [SerializeField] private Button _restartButton;
-        [SerializeField] private TMP_Text _restartLabel;
+        [SerializeField] private Button _jumpStartButton;
+        [SerializeField] private TMP_Text _jumpStartLabel;
+        [SerializeField] private Button _jumpEndButton;
+        [SerializeField] private TMP_Text _jumpEndLabel;
         [SerializeField] private TMP_Dropdown _speedDropdown;
         [SerializeField] private Button _backButton;
         [SerializeField] private TMP_Text _backLabel;
@@ -50,8 +52,11 @@ namespace Squarely.Presentation
         /// <summary>The player asked to run the next command.</summary>
         public event Action StepForwardRequestEvent;
 
-        /// <summary>The player asked to watch the replay again from the start.</summary>
-        public event Action RestartRequestEvent;
+        /// <summary>The player asked to go back to the start, before any command.</summary>
+        public event Action JumpStartRequestEvent;
+
+        /// <summary>The player asked to run all remaining commands at once.</summary>
+        public event Action JumpEndRequestEvent;
 
         /// <summary>The player picked a playback speed. Gives the speed.</summary>
         public event Action<float> SpeedSelectEvent;
@@ -66,7 +71,8 @@ namespace Squarely.Presentation
             _playPauseButton.onClick.AddListener(() => PlayPauseRequestEvent?.Invoke());
             _stepBackButton.onClick.AddListener(() => StepBackRequestEvent?.Invoke());
             _stepForwardButton.onClick.AddListener(() => StepForwardRequestEvent?.Invoke());
-            _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
+            _jumpStartButton.onClick.AddListener(() => JumpStartRequestEvent?.Invoke());
+            _jumpEndButton.onClick.AddListener(() => JumpEndRequestEvent?.Invoke());
             _speedDropdown.onValueChanged.AddListener(index => SpeedSelectEvent?.Invoke(_feel.SpeedPresets[index]));
             _backButton.onClick.AddListener(() => BackRequestEvent?.Invoke());
         }
@@ -79,7 +85,8 @@ namespace Squarely.Presentation
             _stepBackLabel.text = texts.StepBack;
             _stepForwardLabel.text = texts.StepForward;
             _backLabel.text = texts.Back;
-            _restartLabel.text = texts.Restart;
+            _jumpStartLabel.text = texts.JumpStart;
+            _jumpEndLabel.text = texts.JumpEnd;
             SetSpeedOptions();
             SetPlaying(false);
             SetWarning(false);
@@ -143,17 +150,19 @@ namespace Squarely.Presentation
             _statusLabel.gameObject.SetActive(!string.IsNullOrEmpty(text));
         }
 
-        /// <summary>Sets whether Play/Pause and Step forward can be pressed. They cannot once the replay is over.</summary>
+        /// <summary>Sets whether Play/Pause, Step forward and Jump to end can be pressed. They cannot once the replay is over.</summary>
         public void SetControlsEnabled(bool isEnabled)
         {
             _playPauseButton.interactable = isEnabled;
             _stepForwardButton.interactable = isEnabled;
+            _jumpEndButton.interactable = isEnabled;
         }
 
-        /// <summary>Sets whether Step back can be pressed. Separate from the other controls: it works once the replay is over.</summary>
-        public void SetStepBackEnabled(bool isEnabled)
+        /// <summary>Sets whether Step back and Jump to start can be pressed. Separate from the other controls: it works once the replay is over.</summary>
+        public void SetBackControlsEnabled(bool isEnabled)
         {
             _stepBackButton.interactable = isEnabled;
+            _jumpStartButton.interactable = isEnabled;
         }
     }
 }

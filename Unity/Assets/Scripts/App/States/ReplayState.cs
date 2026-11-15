@@ -12,7 +12,7 @@ namespace Squarely.App
     /// Watches a recorded game on a game view, with no player input. Starts a game with the replay's seed and the
     /// default game mode, then runs the replay's commands one by one through the game controller, so the
     /// playback is the same as in a game. Auto-play runs the next command a short delay after the previous playback ended.
-    /// It starts paused. Play/Pause, Step back, Step forward, Restart and the speed dropdown control it. Step back undoes the last command at once, with no animation, and pauses auto-play. It also works after the replay is over, and then lets the replay run again. A banner warns if the replay was recorded with a different game config.
+    /// It starts paused. Play/Pause, Jump to start, Step back, Step forward, Jump to end and the speed dropdown control it. Step back undoes the last command and Jump to start undoes all of them, at once, with no animation. Both pause auto-play and also work after the replay is over, and then let the replay run again. Jump to end runs all remaining commands at once, with no animation and no sound, and pauses auto-play. A banner warns if the replay was recorded with a different game config.
     /// If a command fails, it stops and says where. At the end it shows the final score and whether the end state matches the recording.
     /// It never records a high score or a history entry and has no game-over screen. Back enters the back target.
     /// </summary>
@@ -61,12 +61,13 @@ namespace Squarely.App
             _stepper.SetPaused(true);
             _screen.SetPlaying(false);
             UpdateProgress();
-            UpdateStepBack();
+            UpdateBackControls();
 
             _screen.PlayPauseRequestEvent += OnPlayPauseRequested;
             _screen.StepBackRequestEvent += OnStepBackRequested;
             _screen.StepForwardRequestEvent += OnStepForwardRequested;
-            _screen.RestartRequestEvent += OnRestartRequested;
+            _screen.JumpStartRequestEvent += OnJumpStartRequested;
+            _screen.JumpEndRequestEvent += OnJumpEndRequested;
             _screen.SpeedSelectEvent += OnSpeedSelected;
             _screen.BackRequestEvent += OnBackRequested;
 
@@ -79,7 +80,8 @@ namespace Squarely.App
             _screen.PlayPauseRequestEvent -= OnPlayPauseRequested;
             _screen.StepBackRequestEvent -= OnStepBackRequested;
             _screen.StepForwardRequestEvent -= OnStepForwardRequested;
-            _screen.RestartRequestEvent -= OnRestartRequested;
+            _screen.JumpStartRequestEvent -= OnJumpStartRequested;
+            _screen.JumpEndRequestEvent -= OnJumpEndRequested;
             _screen.SpeedSelectEvent -= OnSpeedSelected;
             _screen.BackRequestEvent -= OnBackRequested;
             Object.Destroy(_screen.gameObject);
@@ -111,15 +113,45 @@ namespace Squarely.App
 
         private void OnStepBackRequested()
         {
-            if (!_stepper.StepBack())
+            if (_stepper.CanStepBack)
+                GoBackTo(_stepper.Executed - 1);
+        }
+
+        private void OnJumpStartRequested()
+        {
+            if (_stepper.CanStepBack)
+                GoBackTo(0);
+        }
+
+        private void OnJumpEndRequested()
+        {
+            if (_isOver || !_stepper.HasNext)
                 return;
 
-            int index = _stepper.Executed;
-            _game.RestoreSim(_snapshots[index], index);
-            _snapshots.RemoveRange(index, _snapshots.Count - index);
+            // Each command applies at once, so no playback runs and no sounds burst.
+            while (!_isOver && _stepper.HasNext)
+                ExecuteNext(isSnapped: true);
 
-            if (_replay.Commands[index] is PlacePieceCommand)
-                _movesShown--;
+            _stepper.SetPaused(true);
+            _screen.SetPlaying(false);
+
+            if (!_isOver)
+                ShowResult();
+        }
+
+        // The one path back to the state after the first count commands.
+        private void GoBackTo(int count)
+        {
+            _stepper.StepBackTo(count);
+            _game.RestoreSim(_snapshots[count], count);
+
+            for (int i = count; i < _snapshots.Count; i++)
+            {
+                if (_replay.Commands[i] is PlacePieceCommand)
+                    _movesShown--;
+            }
+
+            _snapshots.RemoveRange(count, _snapshots.Count - count);
 
             // Stepping back from the end brings the replay to life again.
             _isOver = false;
@@ -127,18 +159,13 @@ namespace Squarely.App
             _screen.SetControlsEnabled(true);
             _screen.SetPlaying(false);
             UpdateProgress();
-            UpdateStepBack();
+            UpdateBackControls();
         }
 
         private void OnStepForwardRequested()
         {
             if (!_isOver && _stepper.HasNext)
                 ExecuteNext();
-        }
-
-        private void OnRestartRequested()
-        {
-            _stateMachine.ChangeState(new ReplayState(_context, _stateMachine, _replay, _createBackState));
         }
 
         private void OnSpeedSelected(float speed)
@@ -153,13 +180,13 @@ namespace Squarely.App
 
         #endregion
 
-        private void ExecuteNext()
+        private void ExecuteNext(bool isSnapped = false)
         {
             int index = _stepper.Executed;
             ISimCommand command = _replay.Commands[index];
             Sim before = _game.CopySim();
 
-            if (!_game.ExecuteCommand(command))
+            if (!_game.ExecuteCommand(command, isSnapped))
             {
                 _stepper.Stop();
                 Finish(string.Format(_context.Texts.Replay.DivergedFormat, index + 1));
@@ -173,7 +200,7 @@ namespace Squarely.App
                 _movesShown++;
 
             UpdateProgress(command is EndGameCommand);
-            UpdateStepBack();
+            UpdateBackControls();
         }
 
         private void ShowResult()
@@ -196,9 +223,9 @@ namespace Squarely.App
             _screen.SetStatus(status);
         }
 
-        private void UpdateStepBack()
+        private void UpdateBackControls()
         {
-            _screen.SetStepBackEnabled(_stepper.CanStepBack);
+            _screen.SetBackControlsEnabled(_stepper.CanStepBack);
         }
 
         private void UpdateProgress(bool isGameEnded = false)

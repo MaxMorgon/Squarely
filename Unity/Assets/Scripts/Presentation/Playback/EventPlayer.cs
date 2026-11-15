@@ -55,6 +55,18 @@ namespace Squarely.Presentation
         }
 
         /// <summary>
+        /// Snaps any pending playback, then applies the events at once: no animation, no sound. The playback ends in this call.
+        /// </summary>
+        public void PlaySnapped(IReadOnlyList<ISimEvent> events)
+        {
+            Snap();
+
+            var context = new PlaybackContext(_views, events, null, () => Speed, _stopToken);
+            _current = new Playback(this, events, context);
+            _current.Snap();
+        }
+
+        /// <summary>
         /// Brings the views to the end of the pending playback at once: running and unstarted steps apply
         /// their end state, and events not handled yet are handled snapped. Does nothing if nothing is playing.
         /// </summary>

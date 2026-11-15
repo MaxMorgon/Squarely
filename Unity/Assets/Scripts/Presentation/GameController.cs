@@ -92,16 +92,17 @@ namespace Squarely.Presentation
         /// Executes the command like a move and plays its events. Whatever is still playing from the previous move snaps to its end first.
         /// Returns whether it succeeded. A failed command changes nothing.
         /// </summary>
-        public bool ExecuteCommand(ISimCommand command)
+        /// <param name="isSnapped">True to show the result at once, with no animation and no sound.</param>
+        public bool ExecuteCommand(ISimCommand command, bool isSnapped = false)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            return Execute(command, null);
+            return Execute(command, null, isSnapped);
         }
 
         /// <summary>Executes the command and plays its events. Returns whether it succeeded.</summary>
-        private bool Execute(ISimCommand command, Vector2? dropPoint)
+        private bool Execute(ISimCommand command, Vector2? dropPoint, bool isSnapped = false)
         {
             // Snap before executing, so the playback that ends here is checked against the state it led to.
             _view.Player.Snap();
@@ -123,7 +124,11 @@ namespace Squarely.Presentation
             MoveExecutedEvent?.Invoke(new ExecutedMove(before, result.Events, dropPoint));
 #endif
 
-            _view.Player.Play(result.Events, dropPoint);
+            if (isSnapped)
+                _view.Player.PlaySnapped(result.Events);
+            else
+                _view.Player.Play(result.Events, dropPoint);
+
             return true;
         }
 

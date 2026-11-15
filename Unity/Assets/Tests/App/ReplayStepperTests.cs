@@ -173,5 +173,93 @@ namespace Squarely.App.Tests
 
             Assert.That(stepper.Executed, Is.EqualTo(1));
         }
+
+        [Test]
+        public void JumpToStart_UncountsAllCommands()
+        {
+            var stepper = new ReplayStepper(5, Delay);
+            stepper.MarkExecuted();
+            stepper.MarkExecuted();
+            stepper.MarkExecuted();
+
+            bool didJump = stepper.JumpToStart();
+
+            Assert.That(didJump, Is.True);
+            Assert.That(stepper.Executed, Is.EqualTo(0));
+            Assert.That(stepper.CanStepBack, Is.False);
+            Assert.That(stepper.HasNext, Is.True);
+        }
+
+        [Test]
+        public void JumpToStart_AtTheStart_ChangesNothing()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+            stepper.SetPaused(false);
+
+            Assert.That(stepper.JumpToStart(), Is.False);
+            Assert.That(stepper.IsPaused, Is.False);
+        }
+
+        [Test]
+        public void JumpToStart_PausesAndLiftsStop()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+            stepper.MarkExecuted();
+            stepper.Stop();
+
+            stepper.JumpToStart();
+
+            Assert.That(stepper.IsPaused, Is.True);
+            Assert.That(stepper.HasNext, Is.True);
+        }
+
+        [Test]
+        public void StepBackTo_KeepsTheFirstCommands()
+        {
+            var stepper = new ReplayStepper(5, Delay);
+            for (int i = 0; i < 4; i++)
+                stepper.MarkExecuted();
+
+            Assert.That(stepper.StepBackTo(2), Is.True);
+            Assert.That(stepper.Executed, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void StepBackTo_OutOfRange_ChangesNothing()
+        {
+            var stepper = new ReplayStepper(5, Delay);
+            stepper.MarkExecuted();
+
+            Assert.That(stepper.StepBackTo(1), Is.False);
+            Assert.That(stepper.StepBackTo(-1), Is.False);
+            Assert.That(stepper.Executed, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void JumpToEnd_RunningAllCommands_LeavesNoNextAndKeepsBackEnabled()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+
+            while (stepper.HasNext)
+                stepper.MarkExecuted();
+
+            Assert.That(stepper.Executed, Is.EqualTo(3));
+            Assert.That(stepper.HasNext, Is.False);
+            Assert.That(stepper.CanStepBack, Is.True);
+        }
+
+        [Test]
+        public void JumpToStart_AfterJumpToEnd_ReturnsToZero()
+        {
+            var stepper = new ReplayStepper(3, Delay);
+
+            while (stepper.HasNext)
+                stepper.MarkExecuted();
+
+            stepper.JumpToStart();
+
+            Assert.That(stepper.Executed, Is.EqualTo(0));
+            Assert.That(stepper.HasNext, Is.True);
+        }
     }
 }
