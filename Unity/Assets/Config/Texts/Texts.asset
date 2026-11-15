@@ -41,10 +41,12 @@ MonoBehaviour:
     Sfx: Sound effects
     Music: Music
     DevTools: Dev tools
+    ResetProgress: Reset progress
   _confirm:
     Question: Are you sure?
     Yes: Yes
     No: No
+    ResetProgressQuestion: Reset progress? The best score is deleted.
   _test:
     Title: Test
     Seed: Seed
@@ -70,11 +72,13 @@ MonoBehaviour:
   _replay:
     Play: Play
     Pause: Pause
-    Step: Step
+    StepBack: <
+    StepForward: '>'
     Back: Back
     Restart: Restart
     SpeedFormat: x{0}
     ProgressFormat: Move {0} / {1}
+    GameEnded: Game ended
     ConfigWarning: Replay was recorded with a different game config. It may not play
       the same.
     DivergedFormat: Replay diverged at move {0}
