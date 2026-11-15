@@ -28,6 +28,11 @@ namespace Squarely.Editor
 
         private const string DevToolsDefine = "SQUARELY_DEV_TOOLS";
 
+        // WebGL code optimization is a per-user editor setting (Library), so the build sets it.
+        // Disk size with link-time optimization gives the smallest download.
+        private const string WebGLCodeOptimizationKey = "CodeOptimization";
+        private const string WebGLCodeOptimization = "DiskSizeLTO";
+
         #region Menu
 
         [MenuItem("Squarely/Build/Android Store")]
@@ -64,6 +69,9 @@ namespace Squarely.Editor
         {
             string outputFolder = GetOutputFolder(config, target);
             Directory.CreateDirectory(outputFolder);
+
+            if (target == Target.WebGL)
+                EditorUserBuildSettings.SetPlatformSettings("WebGL", WebGLCodeOptimizationKey, WebGLCodeOptimization);
 
             var options = new BuildPlayerOptions
             {
