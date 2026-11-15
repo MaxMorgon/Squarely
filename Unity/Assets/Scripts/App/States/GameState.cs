@@ -199,7 +199,7 @@ namespace Squarely.App
             if (_settings != null || _gameOver != null)
                 return;
 
-            _settings = _context.Screens.CreateSettings(true, !_isTest);
+            _settings = _context.Screens.CreateSettings(isInGame: true, showDevTools: !_isTest);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
             _settings.RestartRequestEvent += OnSettingsRestartRequested;
             _settings.QuitRequestEvent += OnSettingsQuitRequested;

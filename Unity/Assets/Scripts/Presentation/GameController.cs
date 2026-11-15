@@ -147,6 +147,8 @@ namespace Squarely.Presentation
         /// <summary>
         /// Sets the game back to a snapshot at once, with no animation: whatever is playing snaps to its end,
         /// then the views show the snapshot. The game goes on from the snapshot. The snapshot stays unchanged.
+        /// The game end is not raised again after a restore: the end gate and the end flag stay as they were.
+        /// Dev-only API for the replay watch, which ignores the game end.
         /// </summary>
         /// <param name="snapshot">A copy of the sim from <see cref="CopySim"/>, taken after <paramref name="commandCount"/> successful commands.</param>
         /// <param name="commandCount">How many commands the snapshot has run. The replay of the game keeps only these.</param>

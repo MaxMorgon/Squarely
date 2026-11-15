@@ -131,7 +131,7 @@ namespace Squarely.App
             if (_settings != null)
                 return;
 
-            _settings = _context.Screens.CreateSettings(false, true);
+            _settings = _context.Screens.CreateSettings(isInGame: false, showDevTools: true);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _settings.ResetProgressRequestEvent += OnResetProgressRequested;

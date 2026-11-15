@@ -26,6 +26,9 @@ namespace Squarely.App
         /// <summary>Whether a next command can run: some are left and the replay did not stop.</summary>
         public bool HasNext => !_isStopped && Executed < Total;
 
+        /// <summary>Whether a command ran that a step back can undo.</summary>
+        public bool CanStepBack => Executed > 0;
+
         /// <param name="delay">Seconds between the end of a command's playback and the next command in auto-play.</param>
         public ReplayStepper(int total, float delay)
         {
@@ -67,9 +70,6 @@ namespace Squarely.App
             Executed++;
             _waited = 0f;
         }
-
-        /// <summary>Whether a command ran that a step back can undo.</summary>
-        public bool CanStepBack => Executed > 0;
 
         /// <summary>
         /// Counts the last executed command as not run, pauses auto-play and lifts a stop, so the command can run again.

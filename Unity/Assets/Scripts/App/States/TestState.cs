@@ -193,7 +193,7 @@ namespace Squarely.App
 
             _context.Services.TestSeed.Save(_seed.Value);
             HighScore highScore = TestHighScore.Create(_highScore.Value);
-            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, _seed.Value, highScore, () => new TestState(_context, _stateMachine), true));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _context.DefaultConfig, _seed.Value, highScore, () => new TestState(_context, _stateMachine), isTest: true));
         }
 
         private void OnBackRequested()
