@@ -4,7 +4,8 @@
 
 A Unity/C# puzzle game, built with AI agents. The first version took about a week of focused work, part-time over two weeks. I made the design and architecture decisions. Agents wrote most of the code, in over 35 PRs. The result has a deterministic C# sim, replays as paste-able codes and about 400 tests.
 
-> **Gameplay GIF:** coming soon.
+<img src="ReadMeMedia/Gameplay.gif" alt="Gameplay: placing pieces and clearing lines" width="300">
+
 > **Play in the browser:** coming soon.
 
 The game: place three pieces at a time on an 8×8 board. Full rows and columns clear. Clears on consecutive moves build a combo. The rules follow the genre (1010!, Block Blast). The code and UI are original. The art is placeholder for now.
@@ -45,12 +46,13 @@ Squarely.Simulation    Rules, dealing, scoring, replays. No Unity.
 
 ## Tools
 
-> **Replay GIF:** coming soon.
-
 - **Replays.** Open a past game from the replay history and watch the sim play it again, move by move.
+
+  <img src="ReadMeMedia/TesterScreen.png" alt="Test screen with the replay history" width="300"> <img src="ReadMeMedia/Replay.gif" alt="Replay playback with step controls" width="300">
+
 - **Sound mixer.** An editor window to balance the sounds. It has one row per sound cue, with volume, pitch, haptics and a play button. It also previews a full cue sequence with its real timing, in Edit mode and in Play mode.
 
-  > **Sound mixer screenshot:** coming soon.
+  <img src="ReadMeMedia/SoundMixer.png" alt="Sound mixer editor window" width="700">
 
 - **Dev tools only where you need them.** Studio builds include the dev tools. A "Dev tools" setting turns them on and off during a test. Store builds compile them out, so a release build has no debug code.
 
