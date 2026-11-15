@@ -15,6 +15,7 @@ namespace Squarely.App
         private readonly TextsConfig _texts;
         private readonly AppAudio _audio;
         private readonly DevToolsPreference _devTools;
+        private readonly CursorMarkerPreference _cursorMarker;
 
         /// <summary>Prefabs of the screens the states create.</summary>
         public AppScreenPrefabs Prefabs { get; }
@@ -22,7 +23,8 @@ namespace Squarely.App
         /// <param name="prefabs">Prefabs of the screens.</param>
         /// <param name="root">Parent of every screen created.</param>
         /// <param name="camera">The camera that renders the game and the screens.</param>
-        public ScreenFactory(AppScreenPrefabs prefabs, Transform root, Camera camera, TextsConfig texts, AppAudio audio, DevToolsPreference devTools)
+        public ScreenFactory(AppScreenPrefabs prefabs, Transform root, Camera camera, TextsConfig texts, AppAudio audio, DevToolsPreference devTools,
+            CursorMarkerPreference cursorMarker)
         {
             Prefabs = prefabs;
             _root = root;
@@ -30,6 +32,7 @@ namespace Squarely.App
             _texts = texts;
             _audio = audio;
             _devTools = devTools;
+            _cursorMarker = cursorMarker;
         }
 
         /// <summary>
@@ -60,8 +63,9 @@ namespace Squarely.App
 
         /// <summary>
         /// Creates the settings panel with its toggles set, and plays the panel-open sound.
-        /// The sound effects, music and dev tools toggles save their setting and play the toggle sound.
+        /// The sound effects, music, dev tools and show cursor toggles save their setting and play the toggle sound.
         /// The dev tools toggle shows only if <paramref name="showDevTools"/> is true and the build has dev tools.
+        /// The show cursor toggle shows with it, while dev tools are on.
         /// Destroy the panel with <see cref="DestroyPanel"/>.
         /// </summary>
         public SettingsPanel CreateSettings(bool isInGame, bool showDevTools)
@@ -76,6 +80,9 @@ namespace Squarely.App
             {
                 panel.SetDevTools(_devTools.IsOn);
                 panel.DevToolsChangeEvent += OnDevToolsChanged;
+                panel.SetCursorMarker(_cursorMarker.IsOn, _devTools.IsOn);
+                panel.DevToolsChangeEvent += isOn => panel.SetCursorMarker(_cursorMarker.IsOn, isOn);
+                panel.CursorMarkerChangeEvent += OnCursorMarkerChanged;
             }
 
             return panel;
@@ -99,6 +106,12 @@ namespace Squarely.App
         private void OnDevToolsChanged(bool isOn)
         {
             _devTools.Set(isOn);
+            _audio.PlayToggle(isOn);
+        }
+
+        private void OnCursorMarkerChanged(bool isOn)
+        {
+            _cursorMarker.Set(isOn);
             _audio.PlayToggle(isOn);
         }
     }

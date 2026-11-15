@@ -23,6 +23,9 @@ namespace Squarely.Presentation
         /// <summary>The dev tools toggle. Shown only in builds with dev tools.</summary>
         public string DevTools = "Dev tools";
 
+        /// <summary>The toggle for the ring that follows the pointer in screen recordings. Shown with the dev tools toggle, while dev tools are on.</summary>
+        public string CursorMarker = "Show cursor";
+
         /// <summary>The reset progress button. Shown in the menu settings, in builds with dev tools, while dev tools are on.</summary>
         public string ResetProgress = "Reset progress";
     }

@@ -37,6 +37,10 @@ namespace Squarely.Presentation
         [SerializeField] private Toggle _devToolsToggle;
         [SerializeField] private TMP_Text _devToolsLabel;
 
+        [Tooltip("Shows a ring at the pointer for screen recordings. Hidden until SetCursorMarker shows it.")]
+        [SerializeField] private Toggle _cursorMarkerToggle;
+        [SerializeField] private TMP_Text _cursorMarkerLabel;
+
         [Tooltip("Dev tools only: hidden until SetResetProgressVisible(true) runs. Place it between the toggles and Close.")]
         [SerializeField] private Button _resetProgressButton;
         [SerializeField] private TMP_Text _resetProgressLabel;
@@ -49,6 +53,9 @@ namespace Squarely.Presentation
 
         /// <summary>The player turned dev tools on (true) or off (false).</summary>
         public event Action<bool> DevToolsChangeEvent;
+
+        /// <summary>The player turned the cursor marker on (true) or off (false).</summary>
+        public event Action<bool> CursorMarkerChangeEvent;
 
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>The player asked to reset the progress. Dev tools only.</summary>
@@ -74,6 +81,7 @@ namespace Squarely.Presentation
             _sfxToggle.onValueChanged.AddListener(isOn => SfxChangeEvent?.Invoke(isOn));
             _musicToggle.onValueChanged.AddListener(isOn => MusicChangeEvent?.Invoke(isOn));
             _devToolsToggle.onValueChanged.AddListener(isOn => DevToolsChangeEvent?.Invoke(isOn));
+            _cursorMarkerToggle.onValueChanged.AddListener(isOn => CursorMarkerChangeEvent?.Invoke(isOn));
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _resetProgressButton.onClick.AddListener(() => ResetProgressRequestEvent?.Invoke());
 #endif
@@ -95,6 +103,13 @@ namespace Squarely.Presentation
             _devToolsToggle.SetIsOnWithoutNotify(isOn);
         }
 
+        /// <summary>Sets the cursor marker toggle without raising the change event, and shows or hides it. It is hidden until this runs.</summary>
+        public void SetCursorMarker(bool isOn, bool isVisible)
+        {
+            _cursorMarkerToggle.gameObject.SetActive(isVisible);
+            _cursorMarkerToggle.SetIsOnWithoutNotify(isOn);
+        }
+
 #if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>Shows or hides the reset progress button. It is hidden until this runs.</summary>
         public void SetResetProgressVisible(bool isVisible)
@@ -113,9 +128,11 @@ namespace Squarely.Presentation
             _sfxLabel.text = texts.Sfx;
             _musicLabel.text = texts.Music;
             _devToolsLabel.text = texts.DevTools;
+            _cursorMarkerLabel.text = texts.CursorMarker;
             _resetProgressLabel.text = texts.ResetProgress;
 
             _devToolsToggle.gameObject.SetActive(false);
+            _cursorMarkerToggle.gameObject.SetActive(false);
             _resetProgressButton.gameObject.SetActive(false);
 
             _restartButton.gameObject.SetActive(isInGame);

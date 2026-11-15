@@ -49,6 +49,10 @@ namespace Squarely.App
             var startInTest = new StartInTest(store);
 #endif
             var devTools = new DevToolsPreference(store);
+            var cursorMarker = new CursorMarkerPreference(store);
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            new CursorMarkerSwitch(CursorMarker.Create(transform), devTools, cursorMarker);
+#endif
             var soundPreferences = new SoundPreferences(store, new SoundSettings(_mixer));
             _soundPlayer.SetHaptics(new NoHaptics());
             var music = new MusicDirector(_musicPlayer, _musicSetup);
@@ -58,7 +62,7 @@ namespace Squarely.App
 #endif
                 );
             var audio = new AppAudio(_soundPlayer, music, soundPreferences);
-            var screens = new ScreenFactory(_screenPrefabs, transform, _camera, _texts, audio, devTools);
+            var screens = new ScreenFactory(_screenPrefabs, transform, _camera, _texts, audio, devTools, cursorMarker);
             var context = new AppContext(services, audio, screens, _defaultMode.Config, _texts);
 
             _stateMachine = new AppStateMachine();
