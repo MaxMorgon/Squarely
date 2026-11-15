@@ -31,3 +31,6 @@ Notes/
 
 # Queued-run plan files (local)
 .claude/queue/
+
+# DaVinci Resolve project (video editing)
+/DavinciProject/
