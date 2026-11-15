@@ -9,9 +9,19 @@ namespace Squarely.Presentation
     {
         public string Play = "Play";
         public string Pause = "Pause";
-        public string Step = "Step";
+        [Tooltip("Undoes the last command. The font has no arrow glyphs, so plain characters.")]
+        public string StepBack = "<";
+
+        [Tooltip("Runs the next command.")]
+        public string StepForward = ">";
+
+        [Tooltip("Shows the state at the start, before any command. Plain characters, as the font has no arrow glyphs.")]
+        public string JumpStart = "<<";
+
+        [Tooltip("Runs all remaining commands at once.")]
+        public string JumpEnd = ">>";
+
         public string Back = "Back";
-        public string Restart = "Restart";
 
         [Tooltip("{0} is the playback speed.")]
         public string SpeedFormat = "x{0}";

@@ -61,6 +61,11 @@ namespace Squarely.Presentation
                 _highScoreLabel.text = string.Format(_texts.HighScoreFormat, highScore.Value);
         }
 
+        public void ShowTestButton()
+        {
+            _testButton.gameObject.SetActive(true);
+        }
+
         public void HideTestButton()
         {
             _testButton.gameObject.SetActive(false);

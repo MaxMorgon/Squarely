@@ -43,5 +43,12 @@ namespace Squarely.App
             _store.Save();
             return true;
         }
+
+        /// <summary>Forgets the best score and saves at once. <see cref="Best"/> is null again.</summary>
+        public void Reset()
+        {
+            _store.DeleteKey(StoreKey);
+            _store.Save();
+        }
     }
 }

@@ -26,5 +26,8 @@ RecordedVideos/
 # Private notes repo (Squarely-notes), cloned here
 Notes/
 
+# Player builds (Squarely/Build menu)
+/Builds/
+
 # Queued-run plan files (local)
 .claude/queue/

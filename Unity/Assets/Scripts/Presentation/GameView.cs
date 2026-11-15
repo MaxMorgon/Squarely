@@ -39,8 +39,8 @@ namespace Squarely.Presentation
         [Tooltip("Edit time only: the game mode whose board and hand size the gizmos preview.")]
         [SerializeField] private SimConfigAsset _gizmoPreviewConfig;
 
-        [Tooltip("Seconds the game waits, after the last animation and celebration ended, before it reports the game's end.")]
-        [SerializeField] private float _gameEndHold = 0.5f;
+        [Tooltip("Tunables for the pace of the game view (the hold before the game's end is reported).")]
+        [SerializeField] private GameFeel _feel;
 
         private SimConfig _config;
         private Camera _camera;
@@ -103,7 +103,7 @@ namespace Squarely.Presentation
         /// <param name="camera">The camera that renders the game and its UI, also used to map the pointer to the board.</param>
         /// <param name="hudTexts">The texts the HUD shows.</param>
         /// <param name="placer">Receives the player's placements.</param>
-        /// <param name="sound">Plays the game's sounds, or null for a silent game. Also connects the <see cref="ButtonSound"/> buttons of the view.</param>
+        /// <param name="sound">Plays the game's sounds, or null for a silent game. Also gives the <see cref="ButtonSound"/> buttons of the view their sound.</param>
         public void Initialize(SimConfig config, Camera camera, GameHudTexts hudTexts, IPiecePlacer placer, SoundPlayer sound = null)
         {
             _config = config;
@@ -122,7 +122,7 @@ namespace Squarely.Presentation
             _handView.Initialize(config.HandSize, viewPool, _cellSize);
             _dragController.Initialize(camera, placer, _handView, _boardRoot, boardSpace, viewPool, sound);
             _hud.Initialize(hudTexts);
-            ButtonSound.Bind(gameObject, sound);
+            ButtonSoundScope.Attach(gameObject, sound);
             _hudCanvas.worldCamera = camera;
             _cameraFitter.Initialize(camera, GameplayArea(config));
 
@@ -135,7 +135,7 @@ namespace Squarely.Presentation
             Player.AddHandler(new PieceDealtHandler(_cues.PieceDealt));
             Player.AddHandler(new GameResolvedHandler(OnGameResolved));
 
-            _gameEndGate = new GameEndGate(_gameEndHold);
+            _gameEndGate = new GameEndGate(_feel.GameEndHold);
             Player.PlaybackEndEvent += _gameEndGate.SetPlaybackEnded;
         }
 
@@ -169,6 +169,7 @@ namespace Squarely.Presentation
             _hud.Score.SetCombo(combo);
         }
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>What the board, hand and score views show right now.</summary>
         public ShownState GetShownState()
         {
@@ -192,7 +193,6 @@ namespace Squarely.Presentation
             return new ShownState(cells, hand, _hud.Score.Score, _hud.Score.Combo);
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
         /// <summary>
         /// Debug only: creates the playback debug overlay as a child of this view, rendered by the game camera.
         /// Its creator initializes it.

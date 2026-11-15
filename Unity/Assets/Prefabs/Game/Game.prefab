@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8dd5480b6dc6b54c944ba62ad82f7b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.PieceDragController
-  _liftOffset: 2
   _draggedSortingOrder: 100
   _dragFeel: {fileID: 11400000, guid: b8919694b26d37e4d911e1510654b18a, type: 2}
 --- !u!1 &1817497623172953299
@@ -193,6 +192,7 @@ MonoBehaviour:
   _cameraFitter: {fileID: 8255627761394363729}
   _debugOverlayPrefab: {fileID: 8464684377744441409, guid: 2e41f80957b12954daf9828120cc23f1, type: 3}
   _gizmoPreviewConfig: {fileID: 11400000, guid: bbabd39d8dadbd14e894501e1bdc6a16, type: 2}
+  _feel: {fileID: 11400000, guid: 1fac5a77e5dd778478bca8b2070be0ef, type: 2}
 --- !u!114 &8255627761394363729
 MonoBehaviour:
   m_ObjectHideFlags: 0

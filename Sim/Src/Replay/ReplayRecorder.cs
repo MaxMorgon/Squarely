@@ -10,7 +10,7 @@ namespace Squarely.Simulation
     /// </summary>
     public sealed class ReplayRecorder
     {
-        private readonly Sim _sim;
+        private Sim _sim;
         private readonly List<ISimCommand> _commands = new List<ISimCommand>();
 
         public int CommandCount => _commands.Count;
@@ -29,6 +29,23 @@ namespace Squarely.Simulation
                 _commands.Add(command);
 
             return result;
+        }
+
+        /// <summary>
+        /// Continues the recording on another sim, for a game stepped back to an earlier state.
+        /// Keeps the first <paramref name="commandCount"/> commands and drops the rest.
+        /// The sim must be the state after exactly those commands.
+        /// </summary>
+        public void Restore(Sim sim, int commandCount)
+        {
+            if (sim == null)
+                throw new ArgumentNullException(nameof(sim));
+
+            if (commandCount < 0 || commandCount > _commands.Count)
+                throw new ArgumentOutOfRangeException(nameof(commandCount));
+
+            _sim = sim;
+            _commands.RemoveRange(commandCount, _commands.Count - commandCount);
         }
 
         /// <summary>The replay of the commands so far, with the sim's current score and resolved flag.</summary>

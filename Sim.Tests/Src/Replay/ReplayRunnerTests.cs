@@ -89,6 +89,35 @@ namespace Squarely.Simulation.Tests
         }
 
         [Test]
+        public void Recorder_Restore_DropsLaterCommandsAndFollowsTheNewSim()
+        {
+            var sim = new Sim(DefaultSimConfig.Create(), 4);
+            var recorder = new ReplayRecorder(sim);
+            recorder.Execute(TestHelpers.FirstValidMove(sim));
+            Sim afterOne = sim.Clone();
+            recorder.Execute(TestHelpers.FirstValidMove(sim));
+
+            recorder.Restore(afterOne, 1);
+
+            Assert.That(recorder.CommandCount, Is.EqualTo(1));
+            Assert.That(recorder.Build().EndScore, Is.EqualTo(afterOne.Score));
+
+            recorder.Execute(new EndGameCommand());
+
+            Assert.That(recorder.Build().Commands.Count, Is.EqualTo(2));
+            Assert.That(afterOne.IsResolved, Is.True);
+        }
+
+        [Test]
+        public void Recorder_Restore_RejectsATooLargeCount()
+        {
+            var sim = new Sim(DefaultSimConfig.Create(), 4);
+            var recorder = new ReplayRecorder(sim);
+
+            Assert.Throws<System.ArgumentOutOfRangeException>(() => recorder.Restore(sim.Clone(), 1));
+        }
+
+        [Test]
         public void Recorder_SkipsFailedCommands()
         {
             var sim = new Sim(DefaultSimConfig.Create(), 4);

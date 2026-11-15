@@ -33,6 +33,13 @@ namespace Squarely.Presentation
 
         #endregion
 
+        /// <param name="question">The question to show instead of the default one.</param>
+        public void Initialize(ConfirmTexts texts, string question)
+        {
+            Initialize(texts);
+            _questionLabel.text = question;
+        }
+
         public void Initialize(ConfirmTexts texts)
         {
             _questionLabel.text = texts.Question;

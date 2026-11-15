@@ -13,9 +13,9 @@ namespace Squarely.App
     /// The back target is the state the game was started from (the menu or the test screen). Quit and the Menu button go there.
     /// The HUD's settings panel can resume, restart or quit at any time; restart and quit ask first once a piece
     /// is placed (the panel closes for the question), and abandon the game without recording the high score.
-    /// The game is paused while the panel or the question is open.
+    /// The game is paused while the panel or the question is open. A test game's panel has no "Dev tools" toggle.
     /// Every game is saved in the replay history when it ends, or when the player leaves it after placing a piece.
-    /// In editor and development builds, it also runs the game's debug tools; the debug overlay's restart restarts at once.
+    /// In the editor and in builds with dev tools, it also runs the game's debug tools while the "Dev tools" setting is on (it follows the setting at once); the debug overlay's restart restarts at once.
     /// </summary>
     public sealed class GameState : IAppState
     {
@@ -25,10 +25,11 @@ namespace Squarely.App
         private readonly ulong? _seed;
         private readonly HighScore _highScore;
         private readonly Func<IAppState> _createBackState;
+        private readonly bool _isTest;
 
         private GameView _view;
         private GameController _game;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         private GameDebugTools _debugTools;
 #endif
         private NewRecordCheck _newRecordCheck;
@@ -41,7 +42,8 @@ namespace Squarely.App
         /// <param name="seed">The seed of the game, or null for a new seed from the context's seed source. Restart does the same again.</param>
         /// <param name="highScore">The best score this game plays against and records to when it ends.</param>
         /// <param name="createBackState">Creates the state to go back to when the player quits or leaves the game over screen. Restart passes it on.</param>
-        public GameState(AppContext context, AppStateMachine stateMachine, SimConfig config, ulong? seed, HighScore highScore, Func<IAppState> createBackState)
+        /// <param name="isTest">True for a game started from the test screen. Its settings panel has no dev tools toggle. Restart passes it on.</param>
+        public GameState(AppContext context, AppStateMachine stateMachine, SimConfig config, ulong? seed, HighScore highScore, Func<IAppState> createBackState, bool isTest = false)
         {
             _context = context;
             _stateMachine = stateMachine;
@@ -49,27 +51,28 @@ namespace Squarely.App
             _seed = seed;
             _highScore = highScore;
             _createBackState = createBackState ?? throw new ArgumentNullException(nameof(createBackState));
+            _isTest = isTest;
         }
 
         public void Enter()
         {
-            ulong seed = _seed ?? _context.SeedSource.Next();
+            ulong seed = _seed ?? _context.Services.SeedSource.Next();
             Debug.Log($"New game, seed {seed}.");
             var setup = new GameSetup(_config, seed);
 
-            _context.Music.PlayGame();
-            _view = Object.Instantiate(_context.ScreenPrefabs.Game, _context.ScreenRoot);
-            _game = new GameController(_view, setup);
-            _view.Initialize(_config, _context.Camera, _context.Texts.GameHud, _game, _context.Sound);
+            (_view, _game) = _context.Screens.CreateGame(setup);
             _newRecordCheck = new NewRecordCheck(_highScore.Best);
 
             _view.Hud.SettingsRequestEvent += OnSettingsRequested;
             _view.Hud.Score.ScoreChangeEvent += OnScoreChanged;
             _game.GameEndEvent += OnGameEnded;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            _debugTools = new GameDebugTools(_game, _view, _context.ReplayCopier);
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            _debugTools = new GameDebugTools(_game, _view, _context.Services.ReplayCopier);
             _debugTools.RestartRequestEvent += OnRestartRequested;
-            _debugTools.Start();
+            _context.Services.DevTools.ChangeEvent += OnDevToolsChanged;
+
+            if (_context.Services.DevTools.IsOn)
+                _debugTools.Start();
 #endif
             _game.StartGame();
         }
@@ -88,8 +91,9 @@ namespace Squarely.App
             _view.Hud.SettingsRequestEvent -= OnSettingsRequested;
             _view.Hud.Score.ScoreChangeEvent -= OnScoreChanged;
             _game.GameEndEvent -= OnGameEnded;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _debugTools.RestartRequestEvent -= OnRestartRequested;
+            _context.Services.DevTools.ChangeEvent -= OnDevToolsChanged;
             _debugTools.Stop();
 #endif
             // A game left before it ended is saved here, if the player placed a piece.
@@ -106,14 +110,24 @@ namespace Squarely.App
 
             if (_newRecordCheck.Check(score))
             {
-                _context.PlayHook(hooks => hooks.NewBest);
+                _context.Audio.Sound.PlayHook(hooks => hooks.NewBest);
                 _view.Hud.CelebrateNewRecord();
             }
         }
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+        private void OnDevToolsChanged(bool isOn)
+        {
+            if (isOn)
+                _debugTools.Start();
+            else
+                _debugTools.Stop();
+        }
+#endif
+
         private void OnRestartRequested()
         {
-            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _config, _seed, _highScore, _createBackState));
+            _stateMachine.ChangeState(new GameState(_context, _stateMachine, _config, _seed, _highScore, _createBackState, _isTest));
         }
 
         private void OnMenuRequested()
@@ -128,8 +142,8 @@ namespace Squarely.App
             // The game is over: the settings panel has nothing left to resume, restart or quit.
             CloseSettings();
 
-            _context.Music.FadeForGameOver();
-            _gameOver = _context.CreateScreen(_context.ScreenPrefabs.GameOver);
+            _context.Audio.Music.FadeForGameOver();
+            _gameOver = _context.Screens.CreateScreen(_context.Screens.Prefabs.GameOver);
             _gameOver.Initialize(_context.Texts.GameOver);
             _gameOver.RestartRequestEvent += OnRestartRequested;
             _gameOver.MenuRequestEvent += OnMenuRequested;
@@ -137,8 +151,9 @@ namespace Squarely.App
             bool isNewRecord = RecordHighScore(finalScore);
             PlayGameOverJingle(resolution.Outcome, isNewRecord);
             RecordReplay();
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            _gameOver.SetReplay(_context.ReplayCopier,_game.BuildReplay());
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            if (_context.Services.DevTools.IsOn)
+                _gameOver.SetReplay(_context.Services.ReplayCopier, _game.BuildReplay());
 #endif
         }
 
@@ -149,7 +164,7 @@ namespace Squarely.App
                 return;
 
             _replayRecorded = true;
-            _context.ReplayHistory.Record(_game.BuildReplay());
+            _context.Services.ReplayHistory.Record(_game.BuildReplay());
         }
 
         private bool RecordHighScore(int finalScore)
@@ -164,13 +179,13 @@ namespace Squarely.App
             switch (GameOverJingle.Choose(outcome, isNewRecord))
             {
                 case GameOverJingle.Kind.NewRecord:
-                    _context.PlayHook(hooks => hooks.NewRecord);
+                    _context.Audio.Sound.PlayHook(hooks => hooks.NewRecord);
                     break;
                 case GameOverJingle.Kind.Won:
-                    _context.PlayHook(hooks => hooks.GameWon);
+                    _context.Audio.Sound.PlayHook(hooks => hooks.GameWon);
                     break;
                 default:
-                    _context.PlayHook(hooks => hooks.GameLost);
+                    _context.Audio.Sound.PlayHook(hooks => hooks.GameLost);
                     break;
             }
         }
@@ -184,10 +199,8 @@ namespace Squarely.App
             if (_settings != null || _gameOver != null)
                 return;
 
-            _settings = _context.CreateSettings(true);
+            _settings = _context.Screens.CreateSettings(isInGame: true, showDevTools: !_isTest);
             _settings.CloseRequestEvent += OnSettingsCloseRequested;
-            _settings.SfxChangeEvent += _context.SetSfx;
-            _settings.MusicChangeEvent += _context.SetMusic;
             _settings.RestartRequestEvent += OnSettingsRestartRequested;
             _settings.QuitRequestEvent += OnSettingsQuitRequested;
             UpdatePause();
@@ -225,7 +238,7 @@ namespace Squarely.App
             CloseSettingsPanel();
 
             _confirmedAction = action;
-            _confirm = _context.CreatePanel(_context.ScreenPrefabs.Confirm);
+            _confirm = _context.Screens.CreatePanel(_context.Screens.Prefabs.Confirm);
             _confirm.Initialize(_context.Texts.Confirm);
             _confirm.ConfirmRequestEvent += OnConfirmRequested;
             _confirm.CancelRequestEvent += OnCancelRequested;
@@ -252,7 +265,7 @@ namespace Squarely.App
 
             _confirm.ConfirmRequestEvent -= OnConfirmRequested;
             _confirm.CancelRequestEvent -= OnCancelRequested;
-            _context.DestroyPanel(_confirm);
+            _context.Screens.DestroyPanel(_confirm);
             _confirm = null;
             _confirmedAction = null;
         }
@@ -276,11 +289,9 @@ namespace Squarely.App
                 return;
 
             _settings.CloseRequestEvent -= OnSettingsCloseRequested;
-            _settings.SfxChangeEvent -= _context.SetSfx;
-            _settings.MusicChangeEvent -= _context.SetMusic;
             _settings.RestartRequestEvent -= OnSettingsRestartRequested;
             _settings.QuitRequestEvent -= OnSettingsQuitRequested;
-            _context.DestroyPanel(_settings);
+            _context.Screens.DestroyPanel(_settings);
             _settings = null;
         }
 

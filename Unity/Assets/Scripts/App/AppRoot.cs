@@ -6,8 +6,8 @@ namespace Squarely.App
 {
     /// <summary>
     /// The app's entry point and the only object in the scene that starts anything.
-    /// Builds the app context from its serialized setup and opens the menu, or in editor and development builds
-    /// the test screen if "start in test screen" is on.
+    /// Builds the app context from its serialized setup and opens the menu, or in the editor and in builds with dev tools
+    /// the test screen if "start in test screen" and dev tools are both on.
     /// </summary>
     public sealed class AppRoot : MonoBehaviour
     {
@@ -44,24 +44,38 @@ namespace Squarely.App
             var highScore = new HighScore(store);
             var replayHistory = new ReplayHistory(store, () => System.DateTime.UtcNow);
             var seedSource = new SeedSource(new System.Random());
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             var testSeed = new TestSeed(store, seedSource);
             var startInTest = new StartInTest(store);
+#endif
+            var devTools = new DevToolsPreference(store);
             var soundPreferences = new SoundPreferences(store, new SoundSettings(_mixer));
             _soundPlayer.SetHaptics(new NoHaptics());
             var music = new MusicDirector(_musicPlayer, _musicSetup);
-            var context = new AppContext(_screenPrefabs, transform, _camera, _defaultMode.Config, _texts, highScore, replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, testSeed, startInTest,
-                _soundPlayer, music, soundPreferences);
+            var services = new AppServices(highScore, new PlayerProgress(highScore), replayHistory, new ReplayCopier(new SystemClipboard()), seedSource, devTools
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+                , testSeed, startInTest
+#endif
+                );
+            var audio = new AppAudio(_soundPlayer, music, soundPreferences);
+            var screens = new ScreenFactory(_screenPrefabs, transform, _camera, _texts, audio, devTools);
+            var context = new AppContext(services, audio, screens, _defaultMode.Config, _texts);
 
             _stateMachine = new AppStateMachine();
             _stateMachine.ChangeState(CreateFirstState(context));
+        }
+
+        private void Update()
+        {
+            _stateMachine.Tick(Time.deltaTime);
         }
 
         #endregion
 
         private IAppState CreateFirstState(AppContext context)
         {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-            if (context.StartInTest.IsOn)
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+            if (context.Services.DevTools.IsActive && context.Services.StartInTest.IsOn)
                 return new TestState(context, _stateMachine);
 #endif
 

@@ -40,6 +40,12 @@ namespace Squarely.App
             _strings[key] = value;
         }
 
+        public void DeleteKey(string key)
+        {
+            _ints.Remove(key);
+            _strings.Remove(key);
+        }
+
         /// <summary>Writes nothing to the device: the values stay in memory.</summary>
         public void Save()
         {

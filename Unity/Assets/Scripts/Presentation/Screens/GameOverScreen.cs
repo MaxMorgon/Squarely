@@ -30,7 +30,7 @@ namespace Squarely.Presentation
         [SerializeField] private Button _menuButton;
         [SerializeField] private TMP_Text _menuLabel;
 
-        [Tooltip("Editor and development builds only: the whole button is hidden in other builds.")]
+        [Tooltip("Dev tools only: hidden until SetReplay runs.")]
         [SerializeField] private Button _copyReplayButton;
         [SerializeField] private TMP_Text _copyReplayLabel;
 
@@ -39,7 +39,7 @@ namespace Squarely.Presentation
 
         private GameOverTexts _texts;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         private const float CopiedSeconds = 1.5f;
 
         private ReplayCopier _copier;
@@ -60,15 +60,14 @@ namespace Squarely.Presentation
             _restartButton.onClick.AddListener(() => RestartRequestEvent?.Invoke());
             _menuButton.onClick.AddListener(() => MenuRequestEvent?.Invoke());
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             _copyReplayButton.onClick.AddListener(CopyReplay);
-#else
-            _copyReplayButton.gameObject.SetActive(false);
 #endif
+            _copyReplayButton.gameObject.SetActive(false);
             _copiedLabel.gameObject.SetActive(false);
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         private void Update()
         {
             if (_copiedLabel.gameObject.activeSelf && Time.unscaledTime >= _hideCopiedTime)
@@ -112,12 +111,13 @@ namespace Squarely.Presentation
             }
         }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        /// <summary>Sets the replay that the Copy replay button copies, and the copier that does it.</summary>
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+        /// <summary>Shows the Copy replay button. It copies the given replay with the given copier.</summary>
         public void SetReplay(ReplayCopier copier, GameReplay replay)
         {
             _copier = copier;
             _replay = replay;
+            _copyReplayButton.gameObject.SetActive(true);
         }
 
         private void CopyReplay()

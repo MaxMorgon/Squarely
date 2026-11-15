@@ -10,7 +10,7 @@ namespace Squarely.Presentation
     public sealed class GameController : IPiecePlacer
     {
         private readonly GameView _view;
-        private readonly Sim _sim;
+        private Sim _sim;
         private readonly ReplayRecorder _recorder;
 
         private bool _gameEndRaised;
@@ -26,8 +26,10 @@ namespace Squarely.Presentation
         /// </summary>
         public event Action<GameResolution, int> GameEndEvent;
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>A move was executed, before its events play. Raised only for moves that succeed.</summary>
         public event Action<ExecutedMove> MoveExecutedEvent;
+#endif
 
         /// <summary>Creates the game in its state before the deal is played. Its state can be read at once.</summary>
         /// <param name="view">The game's view. Its owner initializes it, with this controller as its placer, before <see cref="StartGame"/>.</param>
@@ -90,22 +92,25 @@ namespace Squarely.Presentation
         /// Executes the command like a move and plays its events. Whatever is still playing from the previous move snaps to its end first.
         /// Returns whether it succeeded. A failed command changes nothing.
         /// </summary>
-        public bool ExecuteCommand(ISimCommand command)
+        /// <param name="isSnapped">True to show the result at once, with no animation and no sound.</param>
+        public bool ExecuteCommand(ISimCommand command, bool isSnapped = false)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            return Execute(command, null);
+            return Execute(command, null, isSnapped);
         }
 
         /// <summary>Executes the command and plays its events. Returns whether it succeeded.</summary>
-        private bool Execute(ISimCommand command, Vector2? dropPoint)
+        private bool Execute(ISimCommand command, Vector2? dropPoint, bool isSnapped = false)
         {
             // Snap before executing, so the playback that ends here is checked against the state it led to.
             _view.Player.Snap();
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             // The copy is only needed by subscribers of MoveExecutedEvent.
             Sim before = MoveExecutedEvent != null ? _sim.Clone() : null;
+#endif
 
             CommandResult result = _recorder.Execute(command);
 
@@ -115,9 +120,15 @@ namespace Squarely.Presentation
                 return false;
             }
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
             MoveExecutedEvent?.Invoke(new ExecutedMove(before, result.Events, dropPoint));
+#endif
 
-            _view.Player.Play(result.Events, dropPoint);
+            if (isSnapped)
+                _view.Player.PlaySnapped(result.Events);
+            else
+                _view.Player.Play(result.Events, dropPoint);
+
             return true;
         }
 
@@ -129,11 +140,34 @@ namespace Squarely.Presentation
             return _recorder.Build();
         }
 
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         /// <summary>A copy of the game's sim in its current state. Changing the copy does not change the game.</summary>
         public Sim CopySim()
         {
             return _sim.Clone();
         }
+#endif
+
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
+        /// <summary>
+        /// Sets the game back to a snapshot at once, with no animation: whatever is playing snaps to its end,
+        /// then the views show the snapshot. The game goes on from the snapshot. The snapshot stays unchanged.
+        /// The game end is not raised again after a restore: the end gate and the end flag stay as they were.
+        /// Dev-only API for the replay watch, which ignores the game end.
+        /// </summary>
+        /// <param name="snapshot">A copy of the sim from <see cref="CopySim"/>, taken after <paramref name="commandCount"/> successful commands.</param>
+        /// <param name="commandCount">How many commands the snapshot has run. The replay of the game keeps only these.</param>
+        public void RestoreSim(Sim snapshot, int commandCount)
+        {
+            if (snapshot == null)
+                throw new ArgumentNullException(nameof(snapshot));
+
+            _view.Player.Snap();
+            _sim = snapshot.Clone();
+            _recorder.Restore(_sim, commandCount);
+            _view.SetState(_sim.Board, _sim.Hand, _sim.Score, _sim.Combo);
+        }
+#endif
 
         // A replay of the resolving move reaches the resolution again; the game ends once.
         private void OnGameResolved(GameResolvedEvent resolved)

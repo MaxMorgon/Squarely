@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 #endif
@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 namespace Squarely.Presentation
 {
     /// <summary>
-    /// Editor and development builds only: a small panel for tuning playback. Replays the last move (also with R), ends the game at once (also with E),
+    /// Editor and dev-tools builds only (`SQUARELY_DEV_TOOLS`): a small panel for tuning playback. Replays the last move (also with R), ends the game at once (also with E),
     /// copies the replay code of the game so far (also with C),
     /// restarts the game, sets the playback speed (back to 1x each play session) and shows the last drift check.
     /// It starts collapsed in every game. A small toggle button (or the backquote key) expands it.
@@ -43,7 +43,7 @@ namespace Squarely.Presentation
 
         [SerializeField] private TMP_Text _driftLabel;
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#if UNITY_EDITOR || SQUARELY_DEV_TOOLS
         private const string ExpandedToggleText = "×";
         private const string CollapsedToggleText = "DBG";
         private const string CopiedText = "Copied";
