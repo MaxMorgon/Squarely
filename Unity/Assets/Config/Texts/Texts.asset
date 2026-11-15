@@ -16,7 +16,7 @@ MonoBehaviour:
     Title: Squarely
     Play: Play
     Settings: Settings
-    Test: Dev Tools
+    Test: Dev Play
     HighScoreFormat: 'Best: {0}'
   _gameHud:
     ComboFormat: "Combo \xD7{0}"
@@ -49,13 +49,13 @@ MonoBehaviour:
     LeaveGameMessage: Your score will not be saved.
     ResetProgressMessage: Your best score will be deleted.
   _test:
-    Title: Test
+    Title: Dev Play
     Seed: Seed
     SeedPlaceholder: Enter a seed
     Randomize: Randomize
     HighScore: High score
     HighScorePlaceholder: Enter a high score
-    StartInTest: Start in test screen
+    StartInTest: Start in Dev Play
     Play: Play
     Back: Back
     ReplaysTitle: Replays
