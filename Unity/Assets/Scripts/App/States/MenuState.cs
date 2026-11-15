@@ -7,7 +7,7 @@ namespace Squarely.App
     /// Shows the main menu and the high score. Play starts the default game; Settings opens the settings panel.
     /// In the editor and in builds with dev tools, Test opens the test screen while the "Dev tools" setting is on.
     /// Otherwise the button is hidden. The button follows the setting at once.
-    /// The menu settings panel also has a Reset progress button, under the same conditions. It asks first, then clears the player progress and the best score shown.
+    /// The menu settings panel also has a Reset progress button, under the same conditions. It closes the settings panel and asks first, then clears the player progress and the best score shown.
     /// </summary>
     public sealed class MenuState : IAppState
     {
@@ -96,6 +96,9 @@ namespace Squarely.App
         {
             if (_confirm != null)
                 return;
+
+            // The question shows over the menu, not over the settings panel.
+            CloseSettings();
 
             _confirm = _context.Screens.CreatePanel(_context.Screens.Prefabs.Confirm);
             _confirm.Initialize(_context.Texts.Confirm, _context.Texts.Confirm.ResetProgressQuestion);
