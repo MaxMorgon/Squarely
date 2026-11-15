@@ -108,7 +108,7 @@ namespace Squarely.App.Tests
             var stepper = new ReplayStepper(3, Delay);
 
             Assert.That(stepper.CanStepBack, Is.False);
-            Assert.That(stepper.StepBack(), Is.False);
+            Assert.That(stepper.StepBackTo(stepper.Executed - 1), Is.False);
             Assert.That(stepper.Executed, Is.EqualTo(0));
         }
 
@@ -119,7 +119,7 @@ namespace Squarely.App.Tests
             stepper.MarkExecuted();
             stepper.MarkExecuted();
 
-            bool didStepBack = stepper.StepBack();
+            bool didStepBack = stepper.StepBackTo(stepper.Executed - 1);
 
             Assert.That(didStepBack, Is.True);
             Assert.That(stepper.Executed, Is.EqualTo(1));
@@ -132,7 +132,7 @@ namespace Squarely.App.Tests
             var stepper = new ReplayStepper(3, Delay);
             stepper.MarkExecuted();
 
-            stepper.StepBack();
+            stepper.StepBackTo(stepper.Executed - 1);
 
             Assert.That(stepper.IsPaused, Is.True);
             Assert.That(stepper.Tick(5f, false), Is.False);
@@ -145,7 +145,7 @@ namespace Squarely.App.Tests
             stepper.MarkExecuted();
             stepper.MarkExecuted();
 
-            stepper.StepBack();
+            stepper.StepBackTo(stepper.Executed - 1);
 
             Assert.That(stepper.HasNext, Is.True);
         }
@@ -157,7 +157,7 @@ namespace Squarely.App.Tests
             stepper.MarkExecuted();
             stepper.Stop();
 
-            stepper.StepBack();
+            stepper.StepBackTo(stepper.Executed - 1);
 
             Assert.That(stepper.HasNext, Is.True);
         }
@@ -167,7 +167,7 @@ namespace Squarely.App.Tests
         {
             var stepper = new ReplayStepper(3, Delay);
             stepper.MarkExecuted();
-            stepper.StepBack();
+            stepper.StepBackTo(stepper.Executed - 1);
 
             stepper.MarkExecuted();
 
@@ -175,40 +175,19 @@ namespace Squarely.App.Tests
         }
 
         [Test]
-        public void JumpToStart_UncountsAllCommands()
+        public void StepBackTo_Zero_UncountsAll_PausesAndLiftsStop()
         {
             var stepper = new ReplayStepper(5, Delay);
             stepper.MarkExecuted();
             stepper.MarkExecuted();
             stepper.MarkExecuted();
-
-            bool didJump = stepper.JumpToStart();
-
-            Assert.That(didJump, Is.True);
-            Assert.That(stepper.Executed, Is.EqualTo(0));
-            Assert.That(stepper.CanStepBack, Is.False);
-            Assert.That(stepper.HasNext, Is.True);
-        }
-
-        [Test]
-        public void JumpToStart_AtTheStart_ChangesNothing()
-        {
-            var stepper = new ReplayStepper(3, Delay);
-            stepper.SetPaused(false);
-
-            Assert.That(stepper.JumpToStart(), Is.False);
-            Assert.That(stepper.IsPaused, Is.False);
-        }
-
-        [Test]
-        public void JumpToStart_PausesAndLiftsStop()
-        {
-            var stepper = new ReplayStepper(3, Delay);
-            stepper.MarkExecuted();
             stepper.Stop();
 
-            stepper.JumpToStart();
+            bool didStepBack = stepper.StepBackTo(0);
 
+            Assert.That(didStepBack, Is.True);
+            Assert.That(stepper.Executed, Is.EqualTo(0));
+            Assert.That(stepper.CanStepBack, Is.False);
             Assert.That(stepper.IsPaused, Is.True);
             Assert.That(stepper.HasNext, Is.True);
         }
@@ -236,7 +215,7 @@ namespace Squarely.App.Tests
         }
 
         [Test]
-        public void JumpToEnd_RunningAllCommands_LeavesNoNextAndKeepsBackEnabled()
+        public void MarkExecuted_UntilNoNext_KeepsStepBackEnabled()
         {
             var stepper = new ReplayStepper(3, Delay);
 
@@ -246,20 +225,6 @@ namespace Squarely.App.Tests
             Assert.That(stepper.Executed, Is.EqualTo(3));
             Assert.That(stepper.HasNext, Is.False);
             Assert.That(stepper.CanStepBack, Is.True);
-        }
-
-        [Test]
-        public void JumpToStart_AfterJumpToEnd_ReturnsToZero()
-        {
-            var stepper = new ReplayStepper(3, Delay);
-
-            while (stepper.HasNext)
-                stepper.MarkExecuted();
-
-            stepper.JumpToStart();
-
-            Assert.That(stepper.Executed, Is.EqualTo(0));
-            Assert.That(stepper.HasNext, Is.True);
         }
     }
 }

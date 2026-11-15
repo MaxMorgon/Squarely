@@ -113,14 +113,12 @@ namespace Squarely.App
 
         private void OnStepBackRequested()
         {
-            if (_stepper.CanStepBack)
-                GoBackTo(_stepper.Executed - 1);
+            GoBackTo(_stepper.Executed - 1);
         }
 
         private void OnJumpStartRequested()
         {
-            if (_stepper.CanStepBack)
-                GoBackTo(0);
+            GoBackTo(0);
         }
 
         private void OnJumpEndRequested()
@@ -142,7 +140,9 @@ namespace Squarely.App
         // The one path back to the state after the first count commands.
         private void GoBackTo(int count)
         {
-            _stepper.StepBackTo(count);
+            if (!_stepper.StepBackTo(count))
+                return;
+
             _game.RestoreSim(_snapshots[count], count);
 
             for (int i = count; i < _snapshots.Count; i++)
