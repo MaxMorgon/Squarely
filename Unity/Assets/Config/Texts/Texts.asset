@@ -43,10 +43,11 @@ MonoBehaviour:
     DevTools: Dev tools
     ResetProgress: Reset progress
   _confirm:
-    Question: Are you sure?
+    Title: Are you sure?
     Yes: Yes
     No: No
-    ResetProgressQuestion: Reset progress? The best score is deleted.
+    LeaveGameMessage: This game ends. Its score is not saved.
+    ResetProgressMessage: Your progress and best score are deleted.
   _test:
     Title: Test
     Seed: Seed

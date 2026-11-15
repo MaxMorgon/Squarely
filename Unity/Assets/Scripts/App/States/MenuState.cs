@@ -103,7 +103,7 @@ namespace Squarely.App
             // The question shows over the menu, not over the settings panel.
             CloseSettings();
 
-            _confirm.Ask(_context.Texts.Confirm.ResetProgressQuestion, OnResetProgressConfirmed);
+            _confirm.Ask(_context.Texts.Confirm.ResetProgressMessage, OnResetProgressConfirmed);
         }
 
         private void OnResetProgressConfirmed()

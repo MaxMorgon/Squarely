@@ -237,7 +237,7 @@ namespace Squarely.App
             // The question replaces the panel; No goes back to the game, not to the panel.
             CloseSettingsPanel();
 
-            _confirm.Ask(null, action, UpdatePause);
+            _confirm.Ask(_context.Texts.Confirm.LeaveGameMessage, action, UpdatePause);
             UpdatePause();
         }
 

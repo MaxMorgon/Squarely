@@ -4,7 +4,7 @@ using Squarely.Presentation;
 namespace Squarely.App
 {
     /// <summary>
-    /// Owns one "Are you sure?" dialog for a state: creates it, closes it first when the player answers,
+    /// Owns one confirm dialog for a state: creates it, closes it first when the player answers,
     /// then runs the answer. A state keeps one prompt and calls <see cref="Close"/> in its <c>Exit</c>.
     /// </summary>
     public sealed class ConfirmPrompt
@@ -29,10 +29,10 @@ namespace Squarely.App
         /// Opens the dialog. Does nothing if it is already open.
         /// The dialog closes before either callback runs.
         /// </summary>
-        /// <param name="question">The question to show. Null shows the default question.</param>
+        /// <param name="message">The smaller text under the title. Null shows no message.</param>
         /// <param name="onConfirm">Runs when the player says yes.</param>
         /// <param name="onCancel">Runs when the player says no. May be null.</param>
-        public void Ask(string question, Action onConfirm, Action onCancel = null)
+        public void Ask(string message, Action onConfirm, Action onCancel = null)
         {
             if (_dialog != null)
                 return;
@@ -41,10 +41,7 @@ namespace Squarely.App
             _onCancel = onCancel;
             _dialog = _screens.CreatePanel(_screens.Prefabs.Confirm);
 
-            if (question == null)
-                _dialog.Initialize(_texts);
-            else
-                _dialog.Initialize(_texts, question);
+            _dialog.Initialize(_texts, message);
 
             _dialog.ConfirmRequestEvent += OnConfirmRequested;
             _dialog.CancelRequestEvent += OnCancelRequested;
