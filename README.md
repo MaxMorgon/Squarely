@@ -1,80 +1,60 @@
 # Squarely
 
-A block-placement puzzle game in Unity and C#. You get three pieces at a time and place them on an 8×8 board. Full rows and columns clear and score. Clear several lines in a row to build a combo. The game ends when no piece fits.
+[![Sim tests](https://github.com/MaxMorgon/Squarely/actions/workflows/sim-tests.yml/badge.svg)](https://github.com/MaxMorgon/Squarely/actions/workflows/sim-tests.yml)
 
-The core rules follow the genre (1010!, Block Blast). The code, art direction, UI and meta features are original. I build it as a learning project that can grow into a live-ops product, and as a test of an AI-agent development workflow.
+A block-placement puzzle game in Unity and C#, built with a team of AI agents. I own the architecture, the rules and the reviews. Agents implement, verify and review under those rules.
 
 > **Gameplay GIF:** coming soon.
->
 > **Play in the browser:** coming soon.
 
-## Highlights
+The game: you get three pieces at a time and place them on an 8×8 board. Full rows and columns clear and score. Clear on consecutive moves to build a combo. The game ends when no piece fits. The core rules follow the genre (1010!, Block Blast). The code and UI are original. The art is placeholder for now.
 
-- **Pure C# simulation.** All game rules are in a plain .NET library with no Unity dependency. Unity only shows the state and sends commands.
-- **Deterministic and replayable.** A seed plus a list of commands reproduces any game exactly. Replays encode to a short text code that you can paste and watch.
-- **Data-driven.** Board size, pieces, weights, scoring, clear patterns and rules are config, not code. A new rule is a new registered id, not an edit to the core loop.
-- **Event-driven presentation.** The sim returns events. Unity plays them as authored cue sequences (animation, sound, particles). The player can act during an animation: playback snaps to its end state.
-- **Tested.** About 380 NUnit tests over the sim and the Unity presentation and app logic.
+## How I build it with AI
 
-## Architecture
+I work with [Claude Code](https://claude.com/claude-code). I decide the design and the architecture, write the briefs and review every PR. Agents write most of the code.
 
-```
-Squarely.App           App state machine, screens flow, device storage, high score, music
-      │
-Squarely.Presentation  Views, drag input, event playback, sound, debug tools
-      │
-Squarely.Simulation    Board, pieces, dealing, clearing, scoring, resolution, replays (no Unity)
-```
-
-Dependencies go down only. The main ideas:
-
-- **Commands in, events out.** `Sim.Execute(command)` returns a result with the events that happened. A failed command changes nothing.
-- **Preview equals execute.** `Sim.Preview` runs the real command on a clone. Drag input uses it to check a placement, so the view never re-implements a rule. Future AI players can use it too.
-- **Read-only from outside.** The sim exposes read-only board and hand views. Its RNG is a custom seeded PRNG, because `System.Random` gives different output on .NET and Mono.
-- **Replay safety.** A fingerprint of the config travels with each replay. Guard tests fail if a new config field is missing from the fingerprint.
-- **Two build configs.** Store builds compile all dev tools out. Studio builds keep them (debug overlay, replay copy, drift check that compares the views with the sim) behind a setting.
-
-Details: [Docs/Design.md](Docs/Design.md) (game rules) and [Docs/CodeDesign.md](Docs/CodeDesign.md) (code structure).
-
-## Repository
-
-| Path | Contents |
-|---|---|
-| `Sim/`, `Sim.Tests/` | The simulation and its tests. Unity uses them as local UPM packages. |
-| `Unity/` | The Unity project: presentation, app, editor tools, config assets. |
-| `Docs/` | Game design and code design. |
-| `Tools/` | Headless verification and workflow scripts. |
-| `.claude/` | Agent definitions, skills and hooks for the AI workflow. |
-
-## AI-assisted workflow
-
-I build Squarely with [Claude Code](https://claude.com/claude-code). I make the design and product decisions. Agents write most of the code under rules that I set and review.
-
-- **Rules as files.** [CLAUDE.md](CLAUDE.md) holds the project principles and code style. The design docs are the source of truth that agents read before they work.
-- **Specialized agents** in [.claude/agents/](.claude/agents/):
-  - `implementer` does one task in a permanent git worktree, verifies it headless and opens a PR.
+- **Rules as files.** [CLAUDE.md](CLAUDE.md) holds the principles and code style. The [design](Docs/Design.md) and [code design](Docs/CodeDesign.md) docs are the source of truth. Agents read them before they work.
+- **One role per agent** ([.claude/agents/](.claude/agents/)):
+  - `implementer` does one brief in its own git worktree and opens a PR.
   - `wirer` builds the prefabs, scenes and config assets for that PR.
-  - `reviewer` reviews each PR against the architecture and its brief, and posts inline comments. In audit mode it checks the whole codebase for drift and files an issue.
-- **Headless verification.** [Tools/verify.sh](Tools/verify.sh) runs the sim tests, then a Unity batch-mode import, compile and EditMode tests in the agent's worktree.
-- **Guard rails.** A hook stops agents from driving the open Unity editor. Agents never run player builds. They commit only from a brief.
-- **Visible history.** The pull requests and audit issues of this repo show the loop: brief, implement, review, fix, merge.
+  - `reviewer` checks each PR against the architecture and its brief. In audit mode, it checks the whole codebase for drift.
+- **Headless verification.** [Tools/verify.sh](Tools/verify.sh) runs the sim tests, then a Unity batch-mode import, compile and EditMode test run.
+- **Guard rails.** A hook stops agents from driving my open Unity editor. Agents never make player builds.
+- **Proof in the history.** Example: [PR #37](https://github.com/MaxMorgon/Squarely/pull/37) (brief, review comments, fixes) and [audit #38](https://github.com/MaxMorgon/Squarely/issues/38) (drift findings, each fixed or dropped).
+
+## Engineering highlights
+
+- **Pure C# simulation.** All rules are in a .NET library with no Unity dependency. Unity shows the state and sends commands.
+- **Deterministic replays.** A seed plus the command list reproduces a game exactly. A replay is a short text code that you can paste and watch.
+- **Preview equals execute.** `Sim.Preview` runs the real command on a clone. Drag input uses it, so the view never re-implements a rule.
+- **Data-driven.** Board size, pieces, weights, scoring, clear patterns and rules are config. A new rule is a registered id, not an edit to the core loop.
+- **Event-driven presentation.** The sim returns events. Unity plays them as authored cue sequences (animation, sound). A new move snaps the running animations to their end state.
+- **Nearly 400 tests.** They guard determinism, preview equals execute, and a config fingerprint that must cover every field.
+
+```
+Squarely.App           Screen flow, storage, high score, music
+      ▼ depends on
+Squarely.Presentation  Views, input, event playback, sound, debug tools
+      ▼ depends on, sends commands, plays events
+Squarely.Simulation    Rules, dealing, scoring, replays. No Unity.
+```
 
 ## Run it
 
-Requirements: Unity 6.3 (`6000.3.26f1`) and the .NET SDK.
+Requirements: Unity 6.3 (`6000.3.26f1`) and the .NET 8 SDK.
 
 1. Open the `Unity/` folder in Unity Hub.
 2. Open `Assets/Scenes/Main.unity` and press Play.
 3. Run the sim tests with `dotnet test Squarely.sln`.
 
-## Where I would take it next
+## Next
 
-- Hover and placement preview feedback driven by `Sim.Preview`.
-- Board layers and special cells (blockers, wood, fire) as pluggable mechanics.
-- Game modes as config: target score, move limit, custom clear patterns such as pixel-art images.
-- Daily challenge with a shared seed, and server-side score validation from replays.
-- Meta layer (progression, quests, events) that reacts to sim events, and remote config.
+- Clear preview: highlight the lines a drop would clear.
+- Special cells such as stone blockers and bombs, as pluggable mechanics.
+- Game modes as config: target score, move limit, pixel-art clear patterns.
+- Daily challenge with a shared seed. Determinism makes server-side score checks from replays possible.
+- A meta layer (progression, quests, events) that reacts to sim events.
 
 ## License
 
-Code: [MIT](LICENSE). Audio: CC0 placeholder assets (Kenney, OpenGameArt), listed in [Unity/Assets/Audio/CREDITS.md](Unity/Assets/Audio/CREDITS.md).
+Code: [MIT](LICENSE). Art: placeholder. Audio: CC0 placeholder assets (Kenney, OpenGameArt), listed in [CREDITS.md](Unity/Assets/Audio/CREDITS.md).
