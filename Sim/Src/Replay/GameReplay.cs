@@ -26,20 +26,23 @@ namespace Squarely.Simulation
         public bool EndIsResolved { get; }
 
         /// <summary>The number of place commands: the moves the player made.</summary>
-        public int MoveCount
+        public int MoveCount => CountMoves(Commands.Count);
+
+        /// <summary>The number of moves in the first <paramref name="commandCount"/> commands. The one rule for what counts as a move.</summary>
+        public int CountMoves(int commandCount)
         {
-            get
+            if (commandCount < 0 || commandCount > Commands.Count)
+                throw new ArgumentOutOfRangeException(nameof(commandCount));
+
+            int count = 0;
+
+            for (int i = 0; i < commandCount; i++)
             {
-                int count = 0;
-
-                foreach (ISimCommand command in Commands)
-                {
-                    if (command is PlacePieceCommand)
-                        count++;
-                }
-
-                return count;
+                if (Commands[i] is PlacePieceCommand)
+                    count++;
             }
+
+            return count;
         }
 
         public GameReplay(
