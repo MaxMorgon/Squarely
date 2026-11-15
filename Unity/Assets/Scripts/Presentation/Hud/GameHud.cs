@@ -17,7 +17,7 @@ namespace Squarely.Presentation
         [SerializeField] private Button _settingsButton;
         [SerializeField] private TMP_Text _settingsLabel;
 
-        [Tooltip("Shows the \"new record\" text. Hidden until the celebration shows it. Must not block input.")]
+        [Tooltip("Shows the \"new record\" text. Needs a CanvasGroup on the same object: Initialize sets its alpha to 0, and the celebration fades it in. Must not block input.")]
         [SerializeField] private TMP_Text _newRecordLabel;
 
         [Tooltip("Plays when the score goes above the best score. Hang the celebration (animation, particles) here. No sound: GameState plays it.")]
@@ -56,6 +56,7 @@ namespace Squarely.Presentation
             _score.Initialize(texts);
             _settingsLabel.text = texts.Settings;
             _newRecordLabel.text = texts.NewRecord;
+            _newRecordLabel.GetComponent<CanvasGroup>().alpha = 0f;
         }
 
         /// <summary>Hides the settings button.</summary>

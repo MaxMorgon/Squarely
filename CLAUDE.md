@@ -40,6 +40,7 @@ Standard Microsoft C# naming and conventions, plus:
 - Short `if` bodies: no braces, body on the next line, two lines maximum.
 - `#region` for member groups. Member order: constants and fields, properties, constructors, methods.
 - `Set…` takes data and displays it. `Show`/`Hide` only change visibility.
+- Views set their start state in code (active, alpha, toggles, texts), usually in `Initialize`. Do not rely on how the prefab was saved. Animator states that do not animate a property must not write it (Write Defaults off).
 - C# `event` members: `<Noun><Verb>Event`, present tense; handlers `On<Noun><Verb>ed`. Sim event types (`ISimEvent`) are past tense.
 - One top-level type per file. Namespaces mirror assemblies (`Squarely.Simulation`, not `Squarely.Sim`).
 - Nullable and implicit usings are off. Write explicit `using` directives.
