@@ -2,7 +2,7 @@
 
 [![Sim tests](https://github.com/MaxMorgon/Squarely/actions/workflows/sim-tests.yml/badge.svg)](https://github.com/MaxMorgon/Squarely/actions/workflows/sim-tests.yml)
 
-A Unity/C# puzzle game, built with AI agents in about a week of focused work (part-time, 3–15 November 2026). I made the design and architecture decisions. Agents wrote most of the code, in over 35 PRs. The result has a deterministic C# sim, replays as paste-able codes and about 400 tests.
+A Unity/C# puzzle game, built with AI agents. The first version took about a week of focused work, part-time over two weeks. I made the design and architecture decisions. Agents wrote most of the code, in over 35 PRs. The result has a deterministic C# sim, replays as paste-able codes and about 400 tests.
 
 > **Gameplay GIF:** coming soon.
 > **Play in the browser:** coming soon.
@@ -19,6 +19,8 @@ I use [Claude Code](https://claude.com/claude-code). I set the architecture and 
   - `implementer` does one brief in a permanent git worktree and opens a PR. Code is the frequent job, so it runs on the cheaper Sonnet.
   - `wirer` builds the prefabs, scenes and config assets on Opus. Unity asset work needs the stronger model.
   - `reviewer` checks each PR against the architecture and its brief. Every 5 PRs, it audits the whole codebase for drift, because a PR review sees only its diff.
+- **Skills hold the procedures, agents hold the roles.** Skills in [.claude/skills/](.claude/skills/) are step-by-step procedures that any session loads: running the agents, driving the Unity editor, unattended runs. Agents are separate workers with their own model, tools and context.
+- **One file for me.** Agents write only what waits for me into a TODO file: test steps, decisions, questions. I read that list, not an hour of progress logs.
 - **Headless checks.** [Tools/verify.sh](Tools/verify.sh) runs the sim tests, then a Unity batch-mode import, compile and test run, in under a minute.
 - **Enforced guard rails.** A hook blocks agents from my open Unity editor. Force pushes always ask me.
 - **Cost tracking.** [Tools/agent-usage.sh](Tools/agent-usage.sh) reports token use per agent and model.
