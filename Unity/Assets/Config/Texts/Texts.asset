@@ -74,8 +74,9 @@ MonoBehaviour:
     Pause: Pause
     StepBack: <
     StepForward: '>'
+    JumpStart: <<
+    JumpEnd: '>>'
     Back: Back
-    Restart: Restart
     SpeedFormat: x{0}
     ProgressFormat: Move {0} / {1}
     GameEnded: Game ended
