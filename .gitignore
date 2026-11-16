@@ -37,3 +37,6 @@ Notes/
 
 # Raw art from the artist (PSDs, mockups). Exported assets go to Unity/Assets/Art.
 /ArtSources/
+
+# Unity CLI pipeline settings (per machine)
+/Unity/ProjectSettings/Packages/com.unity.pipeline/
