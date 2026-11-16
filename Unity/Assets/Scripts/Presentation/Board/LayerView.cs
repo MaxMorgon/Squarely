@@ -52,13 +52,14 @@ namespace Squarely.Presentation
             return transform.TransformPoint(_boardSpace.CellCenter(pos));
         }
 
-        /// <summary>Shows a view of the cell type in an empty slot.</summary>
-        public CellView Spawn(GridPos pos, string typeId)
+        /// <summary>Shows a view of the cell type, with the look variant, in an empty slot.</summary>
+        public CellView Spawn(GridPos pos, string typeId, int variant = 0)
         {
             if (_views[pos] != null)
                 throw new InvalidOperationException($"Slot {pos} already has a view.");
 
             CellView view = _viewPool.Get(typeId, transform);
+            view.SetVariant(variant);
             view.transform.localPosition = _boardSpace.CellCenter(pos);
             _views[pos] = view;
             return view;

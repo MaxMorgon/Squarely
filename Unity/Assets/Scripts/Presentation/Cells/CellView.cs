@@ -19,9 +19,14 @@ namespace Squarely.Presentation
         /// <summary>A color multiplied over the view's look, white by default. Cues use it to tint and fade cells.</summary>
         public Color Tint { get; private set; } = Color.white;
 
+        /// <summary>Which look variant the view shows, 0 by default. The prefab maps it to a look (e.g. <see cref="CellVariantSprite"/>).</summary>
+        public int Variant { get; private set; }
+
         public event Action<CellViewState> StateChangeEvent;
 
         public event Action<Color> TintChangeEvent;
+
+        public event Action<int> VariantChangeEvent;
 
         public void SetState(CellViewState state)
         {
@@ -33,6 +38,12 @@ namespace Squarely.Presentation
         {
             Tint = tint;
             TintChangeEvent?.Invoke(tint);
+        }
+
+        public void SetVariant(int variant)
+        {
+            Variant = variant;
+            VariantChangeEvent?.Invoke(variant);
         }
 
         /// <summary>Returns this view to the pool it came from.</summary>

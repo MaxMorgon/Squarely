@@ -30,6 +30,7 @@ namespace Squarely.Presentation
         {
             PlaybackViews views = context.Views;
             PieceShape shape = simEvent.Piece.Shape;
+            int variant = PieceVariant.Of(simEvent.Piece);
             HashSet<GridPos> cleared = ClearedCells(context.Events);
             bool clears = cleared.Count > 0;
 
@@ -42,7 +43,7 @@ namespace Squarely.Presentation
             foreach (GridPos offset in shape.Offsets)
             {
                 GridPos pos = simEvent.Origin + offset;
-                cells.Add(views.Board.Spawn(pos, shape.CellTypeId));
+                cells.Add(views.Board.Spawn(pos, shape.CellTypeId, variant));
                 positions.Add(pos);
             }
 

@@ -54,7 +54,7 @@ namespace Squarely.Presentation
             if (piece == null)
                 _slots[slot].Clear();
             else
-                _slots[slot].SetShape(piece.Shape, _viewPool, _cellSize, CellViewState.Idle);
+                _slots[slot].SetPiece(piece, _viewPool, _cellSize, CellViewState.Idle);
         }
 
         /// <summary>The view that shows a slot's piece.</summary>

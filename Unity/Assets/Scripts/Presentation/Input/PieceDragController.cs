@@ -120,10 +120,10 @@ namespace Squarely.Presentation
             _hasCheckedOrigin = false;
             _hand.SetSlotVisible(slot, false);
 
-            _dragged.SetShape(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Idle);
+            _dragged.SetPiece(piece, _viewPool, _boardSpace.CellSize, CellViewState.Idle);
             _dragged.gameObject.SetActive(true);
 
-            _ghost.SetShape(piece.Shape, _viewPool, _boardSpace.CellSize, CellViewState.Ghost);
+            _ghost.SetPiece(piece, _viewPool, _boardSpace.CellSize, CellViewState.Ghost);
             _ghost.gameObject.SetActive(false);
 
             _swing = _dragFeel.CreateSwing();

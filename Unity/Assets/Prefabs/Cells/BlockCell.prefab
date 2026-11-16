@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 474123787819720773}
   - component: {fileID: 6510316013427610909}
   - component: {fileID: 7978915702494184596}
+  - component: {fileID: 5546041361882902265}
   m_Layer: 0
   m_Name: BlockCell
   m_TagString: Untagged
@@ -150,5 +151,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CellStateSpriteTint
   _renderer: {fileID: 8554437661271883749}
-  _idle: {r: 1, g: 0.62, b: 0.22, a: 1}
-  _ghost: {r: 1, g: 0.62, b: 0.22, a: 0.35}
+  _idle: {r: 1, g: 1, b: 1, a: 1}
+  _ghost: {r: 1, g: 1, b: 1, a: 0.35}
+--- !u!114 &5546041361882902265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4605681574364554385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1350ac3c3f990d3498c5aed5c942d22b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Squarely.Presentation::Squarely.Presentation.CellVariantSprite
+  _renderer: {fileID: 8554437661271883749}
+  _sprites:
+  - {fileID: 21300000, guid: b903ffde4ba4896449841a02c4a92ce4, type: 3}
+  - {fileID: 21300000, guid: 1b0fa8038d58e1241b9f2d0bf84bbc25, type: 3}
+  - {fileID: 21300000, guid: 2848ca9a5df682c4e97e7e9ec5f7decc, type: 3}
+  - {fileID: 21300000, guid: 060dbe9e2180b3345b07fd0f2973354c, type: 3}
+  - {fileID: 21300000, guid: f8bd6bddd399ab74bb9807686de4ab19, type: 3}
+  - {fileID: 21300000, guid: 0847f375d3d8c0a48b074f4fd2024750, type: 3}
+  - {fileID: 21300000, guid: 011b530dc3fda1f4db3e094c85dfa897, type: 3}

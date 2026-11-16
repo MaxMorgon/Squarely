@@ -109,10 +109,10 @@ ExecutedMove.cs    A move the game executed: sim before it, events, drop point
 AssemblyInfo.cs    InternalsVisibleTo for tests
 Config/            SimConfigAsset (SimConfig as an editable asset)
 Theme/             CellTheme, CellThemeEntry
-Cells/             CellView, CellViewState, CellViewPool, CellStateSpriteTint
+Cells/             CellView (state, tint, look variant), CellViewState, CellViewPool, CellStateSpriteTint, CellVariantSprite (variant to sprite)
 Board/             BoardSpace (cells <-> board local space), LayerView, BoardBackground
 Camera/            CameraFit (pure fit math), CameraFrame, CameraFitter (keeps the camera framed on board and hand)
-Pieces/            PieceView (hand, dragged piece, ghost), HandView
+Pieces/            PieceView (hand, dragged piece, ghost), HandView, PieceVariant (a piece's look variant from its instance id: view-only, same in replays)
 Input/             PieceDragController, IPiecePlacer (what drag input needs from the game), DragSwing (tilt spring), DragFeel (its tunables: lift and tilt, `Config/Feel/DragFeel.asset`)
 Screens/           MenuScreen, GameOverScreen, FlashLabel (plain C#: a label that shows a short message and hides itself), TestScreen (with ReplayRow), ReplayScreen, ReplayFeel (its tunables, `Config/Feel/ReplayFeel.asset`), SettingsPanel, ConfirmDialog (report the player's choices as C# events)
 Replay/            IClipboard, SystemClipboard, ReplayCopier (replay code to the clipboard)
