@@ -1,0 +1,2093 @@
+fileFormatVersion: 2
+guid: e9001dbe3999d264e926a8991b5686a1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2939941148912627368
+    second: BG_Ground2_0
+  - first:
+      213: -3904579208230397691
+    second: BG_Ground2_1
+  - first:
+      213: -6422299293900581390
+    second: BG_Ground2_2
+  - first:
+      213: 5087939234637229656
+    second: BG_Ground2_3
+  - first:
+      213: 8903505477111532981
+    second: BG_Ground2_4
+  - first:
+      213: 6649634439362736206
+    second: BG_Ground2_5
+  - first:
+      213: 7679847035428126187
+    second: BG_Ground2_6
+  - first:
+      213: -2140370144977410211
+    second: BG_Ground2_7
+  - first:
+      213: -5133948249245317001
+    second: BG_Ground2_8
+  - first:
+      213: 7257025689586574385
+    second: BG_Ground2_9
+  - first:
+      213: -2416674555400911447
+    second: BG_Ground2_10
+  - first:
+      213: 2260135332438252952
+    second: BG_Ground2_11
+  - first:
+      213: 4267370912377185201
+    second: BG_Ground2_12
+  - first:
+      213: 5358919083096668112
+    second: BG_Ground2_13
+  - first:
+      213: 2891058150879372732
+    second: BG_Ground2_14
+  - first:
+      213: 4817213069971189945
+    second: BG_Ground2_15
+  - first:
+      213: 7433368176123959295
+    second: BG_Ground2_16
+  - first:
+      213: 1830193157760899924
+    second: BG_Ground2_17
+  - first:
+      213: 3524334173358785312
+    second: BG_Ground2_18
+  - first:
+      213: -1639503243611913430
+    second: BG_Ground2_19
+  - first:
+      213: -3407366461019873904
+    second: BG_Ground2_20
+  - first:
+      213: -3009383220052581682
+    second: BG_Ground2_21
+  - first:
+      213: -7934577002858959542
+    second: BG_Ground2_22
+  - first:
+      213: -6255980960447612059
+    second: BG_Ground2_23
+  - first:
+      213: -493599948873290074
+    second: BG_Ground2_24
+  - first:
+      213: -1184959807116289122
+    second: BG_Ground2_25
+  - first:
+      213: 5496442761451637986
+    second: BG_Ground2_26
+  - first:
+      213: -3581016532750234545
+    second: BG_Ground2_27
+  - first:
+      213: -9034085634263426762
+    second: BG_Ground2_28
+  - first:
+      213: -518185550279331175
+    second: BG_Ground2_29
+  - first:
+      213: 9045827462657307468
+    second: BG_Ground2_30
+  - first:
+      213: 1747630413906317806
+    second: BG_Ground2_31
+  - first:
+      213: 6713082262863163502
+    second: BG_Ground2_32
+  - first:
+      213: 1466029441504288762
+    second: BG_Ground2_33
+  - first:
+      213: 5517174703440928995
+    second: BG_Ground2_34
+  - first:
+      213: -338978827621457303
+    second: BG_Ground2_35
+  - first:
+      213: 7277268395127090381
+    second: BG_Ground2_36
+  - first:
+      213: -6172804474749945843
+    second: BG_Ground2_37
+  - first:
+      213: -5699466177982746062
+    second: BG_Ground2_38
+  - first:
+      213: 1805825472251767385
+    second: BG_Ground2_39
+  - first:
+      213: 870129848381193730
+    second: BG_Ground2_40
+  - first:
+      213: 3803492179834780353
+    second: BG_Ground2_41
+  - first:
+      213: -8107547292936554076
+    second: BG_Ground2_42
+  - first:
+      213: -1514310753165430546
+    second: BG_Ground2_43
+  - first:
+      213: -7778895123043346051
+    second: BG_Ground2_44
+  - first:
+      213: 3510802039719525665
+    second: BG_Ground2_45
+  - first:
+      213: 7434330914573267149
+    second: BG_Ground2_46
+  - first:
+      213: -6901839725451612437
+    second: BG_Ground2_47
+  - first:
+      213: 808128195388678442
+    second: BG_Ground2_48
+  - first:
+      213: -1014027281033934628
+    second: BG_Ground2_49
+  - first:
+      213: -4129509820335796363
+    second: BG_Ground2_50
+  - first:
+      213: -4354326251552462782
+    second: BG_Ground2_51
+  - first:
+      213: 6554166791071261261
+    second: BG_Ground2_52
+  - first:
+      213: 8755386874316784138
+    second: BG_Ground2_53
+  - first:
+      213: -1247565311795522646
+    second: BG_Ground2_54
+  - first:
+      213: -173848135971469437
+    second: BG_Ground2_55
+  - first:
+      213: 3516333481211558069
+    second: BG_Ground2_56
+  - first:
+      213: 5117688932561043949
+    second: BG_Ground2_57
+  - first:
+      213: 2915912663289864146
+    second: BG_Ground2_58
+  - first:
+      213: 7290422753659435960
+    second: BG_Ground2_59
+  - first:
+      213: 3689260982901192039
+    second: BG_Ground2_60
+  - first:
+      213: -5959211901380124996
+    second: BG_Ground2_61
+  - first:
+      213: 8561578035327238354
+    second: BG_Ground2_62
+  - first:
+      213: 6317930002992851641
+    second: BG_Ground2_63
+  - first:
+      213: -4030946863914831200
+    second: BG_Ground2_64
+  - first:
+      213: 5467191052599759926
+    second: BG_Ground2_65
+  - first:
+      213: 1885657875057015573
+    second: BG_Ground2_66
+  - first:
+      213: 1280140286253559433
+    second: BG_Ground2_67
+  - first:
+      213: 729776431541737080
+    second: BG_Ground2_68
+  - first:
+      213: 6088551579048890946
+    second: BG_Ground2_69
+  - first:
+      213: 7205774031648896443
+    second: BG_Ground2_70
+  - first:
+      213: -7962515701201560609
+    second: BG_Ground2_71
+  - first:
+      213: 9025964997328758087
+    second: BG_Ground2_72
+  - first:
+      213: -3291190532749559255
+    second: BG_Ground2_73
+  - first:
+      213: 908239441041638506
+    second: BG_Ground2_74
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BG_Ground2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 162
+        width: 2048
+        height: 931
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 851528ef91b3337d0800000000000000
+      internalID: -2939941148912627368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_1
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 977
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5091d00c5e520d9c0800000000000000
+      internalID: -3904579208230397691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 800
+        height: 163
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f550d9a1d86fd6a0800000000000000
+      internalID: -6422299293900581390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_3
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 35
+        width: 16
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85e235fd6cdfb9640800000000000000
+      internalID: 5087939234637229656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_4
+      rect:
+        serializedVersion: 2
+        x: 539
+        y: 56
+        width: 8
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bd4af20f0b9f8b70800000000000000
+      internalID: 8903505477111532981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_5
+      rect:
+        serializedVersion: 2
+        x: 628
+        y: 61
+        width: 19
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e407b649a4f384c50800000000000000
+      internalID: 6649634439362736206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_6
+      rect:
+        serializedVersion: 2
+        x: 660
+        y: 85
+        width: 12
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bedb70c603c449a60800000000000000
+      internalID: 7679847035428126187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_7
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 67
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5725cc71b0eb42e0800000000000000
+      internalID: -2140370144977410211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_8
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 61
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7788e74a44d80c8b0800000000000000
+      internalID: -5133948249245317001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_9
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 64
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13421b15a6226b460800000000000000
+      internalID: 7257025689586574385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_10
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 0
+        width: 1115
+        height: 163
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a58a93cb4f367ed0800000000000000
+      internalID: -2416674555400911447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_11
+      rect:
+        serializedVersion: 2
+        x: 998
+        y: 64
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89d9a423c1d9d5f10800000000000000
+      internalID: 2260135332438252952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_12
+      rect:
+        serializedVersion: 2
+        x: 1060
+        y: 71
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b3a31d3c3fb83b30800000000000000
+      internalID: 4267370912377185201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_13
+      rect:
+        serializedVersion: 2
+        x: 1063
+        y: 65
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d7f9086384be5a40800000000000000
+      internalID: 5358919083096668112
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_14
+      rect:
+        serializedVersion: 2
+        x: 1075
+        y: 69
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb5a92c121a1f1820800000000000000
+      internalID: 2891058150879372732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_15
+      rect:
+        serializedVersion: 2
+        x: 1089
+        y: 63
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b07003b3cd2ad240800000000000000
+      internalID: 4817213069971189945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_16
+      rect:
+        serializedVersion: 2
+        x: 1111
+        y: 64
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff7df86f8f0a82760800000000000000
+      internalID: 7433368176123959295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_17
+      rect:
+        serializedVersion: 2
+        x: 1202
+        y: 112
+        width: 22
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45b50beeaf6266910800000000000000
+      internalID: 1830193157760899924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_18
+      rect:
+        serializedVersion: 2
+        x: 1223
+        y: 117
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02302d80243f8e030800000000000000
+      internalID: 3524334173358785312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_19
+      rect:
+        serializedVersion: 2
+        x: 1228
+        y: 104
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2349648c705f39e0800000000000000
+      internalID: -1639503243611913430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_20
+      rect:
+        serializedVersion: 2
+        x: 1228
+        y: 59
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09d9457b14a96b0d0800000000000000
+      internalID: -3407366461019873904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_21
+      rect:
+        serializedVersion: 2
+        x: 1231
+        y: 77
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec2aebfd7e58c36d0800000000000000
+      internalID: -3009383220052581682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_22
+      rect:
+        serializedVersion: 2
+        x: 1233
+        y: 97
+        width: 16
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4dab9d4148b2e190800000000000000
+      internalID: -7934577002858959542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_23
+      rect:
+        serializedVersion: 2
+        x: 1234
+        y: 48
+        width: 17
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56bb9ea467a4e29a0800000000000000
+      internalID: -6255980960447612059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_24
+      rect:
+        serializedVersion: 2
+        x: 1236
+        y: 112
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6aea14236716629f0800000000000000
+      internalID: -493599948873290074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_25
+      rect:
+        serializedVersion: 2
+        x: 1239
+        y: 80
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9bd7b7655d2e8fe0800000000000000
+      internalID: -1184959807116289122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_26
+      rect:
+        serializedVersion: 2
+        x: 1243
+        y: 110
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ec8794f199474c40800000000000000
+      internalID: 5496442761451637986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_27
+      rect:
+        serializedVersion: 2
+        x: 1244
+        y: 69
+        width: 15
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4c0f9ebf6cad4ec0800000000000000
+      internalID: -3581016532750234545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_28
+      rect:
+        serializedVersion: 2
+        x: 1247
+        y: 43
+        width: 18
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 639d443fafa70a280800000000000000
+      internalID: -9034085634263426762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_29
+      rect:
+        serializedVersion: 2
+        x: 1254
+        y: 95
+        width: 29
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9923cdbccf80fc8f0800000000000000
+      internalID: -518185550279331175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_30
+      rect:
+        serializedVersion: 2
+        x: 1285
+        y: 41
+        width: 34
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c437923862c398d70800000000000000
+      internalID: 9045827462657307468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_31
+      rect:
+        serializedVersion: 2
+        x: 1366
+        y: 33
+        width: 32
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee11e832a94d04810800000000000000
+      internalID: 1747630413906317806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_32
+      rect:
+        serializedVersion: 2
+        x: 1402
+        y: 64
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e603fe920c8a92d50800000000000000
+      internalID: 6713082262863163502
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_33
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 64
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aff902b7202685410800000000000000
+      internalID: 1466029441504288762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_34
+      rect:
+        serializedVersion: 2
+        x: 1423
+        y: 115
+        width: 14
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e02e5a5921f09c40800000000000000
+      internalID: 5517174703440928995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_35
+      rect:
+        serializedVersion: 2
+        x: 1499
+        y: 117
+        width: 22
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 962ae316d84bb4bf0800000000000000
+      internalID: -338978827621457303
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_36
+      rect:
+        serializedVersion: 2
+        x: 1509
+        y: 41
+        width: 30
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcc2aba7c0d0ef460800000000000000
+      internalID: 7277268395127090381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_37
+      rect:
+        serializedVersion: 2
+        x: 1535
+        y: 68
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d08769ef80bc55aa0800000000000000
+      internalID: -6172804474749945843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_38
+      rect:
+        serializedVersion: 2
+        x: 1546
+        y: 67
+        width: 6
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2323cfb45bd67e0b0800000000000000
+      internalID: -5699466177982746062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_39
+      rect:
+        serializedVersion: 2
+        x: 1551
+        y: 56
+        width: 33
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95a2be703b49f0910800000000000000
+      internalID: 1805825472251767385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_40
+      rect:
+        serializedVersion: 2
+        x: 1574
+        y: 112
+        width: 39
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20eb939ac72531c00800000000000000
+      internalID: 870129848381193730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_41
+      rect:
+        serializedVersion: 2
+        x: 1576
+        y: 89
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ca370d5cf7b8c430800000000000000
+      internalID: 3803492179834780353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_42
+      rect:
+        serializedVersion: 2
+        x: 1577
+        y: 47
+        width: 26
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a936d451b43c7f80800000000000000
+      internalID: -8107547292936554076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_43
+      rect:
+        serializedVersion: 2
+        x: 1602
+        y: 54
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee03506a4661cfae0800000000000000
+      internalID: -1514310753165430546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_44
+      rect:
+        serializedVersion: 2
+        x: 1614
+        y: 89
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d799bf59910db0490800000000000000
+      internalID: -7778895123043346051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_45
+      rect:
+        serializedVersion: 2
+        x: 1685
+        y: 38
+        width: 30
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12df236aadfd8b030800000000000000
+      internalID: 3510802039719525665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_46
+      rect:
+        serializedVersion: 2
+        x: 1713
+        y: 59
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc038d9f39c0c2760800000000000000
+      internalID: 7434330914573267149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_47
+      rect:
+        serializedVersion: 2
+        x: 1727
+        y: 60
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: beee6c3565db730a0800000000000000
+      internalID: -6901839725451612437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_48
+      rect:
+        serializedVersion: 2
+        x: 1741
+        y: 67
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a21ae13ef4c073b00800000000000000
+      internalID: 808128195388678442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_49
+      rect:
+        serializedVersion: 2
+        x: 1775
+        y: 64
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd8ca697f837de1f0800000000000000
+      internalID: -1014027281033934628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_50
+      rect:
+        serializedVersion: 2
+        x: 1912
+        y: 64
+        width: 136
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57fc56e82b801b6c0800000000000000
+      internalID: -4129509820335796363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_51
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 48
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 248ae0c28535293c0800000000000000
+      internalID: -4354326251552462782
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_52
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 25
+        width: 22
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d42e67498f315fa50800000000000000
+      internalID: 6554166791071261261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_53
+      rect:
+        serializedVersion: 2
+        x: 489
+        y: 36
+        width: 9
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0205c269f1618970800000000000000
+      internalID: 8755386874316784138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_54
+      rect:
+        serializedVersion: 2
+        x: 497
+        y: 35
+        width: 9
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa3145475f1cfaee0800000000000000
+      internalID: -1247565311795522646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_55
+      rect:
+        serializedVersion: 2
+        x: 502
+        y: 30
+        width: 6
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3878e8a9a0e569df0800000000000000
+      internalID: -173848135971469437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_56
+      rect:
+        serializedVersion: 2
+        x: 1066
+        y: 47
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b87d6bbba68cc030800000000000000
+      internalID: 3516333481211558069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_57
+      rect:
+        serializedVersion: 2
+        x: 1068
+        y: 41
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de1cf3038fea50740800000000000000
+      internalID: 5117688932561043949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_58
+      rect:
+        serializedVersion: 2
+        x: 1176
+        y: 43
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2df947b3e17677820800000000000000
+      internalID: 2915912663289864146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_59
+      rect:
+        serializedVersion: 2
+        x: 1184
+        y: 43
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bbbb4e3ed8cc2560800000000000000
+      internalID: 7290422753659435960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_60
+      rect:
+        serializedVersion: 2
+        x: 1194
+        y: 41
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 765b8814153e23330800000000000000
+      internalID: 3689260982901192039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_61
+      rect:
+        serializedVersion: 2
+        x: 1266
+        y: 43
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbe15f45950ac4da0800000000000000
+      internalID: -5959211901380124996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_62
+      rect:
+        serializedVersion: 2
+        x: 1365
+        y: 43
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d08778acd5d0d670800000000000000
+      internalID: 8561578035327238354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_63
+      rect:
+        serializedVersion: 2
+        x: 1426
+        y: 41
+        width: 9
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9baeb282ddbcda750800000000000000
+      internalID: 6317930002992851641
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_64
+      rect:
+        serializedVersion: 2
+        x: 1434
+        y: 48
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a2b1e32f233f08c0800000000000000
+      internalID: -4030946863914831200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_65
+      rect:
+        serializedVersion: 2
+        x: 1635
+        y: 41
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6341761cb4d5fdb40800000000000000
+      internalID: 5467191052599759926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_66
+      rect:
+        serializedVersion: 2
+        x: 1727
+        y: 38
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51bf0b2c8d33b2a10800000000000000
+      internalID: 1885657875057015573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_67
+      rect:
+        serializedVersion: 2
+        x: 1737
+        y: 41
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98e6fc0dec8f3c110800000000000000
+      internalID: 1280140286253559433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_68
+      rect:
+        serializedVersion: 2
+        x: 1744
+        y: 42
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8765f774ccfa02a00800000000000000
+      internalID: 729776431541737080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_69
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 30
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2425ad11761ee7450800000000000000
+      internalID: 6088551579048890946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_70
+      rect:
+        serializedVersion: 2
+        x: 649
+        y: 33
+        width: 6
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb5ba20dd4d000460800000000000000
+      internalID: 7205774031648896443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_71
+      rect:
+        serializedVersion: 2
+        x: 961
+        y: 30
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdb196f28267f7190800000000000000
+      internalID: -7962515701201560609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_72
+      rect:
+        serializedVersion: 2
+        x: 1047
+        y: 26
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 745e3ece75ba24d70800000000000000
+      internalID: 9025964997328758087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_73
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 4
+        width: 37
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92a755fd5a75352d0800000000000000
+      internalID: -3291190532749559255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Ground2_74
+      rect:
+        serializedVersion: 2
+        x: 1703
+        y: 0
+        width: 23
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a644946a5f6ba9c00800000000000000
+      internalID: 908239441041638506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      BG_Ground2_0: -2939941148912627368
+      BG_Ground2_1: -3904579208230397691
+      BG_Ground2_10: -2416674555400911447
+      BG_Ground2_11: 2260135332438252952
+      BG_Ground2_12: 4267370912377185201
+      BG_Ground2_13: 5358919083096668112
+      BG_Ground2_14: 2891058150879372732
+      BG_Ground2_15: 4817213069971189945
+      BG_Ground2_16: 7433368176123959295
+      BG_Ground2_17: 1830193157760899924
+      BG_Ground2_18: 3524334173358785312
+      BG_Ground2_19: -1639503243611913430
+      BG_Ground2_2: -6422299293900581390
+      BG_Ground2_20: -3407366461019873904
+      BG_Ground2_21: -3009383220052581682
+      BG_Ground2_22: -7934577002858959542
+      BG_Ground2_23: -6255980960447612059
+      BG_Ground2_24: -493599948873290074
+      BG_Ground2_25: -1184959807116289122
+      BG_Ground2_26: 5496442761451637986
+      BG_Ground2_27: -3581016532750234545
+      BG_Ground2_28: -9034085634263426762
+      BG_Ground2_29: -518185550279331175
+      BG_Ground2_3: 5087939234637229656
+      BG_Ground2_30: 9045827462657307468
+      BG_Ground2_31: 1747630413906317806
+      BG_Ground2_32: 6713082262863163502
+      BG_Ground2_33: 1466029441504288762
+      BG_Ground2_34: 5517174703440928995
+      BG_Ground2_35: -338978827621457303
+      BG_Ground2_36: 7277268395127090381
+      BG_Ground2_37: -6172804474749945843
+      BG_Ground2_38: -5699466177982746062
+      BG_Ground2_39: 1805825472251767385
+      BG_Ground2_4: 8903505477111532981
+      BG_Ground2_40: 870129848381193730
+      BG_Ground2_41: 3803492179834780353
+      BG_Ground2_42: -8107547292936554076
+      BG_Ground2_43: -1514310753165430546
+      BG_Ground2_44: -7778895123043346051
+      BG_Ground2_45: 3510802039719525665
+      BG_Ground2_46: 7434330914573267149
+      BG_Ground2_47: -6901839725451612437
+      BG_Ground2_48: 808128195388678442
+      BG_Ground2_49: -1014027281033934628
+      BG_Ground2_5: 6649634439362736206
+      BG_Ground2_50: -4129509820335796363
+      BG_Ground2_51: -4354326251552462782
+      BG_Ground2_52: 6554166791071261261
+      BG_Ground2_53: 8755386874316784138
+      BG_Ground2_54: -1247565311795522646
+      BG_Ground2_55: -173848135971469437
+      BG_Ground2_56: 3516333481211558069
+      BG_Ground2_57: 5117688932561043949
+      BG_Ground2_58: 2915912663289864146
+      BG_Ground2_59: 7290422753659435960
+      BG_Ground2_6: 7679847035428126187
+      BG_Ground2_60: 3689260982901192039
+      BG_Ground2_61: -5959211901380124996
+      BG_Ground2_62: 8561578035327238354
+      BG_Ground2_63: 6317930002992851641
+      BG_Ground2_64: -4030946863914831200
+      BG_Ground2_65: 5467191052599759926
+      BG_Ground2_66: 1885657875057015573
+      BG_Ground2_67: 1280140286253559433
+      BG_Ground2_68: 729776431541737080
+      BG_Ground2_69: 6088551579048890946
+      BG_Ground2_7: -2140370144977410211
+      BG_Ground2_70: 7205774031648896443
+      BG_Ground2_71: -7962515701201560609
+      BG_Ground2_72: 9025964997328758087
+      BG_Ground2_73: -3291190532749559255
+      BG_Ground2_74: 908239441041638506
+      BG_Ground2_8: -5133948249245317001
+      BG_Ground2_9: 7257025689586574385
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -34,3 +34,6 @@ Notes/
 
 # DaVinci Resolve project (video editing)
 /DavinciProject/
+
+# Raw art from the artist (PSDs, mockups). Exported assets go to Unity/Assets/Art.
+/ArtSources/

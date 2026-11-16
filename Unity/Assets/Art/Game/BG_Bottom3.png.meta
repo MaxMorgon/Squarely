@@ -1,0 +1,2379 @@
+fileFormatVersion: 2
+guid: 58c4fd009e1415f46b91774c4554cd2d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -227975719608319236
+    second: BG_Bottom3_0
+  - first:
+      213: -8224360909447580037
+    second: BG_Bottom3_1
+  - first:
+      213: -90195698564011383
+    second: BG_Bottom3_2
+  - first:
+      213: -5916222521942921278
+    second: BG_Bottom3_3
+  - first:
+      213: 8193965355481091145
+    second: BG_Bottom3_4
+  - first:
+      213: -1307316402367704164
+    second: BG_Bottom3_5
+  - first:
+      213: 6931913911154791600
+    second: BG_Bottom3_6
+  - first:
+      213: 7611288917782192789
+    second: BG_Bottom3_7
+  - first:
+      213: -661044955196196952
+    second: BG_Bottom3_8
+  - first:
+      213: 2860117900859891803
+    second: BG_Bottom3_9
+  - first:
+      213: -8571329454216835768
+    second: BG_Bottom3_10
+  - first:
+      213: 6538788796564191466
+    second: BG_Bottom3_11
+  - first:
+      213: -5740790812139782249
+    second: BG_Bottom3_12
+  - first:
+      213: 1127477207173936091
+    second: BG_Bottom3_13
+  - first:
+      213: -5498260186542421331
+    second: BG_Bottom3_14
+  - first:
+      213: -6885827534850820696
+    second: BG_Bottom3_15
+  - first:
+      213: 3199891973727092280
+    second: BG_Bottom3_16
+  - first:
+      213: 8781999115121939085
+    second: BG_Bottom3_17
+  - first:
+      213: 5780426882192783066
+    second: BG_Bottom3_18
+  - first:
+      213: 6459072857545837025
+    second: BG_Bottom3_19
+  - first:
+      213: -6548409932831445111
+    second: BG_Bottom3_20
+  - first:
+      213: -3284152402949857999
+    second: BG_Bottom3_21
+  - first:
+      213: 6085791652618952862
+    second: BG_Bottom3_22
+  - first:
+      213: 6571971645101352912
+    second: BG_Bottom3_23
+  - first:
+      213: -137462877124002572
+    second: BG_Bottom3_24
+  - first:
+      213: -7630164299604582957
+    second: BG_Bottom3_25
+  - first:
+      213: -8491960338149693481
+    second: BG_Bottom3_26
+  - first:
+      213: 8910605503842834743
+    second: BG_Bottom3_27
+  - first:
+      213: 3903895245039292427
+    second: BG_Bottom3_28
+  - first:
+      213: 144246070715065844
+    second: BG_Bottom3_29
+  - first:
+      213: -76192660656935970
+    second: BG_Bottom3_30
+  - first:
+      213: -6415298366763222684
+    second: BG_Bottom3_31
+  - first:
+      213: -4323744745268526055
+    second: BG_Bottom3_32
+  - first:
+      213: -4991271059683728101
+    second: BG_Bottom3_33
+  - first:
+      213: 2014061654903005332
+    second: BG_Bottom3_34
+  - first:
+      213: 5457295662647490461
+    second: BG_Bottom3_35
+  - first:
+      213: -3502482072352549405
+    second: BG_Bottom3_36
+  - first:
+      213: -6971963703232750236
+    second: BG_Bottom3_37
+  - first:
+      213: -1477322873891322098
+    second: BG_Bottom3_38
+  - first:
+      213: -7359479085507412931
+    second: BG_Bottom3_39
+  - first:
+      213: 416737269199028323
+    second: BG_Bottom3_40
+  - first:
+      213: 5066099204694889413
+    second: BG_Bottom3_41
+  - first:
+      213: 2050962279065121518
+    second: BG_Bottom3_42
+  - first:
+      213: 2479713333379888828
+    second: BG_Bottom3_43
+  - first:
+      213: -7550053481079354854
+    second: BG_Bottom3_44
+  - first:
+      213: -8019193484917854180
+    second: BG_Bottom3_45
+  - first:
+      213: 1148417416511464213
+    second: BG_Bottom3_46
+  - first:
+      213: 6095762918827361879
+    second: BG_Bottom3_47
+  - first:
+      213: -5106402226369075794
+    second: BG_Bottom3_48
+  - first:
+      213: -8136669515977491622
+    second: BG_Bottom3_49
+  - first:
+      213: 8966384603077469523
+    second: BG_Bottom3_50
+  - first:
+      213: -3563835284416289318
+    second: BG_Bottom3_51
+  - first:
+      213: -7756629657987971265
+    second: BG_Bottom3_52
+  - first:
+      213: -8221320372422379238
+    second: BG_Bottom3_53
+  - first:
+      213: 1099320177961420420
+    second: BG_Bottom3_54
+  - first:
+      213: 7134772557858287337
+    second: BG_Bottom3_55
+  - first:
+      213: -4909487677486430103
+    second: BG_Bottom3_56
+  - first:
+      213: 1287642496431150966
+    second: BG_Bottom3_57
+  - first:
+      213: 1854774948135090367
+    second: BG_Bottom3_58
+  - first:
+      213: -5968552946788241511
+    second: BG_Bottom3_59
+  - first:
+      213: -8448749058044787449
+    second: BG_Bottom3_60
+  - first:
+      213: -8061922758881913072
+    second: BG_Bottom3_61
+  - first:
+      213: -2121271028568590108
+    second: BG_Bottom3_62
+  - first:
+      213: -3056129596671249446
+    second: BG_Bottom3_63
+  - first:
+      213: 8312183156695057579
+    second: BG_Bottom3_64
+  - first:
+      213: -6199430538097174522
+    second: BG_Bottom3_65
+  - first:
+      213: -14082460931714306
+    second: BG_Bottom3_66
+  - first:
+      213: 8099839657251862987
+    second: BG_Bottom3_67
+  - first:
+      213: 2773261333675071328
+    second: BG_Bottom3_68
+  - first:
+      213: -1580703548642984463
+    second: BG_Bottom3_69
+  - first:
+      213: -5085456819138384404
+    second: BG_Bottom3_70
+  - first:
+      213: 5361910834673718689
+    second: BG_Bottom3_71
+  - first:
+      213: -2592074965828749809
+    second: BG_Bottom3_72
+  - first:
+      213: 2234780857210235882
+    second: BG_Bottom3_73
+  - first:
+      213: 2669341887810079043
+    second: BG_Bottom3_74
+  - first:
+      213: -6449152108912892698
+    second: BG_Bottom3_75
+  - first:
+      213: -8581591150421280383
+    second: BG_Bottom3_76
+  - first:
+      213: 2842405822131564547
+    second: BG_Bottom3_77
+  - first:
+      213: -1592509459097009348
+    second: BG_Bottom3_78
+  - first:
+      213: -2200458743234278677
+    second: BG_Bottom3_79
+  - first:
+      213: -4418531166620604538
+    second: BG_Bottom3_80
+  - first:
+      213: 4291091835282263100
+    second: BG_Bottom3_81
+  - first:
+      213: 3520614801175781801
+    second: BG_Bottom3_82
+  - first:
+      213: -786932125502485309
+    second: BG_Bottom3_83
+  - first:
+      213: -1629014557986297778
+    second: BG_Bottom3_84
+  - first:
+      213: -2438193735061138529
+    second: BG_Bottom3_85
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BG_Bottom3_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 598
+        width: 274
+        height: 390
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf205577a4116dcf0800000000000000
+      internalID: -227975719608319236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_1
+      rect:
+        serializedVersion: 2
+        x: 1210
+        y: 987
+        width: 95
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b76b4cfc3533ddd80800000000000000
+      internalID: -8224360909447580037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_2
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 759
+        width: 121
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98ae2d27d7f8fbef0800000000000000
+      internalID: -90195698564011383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_3
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 719
+        width: 186
+        height: 155
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2cf2d6736fa55eda0800000000000000
+      internalID: -5916222521942921278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_4
+      rect:
+        serializedVersion: 2
+        x: 867
+        y: 840
+        width: 128
+        height: 131
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94cce4bc310d6b170800000000000000
+      internalID: 8193965355481091145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_5
+      rect:
+        serializedVersion: 2
+        x: 904
+        y: 756
+        width: 52
+        height: 58
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c93d4d398aa7bdde0800000000000000
+      internalID: -1307316402367704164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_6
+      rect:
+        serializedVersion: 2
+        x: 985
+        y: 679
+        width: 149
+        height: 269
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b458ffa9fa133060800000000000000
+      internalID: 6931913911154791600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_7
+      rect:
+        serializedVersion: 2
+        x: 1137
+        y: 545
+        width: 307
+        height: 282
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5926643c1fab0a960800000000000000
+      internalID: 7611288917782192789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_8
+      rect:
+        serializedVersion: 2
+        x: 1927
+        y: 800
+        width: 10
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a777f89d1f73d6f0800000000000000
+      internalID: -661044955196196952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_9
+      rect:
+        serializedVersion: 2
+        x: 1937
+        y: 807
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b506d78c31e21b720800000000000000
+      internalID: 2860117900859891803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_10
+      rect:
+        serializedVersion: 2
+        x: 1943
+        y: 809
+        width: 105
+        height: 149
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84d009436458c0980800000000000000
+      internalID: -8571329454216835768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_11
+      rect:
+        serializedVersion: 2
+        x: 1953
+        y: 800
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae8338834c17eba50800000000000000
+      internalID: 6538788796564191466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_12
+      rect:
+        serializedVersion: 2
+        x: 1986
+        y: 833
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79ff4902c2d9450b0800000000000000
+      internalID: -5740790812139782249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_13
+      rect:
+        serializedVersion: 2
+        x: 1996
+        y: 840
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd3b3f9db8a95af00800000000000000
+      internalID: 1127477207173936091
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_14
+      rect:
+        serializedVersion: 2
+        x: 2042
+        y: 837
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daa477acd7142b3b0800000000000000
+      internalID: -5498260186542421331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_15
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 771
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a5fc98f650a070a0800000000000000
+      internalID: -6885827534850820696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_16
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 749
+        width: 36
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83e70addbcc486c20800000000000000
+      internalID: 3199891973727092280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_17
+      rect:
+        serializedVersion: 2
+        x: 844
+        y: 782
+        width: 22
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8253aa8aadefd970800000000000000
+      internalID: 8781999115121939085
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_18
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 772
+        width: 22
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad638339f93383050800000000000000
+      internalID: 5780426882192783066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_19
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 772
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e90364da8c33a950800000000000000
+      internalID: 6459072857545837025
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_20
+      rect:
+        serializedVersion: 2
+        x: 1779
+        y: 724
+        width: 145
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98f21fd6cdf5f15a0800000000000000
+      internalID: -6548409932831445111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_21
+      rect:
+        serializedVersion: 2
+        x: 2009
+        y: 772
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13d9de92ac85c62d0800000000000000
+      internalID: -3284152402949857999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_22
+      rect:
+        serializedVersion: 2
+        x: 2019
+        y: 777
+        width: 17
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e90e36f9343157450800000000000000
+      internalID: 6085791652618952862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_23
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 762
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d7a4343465543b50800000000000000
+      internalID: 6571971645101352912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_24
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 774
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fc7837dd32a71ef0800000000000000
+      internalID: -137462877124002572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_25
+      rect:
+        serializedVersion: 2
+        x: 182
+        y: 759
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dd9330fef53c1690800000000000000
+      internalID: -7630164299604582957
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_26
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 746
+        width: 18
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d7a1e5901f762a80800000000000000
+      internalID: -8491960338149693481
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_27
+      rect:
+        serializedVersion: 2
+        x: 1966
+        y: 746
+        width: 21
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 739513ece74d8ab70800000000000000
+      internalID: 8910605503842834743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_28
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 726
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0057e8aa0c6d2630800000000000000
+      internalID: 3903895245039292427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_29
+      rect:
+        serializedVersion: 2
+        x: 715
+        y: 723
+        width: 17
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f5a73d7907700200800000000000000
+      internalID: 144246070715065844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_30
+      rect:
+        serializedVersion: 2
+        x: 785
+        y: 733
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: edb2d07cd2f41fef0800000000000000
+      internalID: -76192660656935970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_31
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 598
+        width: 150
+        height: 125
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4693fe8002848f6a0800000000000000
+      internalID: -6415298366763222684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_32
+      rect:
+        serializedVersion: 2
+        x: 1054
+        y: 689
+        width: 24
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 914cec6ff09fef3c0800000000000000
+      internalID: -4323744745268526055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_33
+      rect:
+        serializedVersion: 2
+        x: 1074
+        y: 693
+        width: 17
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b152dd58a617bbab0800000000000000
+      internalID: -4991271059683728101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_34
+      rect:
+        serializedVersion: 2
+        x: 1088
+        y: 694
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 490aa38776263fb10800000000000000
+      internalID: 2014061654903005332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_35
+      rect:
+        serializedVersion: 2
+        x: 1091
+        y: 706
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d97326ebd753cbb40800000000000000
+      internalID: 5457295662647490461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_36
+      rect:
+        serializedVersion: 2
+        x: 1899
+        y: 696
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e59045bc1fa46fc0800000000000000
+      internalID: -3502482072352549405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_37
+      rect:
+        serializedVersion: 2
+        x: 1892
+        y: 699
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46d15e173fb9e3f90800000000000000
+      internalID: -6971963703232750236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_38
+      rect:
+        serializedVersion: 2
+        x: 280
+        y: 588
+        width: 110
+        height: 109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0706236cae7f7be0800000000000000
+      internalID: -1477322873891322098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_39
+      rect:
+        serializedVersion: 2
+        x: 611
+        y: 663
+        width: 12
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3cf96093c0edd990800000000000000
+      internalID: -7359479085507412931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_40
+      rect:
+        serializedVersion: 2
+        x: 824
+        y: 645
+        width: 92
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 360464f965c88c500800000000000000
+      internalID: 416737269199028323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_41
+      rect:
+        serializedVersion: 2
+        x: 1437
+        y: 663
+        width: 40
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c35ab4a2666e4640800000000000000
+      internalID: 5066099204694889413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_42
+      rect:
+        serializedVersion: 2
+        x: 1490
+        y: 648
+        width: 45
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee2f66b835b767c10800000000000000
+      internalID: 2050962279065121518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_43
+      rect:
+        serializedVersion: 2
+        x: 1620
+        y: 648
+        width: 27
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb678ec7326b96220800000000000000
+      internalID: 2479713333379888828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_44
+      rect:
+        serializedVersion: 2
+        x: 1690
+        y: 651
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1a40116c52d83790800000000000000
+      internalID: -7550053481079354854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_45
+      rect:
+        serializedVersion: 2
+        x: 1700
+        y: 641
+        width: 17
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c103852530a16b090800000000000000
+      internalID: -8019193484917854180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_46
+      rect:
+        serializedVersion: 2
+        x: 1716
+        y: 666
+        width: 44
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 513a9054e8fffef00800000000000000
+      internalID: 1148417416511464213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_47
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 651
+        width: 7
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75604b3f310889450800000000000000
+      internalID: 6095762918827361879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_48
+      rect:
+        serializedVersion: 2
+        x: 642
+        y: 645
+        width: 7
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea5e101ea3a6229b0800000000000000
+      internalID: -5106402226369075794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_49
+      rect:
+        serializedVersion: 2
+        x: 1423
+        y: 592
+        width: 51
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5b79656f2eb41f80800000000000000
+      internalID: -8136669515977491622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_50
+      rect:
+        serializedVersion: 2
+        x: 1526
+        y: 648
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 355e6f16a4ffe6c70800000000000000
+      internalID: 8966384603077469523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_51
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 638
+        width: 9
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad52d5ad0b6ba8ec0800000000000000
+      internalID: -3563835284416289318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_52
+      rect:
+        serializedVersion: 2
+        x: 1544
+        y: 625
+        width: 44
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f370e552c6aea5490800000000000000
+      internalID: -7756629657987971265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_53
+      rect:
+        serializedVersion: 2
+        x: 1663
+        y: 615
+        width: 31
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a19f4110ea008ed80800000000000000
+      internalID: -8221320372422379238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_54
+      rect:
+        serializedVersion: 2
+        x: 1687
+        y: 651
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4864fcd90e1914f00800000000000000
+      internalID: 1099320177961420420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_55
+      rect:
+        serializedVersion: 2
+        x: 396
+        y: 615
+        width: 13
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ee2958f6ddc30360800000000000000
+      internalID: 7134772557858287337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_56
+      rect:
+        serializedVersion: 2
+        x: 409
+        y: 615
+        width: 20
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 968834a08fefddbb0800000000000000
+      internalID: -4909487677486430103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_57
+      rect:
+        serializedVersion: 2
+        x: 669
+        y: 615
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 677d97d3700aed110800000000000000
+      internalID: 1287642496431150966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_58
+      rect:
+        serializedVersion: 2
+        x: 1321
+        y: 612
+        width: 20
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb8b2e10dfb7db910800000000000000
+      internalID: 1854774948135090367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_59
+      rect:
+        serializedVersion: 2
+        x: 1566
+        y: 621
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99f6397b7b07b2da0800000000000000
+      internalID: -5968552946788241511
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_60
+      rect:
+        serializedVersion: 2
+        x: 1604
+        y: 573
+        width: 70
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70503debe7300ca80800000000000000
+      internalID: -8448749058044787449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_61
+      rect:
+        serializedVersion: 2
+        x: 2009
+        y: 598
+        width: 39
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 017d436f6fb4e1090800000000000000
+      internalID: -8061922758881913072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_62
+      rect:
+        serializedVersion: 2
+        x: 1203
+        y: 595
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e877dd0d3bbf82e0800000000000000
+      internalID: -2121271028568590108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_63
+      rect:
+        serializedVersion: 2
+        x: 1217
+        y: 569
+        width: 58
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad33adae2527695d0800000000000000
+      internalID: -3056129596671249446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_64
+      rect:
+        serializedVersion: 2
+        x: 1996
+        y: 602
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba44bca8a8eca5370800000000000000
+      internalID: 8312183156695057579
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_65
+      rect:
+        serializedVersion: 2
+        x: 1008
+        y: 572
+        width: 34
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 608520785c237f9a0800000000000000
+      internalID: -6199430538097174522
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_66
+      rect:
+        serializedVersion: 2
+        x: 1144
+        y: 569
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef21a9e8318fdcff0800000000000000
+      internalID: -14082460931714306
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_67
+      rect:
+        serializedVersion: 2
+        x: 1157
+        y: 570
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc97e14e049686070800000000000000
+      internalID: 8099839657251862987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_68
+      rect:
+        serializedVersion: 2
+        x: 1207
+        y: 582
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06757075d7a9c7620800000000000000
+      internalID: 2773261333675071328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_69
+      rect:
+        serializedVersion: 2
+        x: 1407
+        y: 562
+        width: 14
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fd7fe75f76301ae0800000000000000
+      internalID: -1580703548642984463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_70
+      rect:
+        serializedVersion: 2
+        x: 1167
+        y: 569
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ced2ba687f3dc69b0800000000000000
+      internalID: -5085456819138384404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_71
+      rect:
+        serializedVersion: 2
+        x: 1341
+        y: 481
+        width: 57
+        height: 88
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a59b0ade75596a40800000000000000
+      internalID: 5361910834673718689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_72
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 2048
+        height: 552
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f06389e4d89170cd0800000000000000
+      internalID: -2592074965828749809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_73
+      rect:
+        serializedVersion: 2
+        x: 1197
+        y: 531
+        width: 18
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aebebd86959830f10800000000000000
+      internalID: 2234780857210235882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_74
+      rect:
+        serializedVersion: 2
+        x: 1220
+        y: 545
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3498dfedd486b0520800000000000000
+      internalID: 2669341887810079043
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_75
+      rect:
+        serializedVersion: 2
+        x: 1227
+        y: 549
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e429c573520086a0800000000000000
+      internalID: -6449152108912892698
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_76
+      rect:
+        serializedVersion: 2
+        x: 1251
+        y: 532
+        width: 24
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 189f08fd05018e880800000000000000
+      internalID: -8581591150421280383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_77
+      rect:
+        serializedVersion: 2
+        x: 1331
+        y: 532
+        width: 14
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30077a71901427720800000000000000
+      internalID: 2842405822131564547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_78
+      rect:
+        serializedVersion: 2
+        x: 1433
+        y: 531
+        width: 8
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c33c21d951546e9e0800000000000000
+      internalID: -1592509459097009348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_79
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 534
+        width: 7
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bea4e9a7e666671e0800000000000000
+      internalID: -2200458743234278677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_80
+      rect:
+        serializedVersion: 2
+        x: 692
+        y: 514
+        width: 10
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 687269870593ea2c0800000000000000
+      internalID: -4418531166620604538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_81
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 521
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3c049cf9450d8b30800000000000000
+      internalID: 4291091835282263100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_82
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 517
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a1a017328cbbd030800000000000000
+      internalID: 3520614801175781801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_83
+      rect:
+        serializedVersion: 2
+        x: 1294
+        y: 524
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3ccc415b6614415f0800000000000000
+      internalID: -786932125502485309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_84
+      rect:
+        serializedVersion: 2
+        x: 1450
+        y: 521
+        width: 7
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e486941f3e39469e0800000000000000
+      internalID: -1629014557986297778
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BG_Bottom3_85
+      rect:
+        serializedVersion: 2
+        x: 1556
+        y: 517
+        width: 9
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f93191057bbc92ed0800000000000000
+      internalID: -2438193735061138529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      BG_Bottom3_0: -227975719608319236
+      BG_Bottom3_1: -8224360909447580037
+      BG_Bottom3_10: -8571329454216835768
+      BG_Bottom3_11: 6538788796564191466
+      BG_Bottom3_12: -5740790812139782249
+      BG_Bottom3_13: 1127477207173936091
+      BG_Bottom3_14: -5498260186542421331
+      BG_Bottom3_15: -6885827534850820696
+      BG_Bottom3_16: 3199891973727092280
+      BG_Bottom3_17: 8781999115121939085
+      BG_Bottom3_18: 5780426882192783066
+      BG_Bottom3_19: 6459072857545837025
+      BG_Bottom3_2: -90195698564011383
+      BG_Bottom3_20: -6548409932831445111
+      BG_Bottom3_21: -3284152402949857999
+      BG_Bottom3_22: 6085791652618952862
+      BG_Bottom3_23: 6571971645101352912
+      BG_Bottom3_24: -137462877124002572
+      BG_Bottom3_25: -7630164299604582957
+      BG_Bottom3_26: -8491960338149693481
+      BG_Bottom3_27: 8910605503842834743
+      BG_Bottom3_28: 3903895245039292427
+      BG_Bottom3_29: 144246070715065844
+      BG_Bottom3_3: -5916222521942921278
+      BG_Bottom3_30: -76192660656935970
+      BG_Bottom3_31: -6415298366763222684
+      BG_Bottom3_32: -4323744745268526055
+      BG_Bottom3_33: -4991271059683728101
+      BG_Bottom3_34: 2014061654903005332
+      BG_Bottom3_35: 5457295662647490461
+      BG_Bottom3_36: -3502482072352549405
+      BG_Bottom3_37: -6971963703232750236
+      BG_Bottom3_38: -1477322873891322098
+      BG_Bottom3_39: -7359479085507412931
+      BG_Bottom3_4: 8193965355481091145
+      BG_Bottom3_40: 416737269199028323
+      BG_Bottom3_41: 5066099204694889413
+      BG_Bottom3_42: 2050962279065121518
+      BG_Bottom3_43: 2479713333379888828
+      BG_Bottom3_44: -7550053481079354854
+      BG_Bottom3_45: -8019193484917854180
+      BG_Bottom3_46: 1148417416511464213
+      BG_Bottom3_47: 6095762918827361879
+      BG_Bottom3_48: -5106402226369075794
+      BG_Bottom3_49: -8136669515977491622
+      BG_Bottom3_5: -1307316402367704164
+      BG_Bottom3_50: 8966384603077469523
+      BG_Bottom3_51: -3563835284416289318
+      BG_Bottom3_52: -7756629657987971265
+      BG_Bottom3_53: -8221320372422379238
+      BG_Bottom3_54: 1099320177961420420
+      BG_Bottom3_55: 7134772557858287337
+      BG_Bottom3_56: -4909487677486430103
+      BG_Bottom3_57: 1287642496431150966
+      BG_Bottom3_58: 1854774948135090367
+      BG_Bottom3_59: -5968552946788241511
+      BG_Bottom3_6: 6931913911154791600
+      BG_Bottom3_60: -8448749058044787449
+      BG_Bottom3_61: -8061922758881913072
+      BG_Bottom3_62: -2121271028568590108
+      BG_Bottom3_63: -3056129596671249446
+      BG_Bottom3_64: 8312183156695057579
+      BG_Bottom3_65: -6199430538097174522
+      BG_Bottom3_66: -14082460931714306
+      BG_Bottom3_67: 8099839657251862987
+      BG_Bottom3_68: 2773261333675071328
+      BG_Bottom3_69: -1580703548642984463
+      BG_Bottom3_7: 7611288917782192789
+      BG_Bottom3_70: -5085456819138384404
+      BG_Bottom3_71: 5361910834673718689
+      BG_Bottom3_72: -2592074965828749809
+      BG_Bottom3_73: 2234780857210235882
+      BG_Bottom3_74: 2669341887810079043
+      BG_Bottom3_75: -6449152108912892698
+      BG_Bottom3_76: -8581591150421280383
+      BG_Bottom3_77: 2842405822131564547
+      BG_Bottom3_78: -1592509459097009348
+      BG_Bottom3_79: -2200458743234278677
+      BG_Bottom3_8: -661044955196196952
+      BG_Bottom3_80: -4418531166620604538
+      BG_Bottom3_81: 4291091835282263100
+      BG_Bottom3_82: 3520614801175781801
+      BG_Bottom3_83: -786932125502485309
+      BG_Bottom3_84: -1629014557986297778
+      BG_Bottom3_85: -2438193735061138529
+      BG_Bottom3_9: 2860117900859891803
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

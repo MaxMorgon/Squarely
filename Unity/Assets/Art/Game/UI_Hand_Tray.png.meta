@@ -1,0 +1,1417 @@
+fileFormatVersion: 2
+guid: 5a2847ad95b44a24f9fb2f560077f5c1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6308539446335034215
+    second: UI_Hand_Tray_0
+  - first:
+      213: -702329880177213075
+    second: UI_Hand_Tray_1
+  - first:
+      213: -5357225675204935456
+    second: UI_Hand_Tray_2
+  - first:
+      213: 3288715974648048198
+    second: UI_Hand_Tray_3
+  - first:
+      213: 5174863502434945483
+    second: UI_Hand_Tray_4
+  - first:
+      213: -7623626956350456857
+    second: UI_Hand_Tray_5
+  - first:
+      213: 8928532816351442760
+    second: UI_Hand_Tray_6
+  - first:
+      213: 6926053911068971715
+    second: UI_Hand_Tray_7
+  - first:
+      213: -1195806421129832134
+    second: UI_Hand_Tray_8
+  - first:
+      213: 1988808333891494399
+    second: UI_Hand_Tray_9
+  - first:
+      213: 4425028721532166126
+    second: UI_Hand_Tray_10
+  - first:
+      213: 4107294509123425574
+    second: UI_Hand_Tray_11
+  - first:
+      213: 5656684287560844459
+    second: UI_Hand_Tray_12
+  - first:
+      213: 4423951644609971667
+    second: UI_Hand_Tray_13
+  - first:
+      213: 3585017128613484283
+    second: UI_Hand_Tray_14
+  - first:
+      213: 4297523412394303596
+    second: UI_Hand_Tray_15
+  - first:
+      213: 4849591544212976829
+    second: UI_Hand_Tray_16
+  - first:
+      213: 7942522220197754647
+    second: UI_Hand_Tray_17
+  - first:
+      213: 2492018588125569177
+    second: UI_Hand_Tray_18
+  - first:
+      213: 2933670756022609047
+    second: UI_Hand_Tray_19
+  - first:
+      213: -7046361568711056297
+    second: UI_Hand_Tray_20
+  - first:
+      213: -5226313799625153195
+    second: UI_Hand_Tray_21
+  - first:
+      213: -9179258850661285242
+    second: UI_Hand_Tray_22
+  - first:
+      213: -7425095609811701093
+    second: UI_Hand_Tray_23
+  - first:
+      213: -3373307632070275771
+    second: UI_Hand_Tray_24
+  - first:
+      213: 1609579310961107194
+    second: UI_Hand_Tray_25
+  - first:
+      213: 2265996244330511734
+    second: UI_Hand_Tray_26
+  - first:
+      213: 8502084722907413047
+    second: UI_Hand_Tray_27
+  - first:
+      213: 3751095083396032354
+    second: UI_Hand_Tray_28
+  - first:
+      213: -3012947462956139992
+    second: UI_Hand_Tray_29
+  - first:
+      213: -3722750845987623379
+    second: UI_Hand_Tray_30
+  - first:
+      213: 5518381743865654125
+    second: UI_Hand_Tray_31
+  - first:
+      213: 8125946102414579882
+    second: UI_Hand_Tray_32
+  - first:
+      213: 7434601947017098189
+    second: UI_Hand_Tray_33
+  - first:
+      213: 2073233948117167492
+    second: UI_Hand_Tray_34
+  - first:
+      213: -8333934425483739413
+    second: UI_Hand_Tray_35
+  - first:
+      213: 1257927753646541105
+    second: UI_Hand_Tray_36
+  - first:
+      213: 6135485777174328015
+    second: UI_Hand_Tray_37
+  - first:
+      213: 7477686866816328988
+    second: UI_Hand_Tray_38
+  - first:
+      213: -1611857517847286001
+    second: UI_Hand_Tray_39
+  - first:
+      213: 5077892840811797783
+    second: UI_Hand_Tray_40
+  - first:
+      213: 7629865671713026574
+    second: UI_Hand_Tray_41
+  - first:
+      213: -8809489406490767248
+    second: UI_Hand_Tray_42
+  - first:
+      213: -2972852787067688220
+    second: UI_Hand_Tray_43
+  - first:
+      213: 1525448001867431756
+    second: UI_Hand_Tray_44
+  - first:
+      213: -7191627417732540007
+    second: UI_Hand_Tray_45
+  - first:
+      213: -8107031060542524829
+    second: UI_Hand_Tray_46
+  - first:
+      213: 8399030739201118657
+    second: UI_Hand_Tray_47
+  - first:
+      213: 2778005642063065513
+    second: UI_Hand_Tray_48
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 231
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 1024
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: UI_Hand_Tray_0
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 623
+        width: 38
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 763d65ec33f6c8750800000000000000
+      internalID: 6308539446335034215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_1
+      rect:
+        serializedVersion: 2
+        x: 700
+        y: 628
+        width: 40
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6105e0f1b2d046f0800000000000000
+      internalID: -702329880177213075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_2
+      rect:
+        serializedVersion: 2
+        x: 1237
+        y: 641
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e0cec7d1af47a5b0800000000000000
+      internalID: -5357225675204935456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_3
+      rect:
+        serializedVersion: 2
+        x: 1247
+        y: 640
+        width: 26
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64aac0c21cdd3ad20800000000000000
+      internalID: 3288715974648048198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_4
+      rect:
+        serializedVersion: 2
+        x: 1322
+        y: 651
+        width: 15
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc9c4c710fec0d740800000000000000
+      internalID: 5174863502434945483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_5
+      rect:
+        serializedVersion: 2
+        x: 1718
+        y: 646
+        width: 12
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7eb73a6ccaf633690800000000000000
+      internalID: -7623626956350456857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 79
+        width: 1932
+        height: 567
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 847bb048a4588eb70800000000000000
+      internalID: 8928532816351442760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_7
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 629
+        width: 19
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c2987816594e1060800000000000000
+      internalID: 6926053911068971715
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_8
+      rect:
+        serializedVersion: 2
+        x: 321
+        y: 629
+        width: 18
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a39dc684564a76fe0800000000000000
+      internalID: -1195806421129832134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_9
+      rect:
+        serializedVersion: 2
+        x: 347
+        y: 628
+        width: 21
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff160fb74aaa99b10800000000000000
+      internalID: 1988808333891494399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_10
+      rect:
+        serializedVersion: 2
+        x: 426
+        y: 621
+        width: 20
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eef53db6d2cd86d30800000000000000
+      internalID: 4425028721532166126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_11
+      rect:
+        serializedVersion: 2
+        x: 471
+        y: 630
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 625d63c389a000930800000000000000
+      internalID: 4107294509123425574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_12
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 634
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba4099e9364908e40800000000000000
+      internalID: 5656684287560844459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_13
+      rect:
+        serializedVersion: 2
+        x: 551
+        y: 634
+        width: 13
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d58b78e498056d30800000000000000
+      internalID: 4423951644609971667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_14
+      rect:
+        serializedVersion: 2
+        x: 609
+        y: 629
+        width: 22
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf692b0951a80c130800000000000000
+      internalID: 3585017128613484283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_15
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 629
+        width: 19
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c60efa936ced3ab30800000000000000
+      internalID: 4297523412394303596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_16
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 601
+        width: 14
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db47d82b0d53d4340800000000000000
+      internalID: 4849591544212976829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_17
+      rect:
+        serializedVersion: 2
+        x: 814
+        y: 623
+        width: 36
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 717b883c0e1893e60800000000000000
+      internalID: 7942522220197754647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_18
+      rect:
+        serializedVersion: 2
+        x: 1118
+        y: 631
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99025eed3bd659220800000000000000
+      internalID: 2492018588125569177
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_19
+      rect:
+        serializedVersion: 2
+        x: 1133
+        y: 621
+        width: 24
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 794eda4620e76b820800000000000000
+      internalID: 2933670756022609047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_20
+      rect:
+        serializedVersion: 2
+        x: 1201
+        y: 634
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 754630a8c7b463e90800000000000000
+      internalID: -7046361568711056297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_21
+      rect:
+        serializedVersion: 2
+        x: 1242
+        y: 627
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 555ee981a476877b0800000000000000
+      internalID: -5226313799625153195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_22
+      rect:
+        serializedVersion: 2
+        x: 1251
+        y: 640
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68249f885b8bc9080800000000000000
+      internalID: -9179258850661285242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_23
+      rect:
+        serializedVersion: 2
+        x: 1296
+        y: 627
+        width: 14
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b927cd9f1e2c4f890800000000000000
+      internalID: -7425095609811701093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_24
+      rect:
+        serializedVersion: 2
+        x: 1305
+        y: 630
+        width: 28
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54d4658c49a9f21d0800000000000000
+      internalID: -3373307632070275771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_25
+      rect:
+        serializedVersion: 2
+        x: 1335
+        y: 636
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af0a7abfadf565610800000000000000
+      internalID: 1609579310961107194
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_26
+      rect:
+        serializedVersion: 2
+        x: 1362
+        y: 634
+        width: 21
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67d70b5149f627f10800000000000000
+      internalID: 2265996244330511734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_27
+      rect:
+        serializedVersion: 2
+        x: 1396
+        y: 631
+        width: 17
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73afb2f62097df570800000000000000
+      internalID: 8502084722907413047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_28
+      rect:
+        serializedVersion: 2
+        x: 1433
+        y: 632
+        width: 20
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 267e88caa119e0430800000000000000
+      internalID: 3751095083396032354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_29
+      rect:
+        serializedVersion: 2
+        x: 1474
+        y: 630
+        width: 37
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82ab597ee3cdf26d0800000000000000
+      internalID: -3012947462956139992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_30
+      rect:
+        serializedVersion: 2
+        x: 1626
+        y: 629
+        width: 43
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2e6f9d54d1265cc0800000000000000
+      internalID: -3722750845987623379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_31
+      rect:
+        serializedVersion: 2
+        x: 1666
+        y: 636
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6bec1a55fa359c40800000000000000
+      internalID: 5518381743865654125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_32
+      rect:
+        serializedVersion: 2
+        x: 1696
+        y: 627
+        width: 7
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa814625de825c070800000000000000
+      internalID: 8125946102414579882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_33
+      rect:
+        serializedVersion: 2
+        x: 1714
+        y: 629
+        width: 20
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc3b162a4130d2760800000000000000
+      internalID: 7434601947017098189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_34
+      rect:
+        serializedVersion: 2
+        x: 1868
+        y: 636
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48dedc59a4b95cc10800000000000000
+      internalID: 2073233948117167492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_35
+      rect:
+        serializedVersion: 2
+        x: 312
+        y: 632
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bee74ab8bcae75c80800000000000000
+      internalID: -8333934425483739413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_36
+      rect:
+        serializedVersion: 2
+        x: 342
+        y: 632
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 139053d80ae057110800000000000000
+      internalID: 1257927753646541105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_37
+      rect:
+        serializedVersion: 2
+        x: 548
+        y: 615
+        width: 10
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc2ffe0aecf952550800000000000000
+      internalID: 6135485777174328015
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_38
+      rect:
+        serializedVersion: 2
+        x: 951
+        y: 630
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c15e03e369416c760800000000000000
+      internalID: 7477686866816328988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_39
+      rect:
+        serializedVersion: 2
+        x: 966
+        y: 629
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f0f6b24a02881a9e0800000000000000
+      internalID: -1611857517847286001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_40
+      rect:
+        serializedVersion: 2
+        x: 1094
+        y: 619
+        width: 20
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71d161882ac487640800000000000000
+      internalID: 5077892840811797783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_41
+      rect:
+        serializedVersion: 2
+        x: 1205
+        y: 621
+        width: 11
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e02f666576ab2e960800000000000000
+      internalID: 7629865671713026574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_42
+      rect:
+        serializedVersion: 2
+        x: 1229
+        y: 627
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0701d893f086eb580800000000000000
+      internalID: -8809489406490767248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_43
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 615
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4eaec49142e4eb6d0800000000000000
+      internalID: -2972852787067688220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_44
+      rect:
+        serializedVersion: 2
+        x: 1416
+        y: 624
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4f33a220ea7b2510800000000000000
+      internalID: 1525448001867431756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_45
+      rect:
+        serializedVersion: 2
+        x: 1427
+        y: 632
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 999971967f4323c90800000000000000
+      internalID: -7191627417732540007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_46
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 14
+        width: 944
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 362fd4d043a0e7f80800000000000000
+      internalID: -8107031060542524829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_47
+      rect:
+        serializedVersion: 2
+        x: 1037
+        y: 16
+        width: 802
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c15ba315f95f8470800000000000000
+      internalID: 8399030739201118657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Hand_Tray_48
+      rect:
+        serializedVersion: 2
+        x: 776
+        y: 0
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a13337b9657d8620800000000000000
+      internalID: 2778005642063065513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      UI_Hand_Tray_0: 6308539446335034215
+      UI_Hand_Tray_1: -702329880177213075
+      UI_Hand_Tray_10: 4425028721532166126
+      UI_Hand_Tray_11: 4107294509123425574
+      UI_Hand_Tray_12: 5656684287560844459
+      UI_Hand_Tray_13: 4423951644609971667
+      UI_Hand_Tray_14: 3585017128613484283
+      UI_Hand_Tray_15: 4297523412394303596
+      UI_Hand_Tray_16: 4849591544212976829
+      UI_Hand_Tray_17: 7942522220197754647
+      UI_Hand_Tray_18: 2492018588125569177
+      UI_Hand_Tray_19: 2933670756022609047
+      UI_Hand_Tray_2: -5357225675204935456
+      UI_Hand_Tray_20: -7046361568711056297
+      UI_Hand_Tray_21: -5226313799625153195
+      UI_Hand_Tray_22: -9179258850661285242
+      UI_Hand_Tray_23: -7425095609811701093
+      UI_Hand_Tray_24: -3373307632070275771
+      UI_Hand_Tray_25: 1609579310961107194
+      UI_Hand_Tray_26: 2265996244330511734
+      UI_Hand_Tray_27: 8502084722907413047
+      UI_Hand_Tray_28: 3751095083396032354
+      UI_Hand_Tray_29: -3012947462956139992
+      UI_Hand_Tray_3: 3288715974648048198
+      UI_Hand_Tray_30: -3722750845987623379
+      UI_Hand_Tray_31: 5518381743865654125
+      UI_Hand_Tray_32: 8125946102414579882
+      UI_Hand_Tray_33: 7434601947017098189
+      UI_Hand_Tray_34: 2073233948117167492
+      UI_Hand_Tray_35: -8333934425483739413
+      UI_Hand_Tray_36: 1257927753646541105
+      UI_Hand_Tray_37: 6135485777174328015
+      UI_Hand_Tray_38: 7477686866816328988
+      UI_Hand_Tray_39: -1611857517847286001
+      UI_Hand_Tray_4: 5174863502434945483
+      UI_Hand_Tray_40: 5077892840811797783
+      UI_Hand_Tray_41: 7629865671713026574
+      UI_Hand_Tray_42: -8809489406490767248
+      UI_Hand_Tray_43: -2972852787067688220
+      UI_Hand_Tray_44: 1525448001867431756
+      UI_Hand_Tray_45: -7191627417732540007
+      UI_Hand_Tray_46: -8107031060542524829
+      UI_Hand_Tray_47: 8399030739201118657
+      UI_Hand_Tray_48: 2778005642063065513
+      UI_Hand_Tray_5: -7623626956350456857
+      UI_Hand_Tray_6: 8928532816351442760
+      UI_Hand_Tray_7: 6926053911068971715
+      UI_Hand_Tray_8: -1195806421129832134
+      UI_Hand_Tray_9: 1988808333891494399
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
